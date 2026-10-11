@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VibePaint Pro | Layer & Filter Engine</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        bgDark: '#0a0a0a',
+                        panel: '#141414',
+                        panelBorder: '#2a2a2a',
+                        accent: '#4A5D23', /* Olive Green */
+                        accentHover: '#3B4D1C',
+                        forest: '#2C4027', /* Deep Forest Green */
+                        textMain: '#E0E0E0',
+                        textMuted: '#737373'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #E0E0E0;
+            overflow: hidden; 
+            touch-action: none; 
+            user-select: none;
+        }
+        
+        /* Minimalist scrollbars */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+        .pro-panel {
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Tool styling */
+        .tool-btn {
+            color: #737373;
+            transition: all 0.2s ease;
+        }
+        .tool-btn:hover {
+            color: #E0E0E0;
+            background: rgba(255,255,255,0.05);
+        }
+        .tool-btn.active {
+            color: #fff;
+            background: #4A5D23; /* Olive Accent */
+        }
+
+        /* Color swatches */
+        .color-swatch {
+            border: 2px solid transparent;
+            transition: transform 0.1s;
+        }
+        .color-swatch.active {
+            border-color: #fff;
+            transform: scale(1.15);
+        }
+
+        /* Layer styling */
+        .layer-item {
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .layer-item.active {
+            background: rgba(74, 93, 35, 0.2); /* Faded olive */
+            border-color: rgba(74, 93, 35, 0.5);
+        }
+
+        /* Custom sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: #E0E0E0;
+            cursor: pointer;
+            margin-top: -5px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            cursor: pointer;
+            background: #333;
+        }
+
+        /* Canvas Workspace */
+        #workspace {
+            background-color: #1a1a1a;
+            /* Checkerboard pattern for transparency */
+            background-image: 
+                linear-gradient(45deg, #222 25%, transparent 25%), 
+                linear-gradient(-45deg, #222 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #222 75%), 
+                linear-gradient(-45deg, transparent 75%, #222 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        
+        .canvas-layer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            background: transparent; /* Layers are transparent by default */
+        }
+        
+        /* The topmost canvas catches events but is completely transparent */
+        #interactionCanvas {
+            cursor: crosshair;
+            z-index: 9999;
+        }
+        
+        /* The draft canvas sits just below interaction, used for shape previews */
+        #draftCanvas {
+            z-index: 9998;
+            pointer-events: none;
+        }
+
+        /* Tabs */
+        .tab-btn.active {
+            border-bottom: 2px solid #4A5D23;
+            color: #E0E0E0;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen flex relative">
+
+    <!-- Workspace (Center) -->
+    <main id="workspace" class="flex-1 relative overflow-hidden flex items-center justify-center">
+        <!-- Container for dynamically generated layer canvases -->
+        <div id="layersContainer" class="relative"></div>
+        <!-- Draft canvas for tool previews (lines, rects) -->
+        <canvas id="draftCanvas" class="canvas-layer"></canvas>
+        <!-- Invisible top canvas to handle all mouse/touch events -->
+        <canvas id="interactionCanvas" class="canvas-layer"></canvas>
+    </main>
+
+    <!-- Floating Left Toolbar (Tools & Colors) -->
+    <aside class="pro-panel absolute left-4 top-1/2 -translate-y-1/2 w-14 rounded-xl flex flex-col items-center py-4 gap-4 z-50">
+        
+        <!-- Tools -->
+        <div class="flex flex-col gap-2 w-full px-2">
+            <button class="tool-btn active w-10 h-10 rounded-lg flex items-center justify-center" data-tool="brush" title="Brush (B)">
+                <i class="ph ph-paintbrush text-xl"></i>
+            </button>
+            <button class="tool-btn w-10 h-10 rounded-lg flex items-center justify-center" data-tool="eraser" title="Eraser (E)">
+                <i class="ph ph-eraser text-xl"></i>
+            </button>
+            <button class="tool-btn w-10 h-10 rounded-lg flex items-center justify-center" data-tool="line" title="Line (L)">
+                <i class="ph ph-line-segment text-xl"></i>
+            </button>
+            <button class="tool-btn w-10 h-10 rounded-lg flex items-center justify-center" data-tool="rect" title="Rectangle (R)">
+                <i class="ph ph-square text-xl"></i>
+            </button>
+            <button class="tool-btn w-10 h-10 rounded-lg flex items-center justify-center" data-tool="circle" title="Circle (C)">
+                <i class="ph ph-circle text-xl"></i>
+            </button>
+        </div>
+
+        <div class="w-8 h-px bg-panelBorder my-1"></div>
+
+        <!-- Size visualizer -->
+        <div class="flex flex-col items-center w-full px-2 gap-1" title="Brush Size">
+            <span id="sizeValue" class="text-[10px] text-textMuted font-mono">5</span>
+            <div class="h-24 py-2 w-full flex justify-center items-center relative">
+                <!-- Custom vertical range slider using writing-mode hack -->
+                <input type="range" id="brushSize" min="1" max="100" value="5" class="w-20 absolute rotate-[-90deg]">
+            </div>
+        </div>
+
+        <div class="w-8 h-px bg-panelBorder my-1"></div>
+
+        <!-- Curated Palette (Strictly Monochromes & Olive/Forest) -->
+        <div class="flex flex-col gap-2 w-full items-center" id="colorPalette">
+            <!-- Injected via JS -->
+        </div>
+        
+        <!-- Native color picker fallback -->
+        <input type="color" id="customColor" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0 p-0 mt-1" value="#ffffff">
+
+    </aside>
+
+    <!-- Floating Right Panel (Layers & Filters) -->
+    <aside class="pro-panel absolute right-4 top-1/2 -translate-y-1/2 w-64 rounded-xl flex flex-col h-[80vh] max-h-[700px] z-50">
+        
+        <!-- Header -->
+        <div class="p-4 border-b border-panelBorder flex justify-between items-center">
+            <span class="font-semibold text-sm tracking-wide">Vibe<span class="font-light text-textMuted">Pro</span></span>
+            <div class="flex gap-2">
+                <button id="undoBtn" class="text-textMuted hover:text-white transition-colors disabled:opacity-30" title="Undo (Ctrl+Z)"><i class="ph ph-arrow-u-up-left text-lg"></i></button>
+                <button id="redoBtn" class="text-textMuted hover:text-white transition-colors disabled:opacity-30" title="Redo (Ctrl+Y)"><i class="ph ph-arrow-u-up-right text-lg"></i></button>
+                <button id="exportBtn" class="text-accent hover:text-white transition-colors ml-2" title="Export PNG"><i class="ph ph-download-simple text-lg"></i></button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex text-xs font-medium text-textMuted border-b border-panelBorder">
+            <button class="tab-btn active flex-1 py-3 transition-colors" data-tab="layers">Layers</button>
+            <button class="tab-btn flex-1 py-3 transition-colors" data-tab="adjust">Adjust</button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="flex-1 overflow-y-auto relative">
+            
+            <!-- LAYERS TAB -->
+            <div id="layers-tab" class="p-4 flex flex-col h-full">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-[10px] uppercase tracking-widest text-textMuted font-semibold">Stack</span>
+                    <button id="addLayerBtn" class="text-xs bg-white/5 hover:bg-white/10 px-2 py-1 rounded transition-colors"><i class="ph ph-plus"></i> New</button>
+                </div>
+                
+                <!-- Dynamic Layer List -->
+                <ul id="layerList" class="flex flex-col gap-2 flex-1 overflow-y-auto custom-scroll pr-1">
+                    <!-- Layers injected here -->
+                </ul>
+
+                <!-- Layer Controls -->
+                <div class="pt-4 mt-2 border-t border-panelBorder">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] uppercase tracking-widest text-textMuted">Opacity</span>
+                        <span id="opacityValue" class="text-xs text-textMain font-mono">100%</span>
+                    </div>
+                    <input type="range" id="layerOpacity" min="0" max="100" value="100">
+                </div>
+            </div>
+
+            <!-- ADJUST TAB (Mini-Photoshop) -->
+            <div id="adjust-tab" class="p-4 hidden flex-col h-full">
+                <span class="text-[10px] uppercase tracking-widest text-textMuted font-semibold mb-4 block">Color Correction</span>
+                
+                <div class="space-y-4 flex-1">
+                    <div>
+                        <div class="flex justify-between items-center mb-1"><span class="text-xs text-textMain">Brightness</span><span id="val-bright" class="text-[10px] text-textMuted">100%</span></div>
+                        <input type="range" class="filter-slider" data-filter="brightness" min="0" max="200" value="100">
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1"><span class="text-xs text-textMain">Contrast</span><span id="val-contrast" class="text-[10px] text-textMuted">100%</span></div>
+                        <input type="range" class="filter-slider" data-filter="contrast" min="0" max="200" value="100">
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1"><span class="text-xs text-textMain">Grayscale</span><span id="val-grayscale" class="text-[10px] text-textMuted">0%</span></div>
+                        <input type="range" class="filter-slider" data-filter="grayscale" min="0" max="100" value="0">
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1"><span class="text-xs text-textMain">Blur</span><span id="val-blur" class="text-[10px] text-textMuted">0px</span></div>
+                        <input type="range" class="filter-slider" data-filter="blur" min="0" max="20" value="0">
+                    </div>
+                </div>
+
+                <div class="pt-4 mt-auto border-t border-panelBorder">
+                    <button id="applyFiltersBtn" class="w-full py-2 bg-accent hover:bg-accentHover text-white text-xs font-semibold rounded transition-colors mb-2">Bake Filters to Layer</button>
+                    <button id="resetFiltersBtn" class="w-full py-2 bg-white/5 hover:bg-white/10 text-textMain text-xs font-medium rounded transition-colors">Reset</button>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-panel border border-panelBorder text-white px-6 py-2 rounded-full text-xs font-medium opacity-0 transition-opacity duration-300 pointer-events-none z-50 shadow-xl flex items-center gap-2">
+        <i class="ph-fill ph-info text-accent text-lg"></i>
+        <span id="toastMsg">Action completed</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const layersContainer = document.getElementById('layersContainer');
+        const draftCanvas = document.getElementById('draftCanvas');
+        const interactionCanvas = document.getElementById('interactionCanvas');
+        const layerListEl = document.getElementById('layerList');
+        const paletteContainer = document.getElementById('colorPalette');
+        const customColorPicker = document.getElementById('customColor');
+        const sizeSlider = document.getElementById('brushSize');
+        
+        // Contexts for non-layer canvases
+        const draftCtx = draftCanvas.getContext('2d', { willReadFrequently: true });
+        
+        // Strict Minimalist Color Palette (Whites, Greys, Blacks, Olives, Forests)
+        const colors = [
+            '#FFFFFF', '#D1D5DB', '#9CA3AF', '#4B5563', '#1F2937', '#000000',
+            '#2C4027', /* Forest */
+            '#4A5D23', /* Olive */
+            '#6B8E23', /* Olive Drab */
+            '#8F9779'  /* Sage */
+        ];
+
+        // Core State
+        let C_WIDTH = 800;
+        let C_HEIGHT = 600;
+        let isDrawing = false;
+        let startX, startY;
+        
+        let currentTool = 'brush';
+        let brushSize = 5;
+        let currentColor = '#FFFFFF';
+        
+        // Layer Engine State
+        let layers = []; // Array of { id, canvas, ctx, visible, opacity, name }
+        let activeLayerId = null;
+        let layerCounter = 0;
+
+        // Undo/Redo Engine
+        let historyStack = [];
+        let historyIndex = -1;
+        const MAX_HISTORY = 20;
+
+        // Filters State
+        let currentFilters = { brightness: 100, contrast: 100, grayscale: 0, blur: 0 };
+
+        function init() {
+            // 1. Setup Colors
+            colors.forEach((color, index) => {
+                const btn = document.createElement('div');
+                btn.className = `color-swatch w-6 h-6 rounded-full cursor-pointer bg-white`;
+                btn.style.backgroundColor = color;
+                if(color === '#FFFFFF') btn.style.border = '1px solid #333';
+                if(color === currentColor) btn.classList.add('active');
+                
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.color-swatch').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentColor = color;
+                    customColorPicker.value = color;
+                });
+                paletteContainer.appendChild(btn);
+            });
+
+            // 2. Setup Sizing
+            const resizeObserver = new ResizeObserver(() => {
+                // Determine responsive canvas size
+                const main = document.getElementById('workspace');
+                // Calculate size keeping 4:3 aspect ratio roughly, fitting within bounds with padding
+                const padding = 100;
+                let w = main.clientWidth - padding;
+                let h = main.clientHeight - padding;
+                
+                // If it's a mobile screen, make it fill width
+                if(window.innerWidth < 768) {
+                    w = main.clientWidth - 20;
+                    h = main.clientHeight - 40;
+                }
+
+                if (C_WIDTH !== w || C_HEIGHT !== h) {
+                    resizeSystem(w, h);
+                }
+            });
+            resizeObserver.observe(document.getElementById('workspace'));
+
+            // 3. Initialize Base Layers
+            // Wait for initial resize to set dimensions, then create layers
+            setTimeout(() => {
+                const bgId = createLayer("Background");
+                const drawId = createLayer("Layer 1");
+                
+                // Fill background with white
+                const bgLayer = getLayer(bgId);
+                bgLayer.ctx.fillStyle = '#121212'; // Default dark canvas
+                bgLayer.ctx.fillRect(0, 0, C_WIDTH, C_HEIGHT);
+                
+                setActiveLayer(drawId);
+                saveState(); // Initial save
+            }, 100);
+
+            // 4. Bind UI Events
+            bindEvents();
+        }
+
+        function resizeSystem(w, h) {
+            // Save current pixel data of all layers
+            const tempSnapshots = layers.map(l => l.ctx.getImageData(0, 0, C_WIDTH, C_HEIGHT));
+            
+            C_WIDTH = w;
+            C_HEIGHT = h;
+
+            // Resize invisible interaction and draft canvases
+            interactionCanvas.width = w; interactionCanvas.height = h;
+            draftCanvas.width = w; draftCanvas.height = h;
+
+            // Resize all layer canvases
+            layers.forEach((l, index) => {
+                l.canvas.width = w;
+                l.canvas.height = h;
+                // Restore pixel data
+                if(tempSnapshots[index]) {
+                    l.ctx.putImageData(tempSnapshots[index], 0, 0);
+                }
+            });
+        }
+
+        function createLayer(name) {
+            layerCounter++;
+            const id = `layer_${layerCounter}`;
+            
+            const canvas = document.createElement('canvas');
+            canvas.className = 'canvas-layer pointer-events-none';
+            canvas.width = C_WIDTH;
+            canvas.height = C_HEIGHT;
+            canvas.dataset.id = id;
+            
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            
+            const layer = { id, canvas, ctx, visible: true, opacity: 100, name: name || `Layer ${layerCounter}` };
+            layers.unshift(layer); // Add to top of internal stack (rendered bottom-up via DOM, wait. DOM render order: first child is bottom. Unshift makes it first in array, so let's append to DOM)
+            
+            // DOM manipulation: insert at top of stack (last child)
+            layersContainer.appendChild(canvas);
+            
+            renderLayerUI();
+            return id;
+        }
+
+        function getLayer(id) {
+            return layers.find(l => l.id === id);
+        }
+
+        function setActiveLayer(id) {
+            activeLayerId = id;
+            
+            // Update UI selection
+            document.querySelectorAll('.layer-item').forEach(el => {
+                el.classList.toggle('active', el.dataset.id === id);
+            });
+
+            // Update Opacity slider
+            const active = getLayer(id);
+            if(active) {
+                document.getElementById('layerOpacity').value = active.opacity;
+                document.getElementById('opacityValue').innerText = `${active.opacity}%`;
+            }
+        }
+
+        function renderLayerUI() {
+            layerListEl.innerHTML = '';
+            // Display array order (which is bottom-to-top visually). We iterate backwards to show top layer at top of UI.
+            for (let i = layers.length - 1; i >= 0; i--) {
+                const l = layers[i];
+                const li = document.createElement('li');
+                li.className = `layer-item flex justify-between items-center p-2 rounded cursor-pointer bg-black/20 ${l.id === activeLayerId ? 'active' : ''}`;
+                li.dataset.id = l.id;
+                
+                li.innerHTML = `
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <button class="toggle-vis text-textMuted hover:text-white" data-id="${l.id}">
+                            <i class="ph ${l.visible ? 'ph-eye' : 'ph-eye-closed'}"></i>
+                        </button>
+                        <span class="text-xs truncate">${l.name}</span>
+                    </div>
+                    <button class="delete-layer text-textMuted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity" data-id="${l.id}">
+                        <i class="ph ph-trash"></i>
+                    </button>
+                `;
+
+                // Events
+                li.addEventListener('click', (e) => {
+                    if(!e.target.closest('button')) setActiveLayer(l.id);
+                });
+                
+                li.querySelector('.toggle-vis').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    l.visible = !l.visible;
+                    l.canvas.style.display = l.visible ? 'block' : 'none';
+                    renderLayerUI();
+                });
+
+                const delBtn = li.querySelector('.delete-layer');
+                if(layers.length > 1) { // Prevent deleting last layer
+                    li.classList.add('group');
+                    delBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        layersContainer.removeChild(l.canvas);
+                        layers = layers.filter(layer => layer.id !== l.id);
+                        if(activeLayerId === l.id) setActiveLayer(layers[layers.length-1].id);
+                        renderLayerUI();
+                        saveState();
+                    });
+                } else {
+                    delBtn.remove();
+                }
+
+                layerListEl.appendChild(li);
+            }
+        }
+
+        document.getElementById('addLayerBtn').addEventListener('click', () => {
+            const id = createLayer();
+            setActiveLayer(id);
+            saveState();
+        });
+
+        // Opacity Control
+        document.getElementById('layerOpacity').addEventListener('input', (e) => {
+            const val = e.target.value;
+            document.getElementById('opacityValue').innerText = `${val}%`;
+            const active = getLayer(activeLayerId);
+            if(active) {
+                active.opacity = val;
+                active.canvas.style.opacity = val / 100;
+            }
+        });
+
+        const filterSliders = document.querySelectorAll('.filter-slider');
+        filterSliders.forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                const filter = e.target.dataset.filter;
+                const val = e.target.value;
+                currentFilters[filter] = val;
+                
+                // Update UI text
+                const unit = filter === 'blur' ? 'px' : '%';
+                document.getElementById(`val-${filter}`).innerText = `${val}${unit}`;
+                
+                // Apply CSS filter to active layer canvas for real-time preview
+                const active = getLayer(activeLayerId);
+                if(active) {
+                    active.canvas.style.filter = `brightness(${currentFilters.brightness}%) contrast(${currentFilters.contrast}%) grayscale(${currentFilters.grayscale}%) blur(${currentFilters.blur}px)`;
+                }
+            });
+        });
+
+        document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+            currentFilters = { brightness: 100, contrast: 100, grayscale: 0, blur: 0 };
+            filterSliders.forEach(s => s.value = currentFilters[s.dataset.filter]);
+            ['bright', 'contrast', 'grayscale', 'blur'].forEach(f => {
+                document.getElementById(`val-${f}`).innerText = currentFilters[f === 'bright'?'brightness':f] + (f==='blur'?'px':'%');
+            });
+            const active = getLayer(activeLayerId);
+            if(active) active.canvas.style.filter = 'none';
+        });
+
+        document.getElementById('applyFiltersBtn').addEventListener('click', () => {
+            const active = getLayer(activeLayerId);
+            if(!active) return;
+            
+            // To bake the CSS filter into actual pixels, we draw the canvas onto itself through the ctx.filter property.
+            // Create a temp canvas to hold current data
+            const temp = document.createElement('canvas');
+            temp.width = C_WIDTH; temp.height = C_HEIGHT;
+            temp.getContext('2d').drawImage(active.canvas, 0, 0);
+
+            // Clear active and redraw with ctx filters
+            active.ctx.clearRect(0, 0, C_WIDTH, C_HEIGHT);
+            active.ctx.filter = `brightness(${currentFilters.brightness}%) contrast(${currentFilters.contrast}%) grayscale(${currentFilters.grayscale}%) blur(${currentFilters.blur}px)`;
+            active.ctx.drawImage(temp, 0, 0);
+            
+            // Reset state
+            active.ctx.filter = 'none';
+            active.canvas.style.filter = 'none';
+            document.getElementById('resetFiltersBtn').click();
+            saveState();
+            showToast("Filters applied to layer");
+        });
+
+        const getCoords = (e) => {
+            const rect = interactionCanvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        };
+
+        function setBrushStyle(ctx) {
+            ctx.lineWidth = brushSize;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            if(currentTool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.strokeStyle = 'rgba(0,0,0,1)';
+                ctx.fillStyle = 'rgba(0,0,0,1)';
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = currentColor;
+                ctx.fillStyle = currentColor;
+            }
+        }
+
+        const startDrawing = (e) => {
+            const activeLayer = getLayer(activeLayerId);
+            if(!activeLayer || !activeLayer.visible) {
+                showToast("Cannot draw on hidden/missing layer");
+                return;
+            }
+
+            isDrawing = true;
+            const { x, y } = getCoords(e);
+            startX = x; startY = y;
+
+            if (currentTool === 'brush' || currentTool === 'eraser') {
+                const ctx = activeLayer.ctx;
+                setBrushStyle(ctx);
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        };
+
+        const draw = (e) => {
+            if (!isDrawing) return;
+            e.preventDefault(); 
+            
+            const { x, y } = getCoords(e);
+            const activeLayer = getLayer(activeLayerId);
+            
+            if (currentTool === 'brush' || currentTool === 'eraser') {
+                // Draw directly on active layer
+                const ctx = activeLayer.ctx;
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            } else {
+                // Use Draft Canvas for shapes to prevent smearing
+                draftCtx.clearRect(0, 0, C_WIDTH, C_HEIGHT);
+                setBrushStyle(draftCtx);
+                // Override eraser on draft to just show the line in white
+                if(currentTool === 'eraser') {
+                    draftCtx.globalCompositeOperation = 'source-over';
+                    draftCtx.strokeStyle = '#fff'; 
+                }
+
+                draftCtx.beginPath();
+                if (currentTool === 'line') {
+                    draftCtx.moveTo(startX, startY);
+                    draftCtx.lineTo(x, y);
+                    draftCtx.stroke();
+                } else if (currentTool === 'rect') {
+                    draftCtx.strokeRect(startX, startY, x - startX, y - startY);
+                } else if (currentTool === 'circle') {
+                    let radius = Math.sqrt(Math.pow((startX - x), 2) + Math.pow((startY - y), 2));
+                    draftCtx.arc(startX, startY, radius, 0, 2 * Math.PI);
+                    draftCtx.stroke();
+                }
+            }
+        };
+
+        const stopDrawing = (e) => {
+            if (!isDrawing) return;
+            isDrawing = false;
+            
+            const activeLayer = getLayer(activeLayerId);
+            
+            // If we were drawing a shape on the draft canvas, bake it into the active layer now
+            if (currentTool === 'line' || currentTool === 'rect' || currentTool === 'circle') {
+                const ctx = activeLayer.ctx;
+                setBrushStyle(ctx); // Reset context styling
+                ctx.drawImage(draftCanvas, 0, 0);
+                draftCtx.clearRect(0, 0, C_WIDTH, C_HEIGHT);
+            }
+
+            saveState();
+        };
+
+        function saveState() {
+            if (historyIndex < historyStack.length - 1) {
+                historyStack = historyStack.slice(0, historyIndex + 1);
+            }
+            
+            // Deep copy layer data
+            const snapshot = layers.map(l => ({
+                id: l.id,
+                name: l.name,
+                visible: l.visible,
+                opacity: l.opacity,
+                data: l.ctx.getImageData(0, 0, C_WIDTH, C_HEIGHT)
+            }));
+
+            historyStack.push(snapshot);
+            
+            if (historyStack.length > MAX_HISTORY) historyStack.shift();
+            else historyIndex++;
+            
+            updateUndoRedoUI();
+        }
+
+        function restoreState(index) {
+            const snapshot = historyStack[index];
+            // Rebuild layer structure from snapshot
+            layersContainer.innerHTML = '';
+            layers = [];
+            layerCounter = 0;
+
+            snapshot.forEach(snapLayer => {
+                const canvas = document.createElement('canvas');
+                canvas.className = 'canvas-layer pointer-events-none';
+                canvas.width = C_WIDTH; canvas.height = C_HEIGHT;
+                canvas.dataset.id = snapLayer.id;
+                canvas.style.display = snapLayer.visible ? 'block' : 'none';
+                canvas.style.opacity = snapLayer.opacity / 100;
+                
+                const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                ctx.putImageData(snapLayer.data, 0, 0);
+
+                layers.push({
+                    id: snapLayer.id, canvas, ctx, 
+                    visible: snapLayer.visible, opacity: snapLayer.opacity, name: snapLayer.name
+                });
+                layersContainer.appendChild(canvas);
+                
+                // Track highest ID for counter
+                const num = parseInt(snapLayer.id.split('_')[1]);
+                if(num > layerCounter) layerCounter = num;
+            });
+            
+            // Ensure active layer still exists, or default to top
+            if(!getLayer(activeLayerId)) activeLayerId = layers[layers.length-1].id;
+            
+            renderLayerUI();
+            setActiveLayer(activeLayerId);
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                restoreState(historyIndex);
+                updateUndoRedoUI();
+            }
+        }
+
+        function redo() {
+            if (historyIndex < historyStack.length - 1) {
+                historyIndex++;
+                restoreState(historyIndex);
+                updateUndoRedoUI();
+            }
+        }
+
+        function updateUndoRedoUI() {
+            document.getElementById('undoBtn').disabled = historyIndex <= 0;
+            document.getElementById('redoBtn').disabled = historyIndex >= historyStack.length - 1;
+        }
+
+        function bindEvents() {
+            // Drawing Events
+            interactionCanvas.addEventListener('mousedown', startDrawing);
+            interactionCanvas.addEventListener('mousemove', draw);
+            window.addEventListener('mouseup', stopDrawing);
+
+            interactionCanvas.addEventListener('touchstart', startDrawing, {passive: false});
+            interactionCanvas.addEventListener('touchmove', draw, {passive: false});
+            window.addEventListener('touchend', stopDrawing);
+
+            // Tools
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelector('.tool-btn.active').classList.remove('active');
+                    btn.classList.add('active');
+                    currentTool = btn.dataset.tool;
+                });
+            });
+
+            // Brush Size
+            sizeSlider.addEventListener('input', (e) => {
+                brushSize = e.target.value;
+                document.getElementById('sizeValue').textContent = brushSize;
+            });
+
+            customColorPicker.addEventListener('input', (e) => {
+                document.querySelectorAll('.color-swatch').forEach(c => c.classList.remove('active'));
+                currentColor = e.target.value;
+            });
+
+            // Tab Switching
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById('layers-tab').style.display = btn.dataset.tab === 'layers' ? 'flex' : 'none';
+                    document.getElementById('adjust-tab').style.display = btn.dataset.tab === 'adjust' ? 'flex' : 'none';
+                });
+            });
+
+            // Actions
+            document.getElementById('undoBtn').addEventListener('click', undo);
+            document.getElementById('redoBtn').addEventListener('click', redo);
+
+            // Flatten Export
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const exportCanvas = document.createElement('canvas');
+                exportCanvas.width = C_WIDTH; exportCanvas.height = C_HEIGHT;
+                const eCtx = exportCanvas.getContext('2d');
+                
+                // Draw layers from bottom to top
+                for(let i = layers.length-1; i >= 0; i--) {
+                    const l = layers[i];
+                    if(l.visible) {
+                        eCtx.globalAlpha = l.opacity / 100;
+                        // Apply any unbaked CSS filters for export
+                        eCtx.filter = l.canvas.style.filter !== '' ? l.canvas.style.filter : 'none';
+                        eCtx.drawImage(l.canvas, 0, 0);
+                    }
+                }
+
+                const link = document.createElement('a');
+                link.download = `VibePro_Export_${Date.now()}.png`;
+                link.href = exportCanvas.toDataURL('image/png');
+                link.click();
+                showToast("Flattened PNG exported");
+            });
+
+            // Keyboard Shortcuts
+            window.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    if (e.key === 'z') { e.preventDefault(); undo(); }
+                    else if (e.key === 'y') { e.preventDefault(); redo(); }
+                }
+                // Tool Shortcuts
+                const key = e.key.toLowerCase();
+                const toolMap = {'b':'brush', 'e':'eraser', 'l':'line', 'r':'rect', 'c':'circle'};
+                if(toolMap[key]) {
+                    document.querySelector(`.tool-btn[data-tool="${toolMap[key]}"]`).click();
+                }
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 2500);
+        }
+
+        // Boot system
+        init();
+
+    </script>
+</body>
+</html>

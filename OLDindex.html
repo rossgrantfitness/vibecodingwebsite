@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Augmented Developer | Portfolio</title>
+    
+    <!-- Fonts: Plus Jakarta Sans for a modern, sleek tech vibe -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#050505',
+                        surface: '#121212',
+                        surfaceLight: '#1E1E1E',
+                        primary: '#E5E5E5',
+                        secondary: '#A3A3A3',
+                        accent: '#3B82F6',
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #E5E5E5;
+            overflow-x: hidden;
+        }
+        
+        /* Reveal animations triggered by JS */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glassmorphism utilities */
+        .glass {
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-white selection:text-black">
+
+    <nav class="fixed top-0 w-full z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold tracking-tighter hover:text-white transition-colors">
+                <span class="text-secondary">AI</span>Architect.
+            </a>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-secondary">
+                <a href="#about" class="hover:text-primary transition-colors">Philosophy</a>
+                <a href="#capabilities" class="hover:text-primary transition-colors">Capabilities</a>
+                <a href="#work" class="hover:text-primary transition-colors">Work</a>
+            </div>
+            <a href="#contact" class="px-5 py-2.5 bg-white text-black text-sm font-semibold rounded-full hover:bg-gray-200 transition-all shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+                Let's Build
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+            <!-- Animated Background Gradients - CHANGED TO GREENS -->
+            <div class="absolute top-1/4 -left-10 w-96 h-96 bg-emerald-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+            <div class="absolute top-1/3 -right-10 w-96 h-96 bg-teal-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
+            <div class="absolute -bottom-8 left-1/2 w-96 h-96 bg-green-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-4000"></div>
+
+            <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+                <div class="inline-flex items-center space-x-2 bg-surfaceLight/50 rounded-full px-4 py-1.5 mb-8 border border-white/5 opacity-0 animate-fade-in-up" style="animation-delay: 0.1s;">
+                    <span class="relative flex h-2 w-2">
+                      <!-- Ping changed to green -->
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-xs font-medium text-secondary tracking-wide uppercase">Available for Hire (Remote / Austin, TX)</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[1.1] mb-8 opacity-0 animate-fade-in-up" style="animation-delay: 0.2s;">
+                    I don't just write code.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600">I direct it.</span>
+                </h1>
+                
+                <p class="mt-6 text-lg md:text-xl text-secondary max-w-2xl mx-auto font-light leading-relaxed opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
+                    I am an AI-Augmented Developer & Designer. By leveraging advanced prompt engineering, I build robust data pipelines, secure infrastructures, and stunning UI/UX at 10x the speed of traditional development.
+                </p>
+                
+                <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-in-up" style="animation-delay: 0.4s;">
+                    <a href="#work" class="px-8 py-3.5 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-all w-full sm:w-auto">
+                        View My Work
+                    </a>
+                    <a href="#contact" class="px-8 py-3.5 bg-surface border border-white/10 text-white font-medium rounded-full hover:bg-surfaceLight transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
+                        <i class="ph ph-envelope-simple text-lg"></i> Contact Me
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Capabilities Section -->
+        <section id="capabilities" class="py-32 relative">
+            <div class="max-w-7xl mx-auto px-6 md:px-12">
+                <div class="mb-20 max-w-3xl reveal">
+                    <h2 class="text-3xl md:text-5xl font-medium tracking-tight mb-6">Cross-Disciplinary Velocity.</h2>
+                    <p class="text-lg text-secondary leading-relaxed font-light">
+                        My lack of traditional bias is my greatest strength. I don't get bogged down in syntax; I focus on architecture, user experience, and business logic. I use AI to translate human intent into production-ready software across multiple domains.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- UX/UI -->
+                    <div class="glass p-8 rounded-3xl reveal transition-transform hover:-translate-y-2 duration-300 hover:border-white/20">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                            <i class="ph ph-bezier-curve"></i>
+                        </div>
+                        <h3 class="text-xl font-medium mb-3">UX/UI Design</h3>
+                        <p class="text-sm text-secondary font-light leading-relaxed">
+                            Crafting intuitive, pixel-perfect interfaces that prioritize user psychology and modern aesthetics.
+                        </p>
+                    </div>
+                    
+                    <!-- Engineering -->
+                    <div class="glass p-8 rounded-3xl reveal transition-transform hover:-translate-y-2 duration-300 hover:border-white/20" style="transition-delay: 100ms;">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                            <i class="ph ph-code"></i>
+                        </div>
+                        <h3 class="text-xl font-medium mb-3">Web Engineering</h3>
+                        <p class="text-sm text-secondary font-light leading-relaxed">
+                            Architecting responsive, high-performance web applications using modern frameworks and clean logic.
+                        </p>
+                    </div>
+
+                    <!-- Data -->
+                    <div class="glass p-8 rounded-3xl reveal transition-transform hover:-translate-y-2 duration-300 hover:border-white/20" style="transition-delay: 200ms;">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                            <i class="ph ph-database"></i>
+                        </div>
+                        <h3 class="text-xl font-medium mb-3">Data Solutions</h3>
+                        <p class="text-sm text-secondary font-light leading-relaxed">
+                            Structuring robust databases, integrating complex APIs, and building dynamic data visualization dashboards.
+                        </p>
+                    </div>
+
+                    <!-- Security -->
+                    <div class="glass p-8 rounded-3xl reveal transition-transform hover:-translate-y-2 duration-300 hover:border-white/20" style="transition-delay: 300ms;">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                            <i class="ph ph-shield-check"></i>
+                        </div>
+                        <h3 class="text-xl font-medium mb-3">Security Focus</h3>
+                        <p class="text-sm text-secondary font-light leading-relaxed">
+                            Implementing secure authentication, data encryption, and robust error handling to protect user data.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Section -->
+        <section id="work" class="py-32 bg-surface/30 border-y border-white/5 relative">
+            <div class="max-w-7xl mx-auto px-6 md:px-12">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
+                    <div class="max-w-2xl">
+                        <h2 class="text-3xl md:text-5xl font-medium tracking-tight mb-4">Selected Work.</h2>
+                        <p class="text-secondary font-light">Real applications, architected via advanced prompt engineering. Spanning creative tools, interactive media, and logic-driven dashboards.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Project 1: Logic/Local -->
+                    <a href="pulse.html" class="group block reveal">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-map-pin text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Logic</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Data Dash</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">ATX 78729 Pulse</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">A highly localized real estate and community event tracker for North Austin, utilizing mapping APIs and simulated live data streams.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 2: Creative / Tool -->
+                    <a href="vibe_paint.html" class="group block reveal" style="transition-delay: 100ms;">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-palette text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Creative</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Canvas API</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VibePaint Studio</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">A fully functional, browser-based digital painting application. Features custom brush engines, layer simulation, and local storage saves.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 3: Games -->
+                    <a href="synthwave_runner.html" class="group block reveal" style="transition-delay: 200ms;">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-game-controller text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Game Dev</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Physics</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">SynthWave Runner</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">A playable 2D arcade game built entirely in HTML5/JS. Features collision detection, particle effects, and a custom game loop architecture.</p>
+                        </div>
+                    </a>
+
+                     <!-- Project 4: Marketing -->
+                     <a href="#" class="group block reveal">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-megaphone text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Marketing</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">UI/UX</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">Campaign Forge</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">An interactive landing page builder mockup demonstrating deep understanding of conversion rate optimization (CRO) and modern web typography.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 5: Media / Audio -->
+                    <a href="vibe_sync.html" class="group block reveal" style="transition-delay: 100ms;">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-lime-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-wave-waveform text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Media</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Web Audio</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VibeSync Audio</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">An interactive, browser-based audio visualizer using the Web Audio API to create generative art reactive to user microphone input.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 6: Logic / Security -->
+                    <a href="vault_flow.html" class="group block reveal" style="transition-delay: 200ms;">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-shield-check text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Security</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Logic</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VaultFlow Auth</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">A frontend mock implementation of a secure, zero-knowledge proof authentication flow with biometric fallback UI states.</p>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-32 relative overflow-hidden">
+            <!-- Background glow -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full filter blur-[120px] pointer-events-none"></div>
+            
+            <div class="max-w-4xl mx-auto px-6 text-center relative z-10 reveal">
+                <h2 class="text-4xl md:text-6xl font-medium tracking-tight mb-8">Ready to move fast?</h2>
+                <p class="text-xl text-secondary font-light mb-12 max-w-2xl mx-auto">
+                    I am actively seeking roles in Data, Security, Engineering, or UX/UI. Based near Austin TX (78729), open to local, hybrid, or remote opportunities.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <a href="mailto:hello@example.com" class="px-8 py-4 bg-white text-black text-lg font-semibold rounded-full hover:bg-gray-200 transition-all w-full sm:w-auto shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+                        Get in Touch
+                    </a>
+                    <a href="#" class="px-8 py-4 glass border border-white/10 text-white text-lg font-medium rounded-full hover:bg-white/10 transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
+                        <i class="ph ph-linkedin-logo text-2xl"></i> Connect
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-10 border-t border-white/5 text-center text-sm text-secondary font-light">
+        <p>&copy; 2026 AI Architect Portfolio. Built with intent.</p>
+    </footer>
+
+    <script>
+        // Smooth reveal animation on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+
+            const revealOnScroll = () => {
+                const windowHeight = window.innerHeight;
+                const elementVisible = 100;
+
+                reveals.forEach((reveal) => {
+                    const elementTop = reveal.getBoundingClientRect().top;
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveal.classList.add('active');
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', revealOnScroll);
+            revealOnScroll(); // Trigger on load
+
+            // Navbar background change on scroll
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-surface/80', 'shadow-lg', 'shadow-black/50');
+                    navbar.classList.remove('glass');
+                } else {
+                    navbar.classList.remove('bg-surface/80', 'shadow-lg', 'shadow-black/50');
+                    navbar.classList.add('glass');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

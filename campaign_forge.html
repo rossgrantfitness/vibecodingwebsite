@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Forge | CRO Simulator</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        bgDark: '#050505',
+                        panel: '#121212',
+                        panelBorder: '#2a2a2a',
+                        olive: '#4A5D23',
+                        forest: '#2C4027',
+                        textMain: '#E0E0E0',
+                        textMuted: '#737373'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #050505; color: #E0E0E0; overflow: hidden; }
+        
+        .glass-panel {
+            background: rgba(18, 18, 18, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #4A5D23;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #4A5D23;
+        }
+
+        /* Preview Window Styling */
+        .preview-window {
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            transition: all 0.3s ease;
+        }
+        
+        /* Value transitions */
+        .val-update {
+            animation: flashGreen 0.5s ease;
+        }
+        @keyframes flashGreen {
+            0% { color: #4A5D23; transform: scale(1.1); }
+            100% { color: inherit; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="w-screen h-screen flex flex-col font-sans">
+
+    <nav class="h-14 border-b border-white/10 bg-panel flex items-center justify-between px-6 shrink-0 z-20">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-olive/20 flex items-center justify-center border border-olive/30">
+                <i class="ph ph-flask text-olive text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-sm font-semibold tracking-wide">Campaign<span class="text-textMuted font-light">Forge</span></h1>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-textMuted uppercase tracking-widest">Est. Conversion</span>
+                <span id="metric-cr" class="text-lg font-bold text-olive">2.4%</span>
+            </div>
+            <div class="w-px h-6 bg-white/10"></div>
+            <a href="index.html" class="flex items-center gap-2 text-xs text-textMuted hover:text-white transition-colors bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+                <i class="ph ph-arrow-left"></i> Exit
+            </a>
+        </div>
+    </nav>
+
+    <main class="flex-1 flex overflow-hidden">
+        
+        <!-- LEFT: Control Panel -->
+        <aside class="w-80 border-r border-white/10 bg-panel/50 flex flex-col h-full overflow-y-auto z-10 shrink-0">
+            <div class="p-5 border-b border-white/5">
+                <h2 class="text-xs font-semibold uppercase tracking-widest text-textMuted mb-1">A/B Parameters</h2>
+                <p class="text-[10px] text-textMuted">Adjust variables to optimize predicted engagement.</p>
+            </div>
+
+            <div class="p-5 flex flex-col gap-6">
+                
+                <!-- Headline Control -->
+                <div>
+                    <label class="block text-xs font-medium text-textMain mb-2">Primary Headline</label>
+                    <select id="ctrl-headline" class="w-full bg-bgDark border border-white/10 rounded-lg px-3 py-2 text-xs text-textMain focus:outline-none focus:border-olive transition-colors">
+                        <option value="default">Accelerate Your Workflow.</option>
+                        <option value="urgency">Stop Wasting Time. Build Faster.</option>
+                        <option value="social">Join 10,000+ Elite Developers.</option>
+                        <option value="question">Are You Ready to Scale?</option>
+                    </select>
+                </div>
+
+                <!-- Copy Length Control -->
+                <div>
+                    <label class="block text-xs font-medium text-textMain mb-2">Supporting Copy Length</label>
+                    <div class="flex bg-bgDark rounded-lg border border-white/10 overflow-hidden">
+                        <button class="flex-1 py-2 text-xs text-center border-r border-white/10 bg-white/10 text-white ctrl-copy" data-val="short">Punchy</button>
+                        <button class="flex-1 py-2 text-xs text-center text-textMuted hover:text-white transition-colors ctrl-copy" data-val="long">Detailed</button>
+                    </div>
+                </div>
+
+                <!-- CTA Color Control -->
+                <div>
+                    <label class="block text-xs font-medium text-textMain mb-2">CTA Button Color</label>
+                    <div class="flex gap-3">
+                        <button class="w-8 h-8 rounded-full bg-[#E0E0E0] border-2 border-white ring-2 ring-transparent transition-all ctrl-color active" data-color="white" data-hex="#E0E0E0" data-text="#000"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#4A5D23] border-2 border-transparent hover:border-white/50 ring-2 ring-transparent transition-all ctrl-color" data-color="olive" data-hex="#4A5D23" data-text="#fff"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#2C4027] border-2 border-transparent hover:border-white/50 ring-2 ring-transparent transition-all ctrl-color" data-color="forest" data-hex="#2C4027" data-text="#fff"></button>
+                        <button class="w-8 h-8 rounded-full bg-blue-600 border-2 border-transparent hover:border-white/50 ring-2 ring-transparent transition-all ctrl-color" data-color="blue" data-hex="#2563EB" data-text="#fff"></button>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-white/10 my-2"></div>
+
+                <!-- Toggles -->
+                <div>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-xs font-medium text-textMain group-hover:text-white transition-colors">Include Social Proof (Trust Badges)</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" id="ctrl-trust" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 border-panel appearance-none cursor-pointer transition-all duration-300 z-10 top-0 left-0"/>
+                            <label class="toggle-label block overflow-hidden h-5 rounded-full bg-white/20 cursor-pointer transition-colors duration-300"></label>
+                        </div>
+                    </label>
+                </div>
+
+                <div>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-xs font-medium text-textMain group-hover:text-white transition-colors">Dark Mode Theme</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" id="ctrl-theme" checked class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 border-panel appearance-none cursor-pointer transition-all duration-300 z-10 top-0 left-0"/>
+                            <label class="toggle-label block overflow-hidden h-5 rounded-full bg-white/20 cursor-pointer transition-colors duration-300"></label>
+                        </div>
+                    </label>
+                </div>
+
+            </div>
+        </aside>
+
+        <section class="flex-1 bg-bgDark relative flex flex-col p-8 overflow-y-auto items-center justify-start">
+            
+            <div class="w-full max-w-4xl flex justify-between items-end mb-4">
+                <span class="text-xs text-textMuted uppercase tracking-widest font-semibold">Live Render</span>
+                <div class="flex gap-4">
+                    <div class="text-right">
+                        <span class="block text-[10px] text-textMuted uppercase tracking-wider">Bounce Rate</span>
+                        <span id="metric-bounce" class="text-sm font-semibold">68.2%</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-[10px] text-textMuted uppercase tracking-wider">Time on Page</span>
+                        <span id="metric-time" class="text-sm font-semibold">0m 42s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The Landing Page Mockup -->
+            <div id="preview-container" class="preview-window w-full max-w-4xl bg-[#111] rounded-xl border border-white/10 overflow-hidden relative transition-colors duration-500 min-h-[500px] flex flex-col">
+                
+                <!-- Mockup Browser Bar -->
+                <div class="h-10 bg-black/40 border-b border-white/5 flex items-center px-4 gap-2 shrink-0">
+                    <div class="w-3 h-3 rounded-full bg-white/10"></div>
+                    <div class="w-3 h-3 rounded-full bg-white/10"></div>
+                    <div class="w-3 h-3 rounded-full bg-white/10"></div>
+                    <div class="mx-auto w-1/2 h-5 bg-white/5 rounded-md border border-white/5 flex items-center justify-center">
+                        <span class="text-[9px] text-white/30 tracking-widest">campaign-preview.local</span>
+                    </div>
+                </div>
+
+                <!-- Mockup Content -->
+                <div class="flex-1 p-12 flex flex-col items-center text-center relative z-10 transition-all duration-500">
+                    
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8">
+                        <span class="w-2 h-2 rounded-full bg-olive animate-pulse"></span>
+                        <span class="text-[10px] uppercase tracking-wider text-white/70">v2.0 Now Available</span>
+                    </div>
+
+                    <h1 id="preview-headline" class="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-white transition-all duration-300">
+                        Accelerate Your Workflow.
+                    </h1>
+                    
+                    <p id="preview-copy" class="text-lg text-white/60 max-w-2xl mb-10 transition-all duration-300">
+                        Deploy production-ready infrastructure in seconds. 
+                    </p>
+
+                    <button id="preview-cta" class="px-8 py-4 bg-[#E0E0E0] text-black font-semibold rounded-full hover:scale-105 transition-all shadow-lg text-sm mb-12">
+                        Start Free Trial
+                    </button>
+
+                    <!-- Trust Badges (Toggleable) -->
+                    <div id="preview-trust" class="w-full max-w-3xl border-t border-white/10 pt-8 mt-auto hidden opacity-0 transition-opacity duration-500">
+                        <p class="text-[10px] uppercase tracking-widest text-white/40 mb-4">Trusted by innovative teams</p>
+                        <div class="flex justify-center gap-8 opacity-50 grayscale">
+                            <i class="ph-fill ph-amazon-logo text-3xl text-white"></i>
+                            <i class="ph-fill ph-google-logo text-3xl text-white"></i>
+                            <i class="ph-fill ph-meta-logo text-3xl text-white"></i>
+                            <i class="ph-fill ph-stripe-logo text-3xl text-white"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // DOM Elements - Controls
+        const ctrlHeadline = document.getElementById('ctrl-headline');
+        const ctrlCopyBtns = document.querySelectorAll('.ctrl-copy');
+        const ctrlColorBtns = document.querySelectorAll('.ctrl-color');
+        const ctrlTrust = document.getElementById('ctrl-trust');
+        const ctrlTheme = document.getElementById('ctrl-theme');
+
+        // DOM Elements - Preview
+        const prevContainer = document.getElementById('preview-container');
+        const prevHeadline = document.getElementById('preview-headline');
+        const prevCopy = document.getElementById('preview-copy');
+        const prevCta = document.getElementById('preview-cta');
+        const prevTrust = document.getElementById('preview-trust');
+
+        // DOM Elements - Metrics
+        const metricCr = document.getElementById('metric-cr');
+        const metricBounce = document.getElementById('metric-bounce');
+        const metricTime = document.getElementById('metric-time');
+
+        // State Data
+        const copyTexts = {
+            short: "Deploy production-ready infrastructure in seconds.",
+            long: "Our zero-config deployment engine analyzes your codebase, provisions the optimal serverless architecture, and distributes it globally to 14 edge networks—all before your coffee gets cold."
+        };
+
+        const baseMetrics = { cr: 2.4, bounce: 68.2, time: 42 };
+
+        // --- Core Scoring Algorithm ---
+        // Proves understanding of basic logic weighting and state derivation
+        function calculateMetrics() {
+            let cr = baseMetrics.cr;
+            let bounce = baseMetrics.bounce;
+            let time = baseMetrics.time;
+
+            // Headline rules
+            const hVal = ctrlHeadline.value;
+            if (hVal === 'urgency') { cr += 0.8; bounce += 2.0; } // Urgency converts well but high bounce if not relevant
+            if (hVal === 'social') { cr += 0.5; bounce -= 5.0; time += 10; }
+            if (hVal === 'question') { cr -= 0.2; bounce += 1.5; } 
+
+            // Copy rules
+            const isLong = document.querySelector('.ctrl-copy.bg-white\\/10').dataset.val === 'long';
+            if (isLong) { cr -= 0.4; time += 25; } // Long text lowers direct CR but increases time
+            else { bounce += 2.5; }
+
+            // CTA Color Rules
+            const colorBtn = document.querySelector('.ctrl-color.active');
+            const cColor = colorBtn.dataset.color;
+            if (cColor === 'olive' || cColor === 'forest') cr += 0.6; // High contrast brand colors
+            if (cColor === 'blue') cr += 0.9; // Standard psychological trust color
+
+            // Trust Badges
+            if (ctrlTrust.checked) { cr += 1.2; bounce -= 8.5; time += 5; }
+
+            // Theme 
+            if (!ctrlTheme.checked) { cr -= 0.3; } // Light mode penalty for dev tools
+
+            updateMetricDisplay(cr, bounce, time);
+        }
+
+        function updateMetricDisplay(cr, bounce, time) {
+            // Add animation class
+            metricCr.classList.remove('val-update');
+            void metricCr.offsetWidth; // trigger reflow
+            metricCr.classList.add('val-update');
+
+            metricCr.innerText = cr.toFixed(1) + '%';
+            metricBounce.innerText = bounce.toFixed(1) + '%';
+            
+            const mins = Math.floor(time / 60);
+            const secs = Math.floor(time % 60);
+            metricTime.innerText = `${mins}m ${secs}s`;
+
+            // Color code CR
+            if(cr > 4.0) metricCr.className = "text-lg font-bold text-green-400 val-update";
+            else if(cr > 2.5) metricCr.className = "text-lg font-bold text-olive val-update";
+            else metricCr.className = "text-lg font-bold text-yellow-500 val-update";
+        }
+
+        // --- UI Updaters ---
+
+        ctrlHeadline.addEventListener('change', (e) => {
+            prevHeadline.style.opacity = 0;
+            setTimeout(() => {
+                prevHeadline.innerText = e.target.options[e.target.selectedIndex].text;
+                prevHeadline.style.opacity = 1;
+                calculateMetrics();
+            }, 300);
+        });
+
+        ctrlCopyBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // UI Toggle
+                ctrlCopyBtns.forEach(b => {
+                    b.classList.remove('bg-white/10', 'text-white');
+                    b.classList.add('text-textMuted');
+                });
+                e.target.classList.remove('text-textMuted');
+                e.target.classList.add('bg-white/10', 'text-white');
+
+                // Update Preview
+                const val = e.target.dataset.val;
+                prevCopy.style.opacity = 0;
+                setTimeout(() => {
+                    prevCopy.innerText = copyTexts[val];
+                    prevCopy.style.opacity = 1;
+                    calculateMetrics();
+                }, 300);
+            });
+        });
+
+        ctrlColorBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // UI Toggle
+                ctrlColorBtns.forEach(b => b.classList.remove('active', 'border-white'));
+                e.target.classList.add('active', 'border-white');
+
+                // Update Preview
+                prevCta.style.backgroundColor = e.target.dataset.hex;
+                prevCta.style.color = e.target.dataset.text;
+                calculateMetrics();
+            });
+        });
+
+        ctrlTrust.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                prevTrust.classList.remove('hidden');
+                setTimeout(() => prevTrust.classList.remove('opacity-0'), 50);
+            } else {
+                prevTrust.classList.add('opacity-0');
+                setTimeout(() => prevTrust.classList.add('hidden'), 500);
+            }
+            calculateMetrics();
+        });
+
+        ctrlTheme.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                // Dark
+                prevContainer.style.backgroundColor = '#111';
+                prevHeadline.style.color = 'white';
+                prevCopy.style.color = 'rgba(255,255,255,0.6)';
+            } else {
+                // Light
+                prevContainer.style.backgroundColor = '#f5f5f5';
+                prevHeadline.style.color = '#111';
+                prevCopy.style.color = 'rgba(0,0,0,0.6)';
+            }
+            calculateMetrics();
+        });
+
+        // Init
+        calculateMetrics();
+
+    </script>
+</body>
+</html>

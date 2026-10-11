@@ -7,11 +7,11 @@ One step per session. End each with "commit and push", then start the next sessi
 | Project | Built by | Status |
 | --- | --- | --- |
 | ATX 78729 Pulse (`pulse.html`) | — | Live |
-| Mousecapades (mouse platformer) | Claude | In development |
-| VibePaint Studio | Gemini | Coming soon |
-| Campaign Forge | Gemini | Coming soon |
-| VibeSync Audio | Gemini | Coming soon |
-| VaultFlow Auth | Gemini | Coming soon |
+| Mousecapades (`games/mousecapades/`) | Claude | In development (playable prototype) |
+| VibePaint Studio | Gemini | Live |
+| Campaign Forge | Gemini | Live |
+| VibeSync Audio | Gemini | Live |
+| VaultFlow Auth | Gemini | Live |
 
 ## Steps
 

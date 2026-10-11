@@ -9,6 +9,8 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
 
 - `index.html` — portfolio landing page. The "Selected Work" grid links to each project.
 - `pulse.html` — ATX 78729 Pulse dashboard (live).
+- `vibe_paint.html`, `vibe_sync.html`, `campaign_forge.html`, `vault_flow.html` — web apps built in Gemini (live). Leave these to the owner.
+- `OLDindex.html`, `newOLDindex.html` — the owner's backup copies of earlier landing pages. Leave them alone.
 - `games/mousecapades/` — the mouse-girl platformer (in development).
 - `synthwave_runner.html` — old arcade game, superseded by Mousecapades. Unlinked; delete once Mousecapades ships.
 - New web apps go at the repo root as `<name>.html` (single file) or in `<name>/index.html` if they need several files.
@@ -21,7 +23,8 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
 - Pin every CDN script to an exact version.
 - Every project page has a visible "← Back to Portfolio" link to `index.html`, including on mobile.
 - Project cards in `index.html`: a live project is an `<a href="...">` with a green "Live" badge; an
-  unbuilt one is a `<div class="... cursor-default">` with a "Coming soon" / "In development" badge.
+  unbuilt one is a `<div class="... cursor-default">` with a "Coming soon" badge; a playable
+  work-in-progress is an `<a>` with an "In development" badge.
   When a project ships, switch its card from `<div>` to `<a>` and change the badge.
 
 ## Game (`games/mousecapades/`)

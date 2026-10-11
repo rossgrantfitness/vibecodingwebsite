@@ -1,4 +1,4 @@
-import { TILE } from './config.js';
+import { TILE, PLAYER_H } from './config.js';
 
 export const EMPTY = 0;
 export const GROUND = 1;
@@ -104,6 +104,6 @@ export function buildTestLevel() {
   b.ground(185, 195);
   b.ground(206, 219);
   b.add('goal', 214, 14);
-  L.spawn = { x: 3 * TILE, y: 14 * TILE - 14 };
+  L.spawn = { x: 3 * TILE, y: 14 * TILE - PLAYER_H };
   return L;
 }

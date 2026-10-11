@@ -29,7 +29,7 @@ One step per session. End each with "commit and push", then start the next sessi
       drones (stomp; hold jump for a high bounce), cheese chips, item blocks, 3 Golden Cheeses, checkpoint,
       exit gate, HUD, death/respawn, title screen, pause, win screen with best time, Web Audio SFX.
       Still to do: a power-up (and the hit-to-shrink damage model that comes with it).
-- [ ] **4. Art + game feel** — mouse-girl animations, tileset, parallax dystopia background, particles,
+- [ ] **4. Art + game feel** — ~~mouse-girl animations~~ (sprite sheet in, v0.4), tileset, parallax dystopia background, particles,
       squash & stretch, screen shake, hit-stop, Web Audio SFX.
 - [ ] **5. Polish + ship** — ~~touch controls~~ (done in v2), music, itch.io release, switch the
       portfolio card to Live, delete `synthwave_runner.html`.

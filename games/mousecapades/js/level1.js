@@ -1,4 +1,4 @@
-import { TILE } from './config.js';
+import { TILE, PLAYER_H } from './config.js';
 import { Level, builder } from './level.js';
 
 // Sector 1: Gutter District. Roughly 2–3 minutes; a checkpoint near the middle.
@@ -94,6 +94,6 @@ export function buildLevel1() {
   b.chips(232, 6, 4, 2);
   b.add('goal', 242, G);
 
-  L.spawn = { x: 3 * TILE, y: G * TILE - 14 };
+  L.spawn = { x: 3 * TILE, y: G * TILE - PLAYER_H };
   return L;
 }

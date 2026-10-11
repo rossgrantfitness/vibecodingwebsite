@@ -1,9 +1,9 @@
-import { TILE } from './config.js';
+import { TILE, PLAYER_W, PLAYER_H, PLAYER_DUCK_H } from './config.js';
 import { Body } from './body.js';
 
-const W = 10;
-const STAND_H = 14;
-const DUCK_H = 9;
+const W = PLAYER_W;
+const STAND_H = PLAYER_H;
+const DUCK_H = PLAYER_DUCK_H;
 
 export class Player extends Body {
   constructor(level) {

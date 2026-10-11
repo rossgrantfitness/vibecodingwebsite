@@ -1,7 +1,7 @@
 // Homepage hero: the Mousecapades mouse running a tiny endless strip, using the game's own
 // sprite and font code. Click, tap or press Space/↑ on the stage to jump. Also hosts the
 // Konami-code easter egg (cheese rain).
-import { drawMouse } from '../../games/mousecapades/js/render.js';
+import { drawPlayer } from '../../games/mousecapades/js/render.js';
 import { makeSprites, blit } from '../../games/mousecapades/js/sprites.js';
 import { drawText } from '../../games/mousecapades/js/font.js';
 
@@ -21,7 +21,7 @@ if (canvas) {
   ctx.imageSmoothingEnabled = false;
   const city = skyline();
 
-  const mouse = { x: 40, y: FLOOR - 14, w: 10, h: 14, vx: 0, vy: 0, facing: 1, grounded: true, anim: 0, sx: 1, sy: 1, state: 'idle', ducking: false };
+  const mouse = { x: 40, y: FLOOR - 17, w: 10, h: 17, vx: 0, vy: 0, facing: 1, grounded: true, anim: 0, sx: 1, sy: 1, state: 'idle', ducking: false };
   const chips = [];
   const sparks = [];
   let score = 0;
@@ -113,7 +113,7 @@ if (canvas) {
     for (const c of chips) blit(ctx, sp.chip, c.x, c.y + Math.round(Math.sin((t + c.bob * 10) * 0.08) * 1.5));
     ctx.fillStyle = '#ffd95e';
     for (const s of sparks) ctx.fillRect(Math.round(s.x), Math.round(s.y), s.life > 8 ? 2 : 1, s.life > 8 ? 2 : 1);
-    drawMouse(ctx, { ...mouse, x: Math.round(mouse.x), y: Math.round(mouse.y) }, Math.round(mouse.x), Math.round(mouse.y), true);
+    drawPlayer(ctx, mouse, Math.round(mouse.x), Math.round(mouse.y), true, t);
 
     blit(ctx, sp.chip, 8, 8);
     drawText(ctx, `×${String(score).padStart(3, '0')}`, 20, 10);

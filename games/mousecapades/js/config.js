@@ -7,6 +7,11 @@ export const VIEW_W = 320;
 export const VIEW_H = 180;
 export const STEP = 1 / 60;
 
+// Player hitbox (the sprite's ear tips overhang the top a little).
+export const PLAYER_W = 10;
+export const PLAYER_H = 17;
+export const PLAYER_DUCK_H = 11;
+
 export const DEFAULTS = {
   // Ground
   walkSpeed: 1.5,

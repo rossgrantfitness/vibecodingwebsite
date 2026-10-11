@@ -4,6 +4,7 @@ import { drawText } from './font.js';
 import { makeSprites, blit } from './sprites.js';
 import { isMuted } from './audio.js';
 import { Drone } from './entities.js';
+import { spriteReady, pickFrame, drawFrame, portrait } from './mouse-sprite.js';
 
 const lerp = (a, b, t) => a + (b - a) * t;
 const blink = (frame, on = 40, period = 60) => frame % period < on;
@@ -96,7 +97,7 @@ export class Renderer {
     if (game.state !== 'title') {
       const x = Math.round(lerp(p.px, p.x + p.rx, alpha)) - cx;
       const y = Math.round(lerp(p.py, p.y + p.ry, alpha)) - cy;
-      drawMouse(ctx, p, x, y, opts.juice);
+      drawPlayer(ctx, p, x, y, opts.juice, game.frame);
       if (opts.hitboxes) {
         outline(ctx, x, y, p.w, p.h, '#39ff88');
         for (const e of game.enemies) if (e.alive) outline(ctx, Math.round(e.x - cx), Math.round(e.y - cy), e.w, e.h, '#ff3b6b');
@@ -295,11 +296,17 @@ export class Renderer {
     ctx.restore();
     drawText(ctx, 'ONE SMALL MOUSE. ONE BIG NEON CITY.', VIEW_W / 2, y + 31, { color: '#cfc6e8', align: 'center' });
 
-    // Big portrait of the mouse, drawn at 1× then scaled 3×.
-    const pc = this.portrait.getContext('2d');
-    pc.clearRect(0, 0, 24, 24);
-    drawMouse(pc, { w: 10, h: 14, facing: 1, state: 'walk', anim: f * 0.12, grounded: true, vx: 0, sx: 1, sy: 1 }, 7, 7, false);
-    ctx.drawImage(this.portrait, VIEW_W / 2 - 36, 72, 72, 72);
+    // Big portrait of the mouse at 2×, bobbing gently.
+    if (portrait.complete && portrait.naturalWidth) {
+      const pw = portrait.naturalWidth * 2;
+      const ph = portrait.naturalHeight * 2;
+      ctx.drawImage(portrait, Math.round(VIEW_W / 2 - pw / 2), 140 - ph + Math.round(Math.sin(f / 24)), pw, ph);
+    } else {
+      const pc = this.portrait.getContext('2d');
+      pc.clearRect(0, 0, 24, 24);
+      drawMouse(pc, { w: 10, h: 14, facing: 1, state: 'walk', anim: f * 0.12, grounded: true, vx: 0, sx: 1, sy: 1 }, 7, 7, false);
+      ctx.drawImage(this.portrait, VIEW_W / 2 - 36, 72, 72, 72);
+    }
 
     if (blink(f)) drawText(ctx, 'PRESS JUMP TO START', VIEW_W / 2, 146, { color: '#ffffff', align: 'center' });
     drawText(ctx, 'ARROWS MOVE  Z JUMP  X RUN  ENTER PAUSE  M SOUND', VIEW_W / 2, 160, { color: '#8c84a6', align: 'center' });
@@ -336,6 +343,14 @@ export class Renderer {
     drawText(ctx, 'PAUSED', VIEW_W / 2, 62, { scale: 2, big: true, align: 'center' });
     drawText(ctx, `ENTER RESUME   R RESTART   M SOUND ${isMuted() ? 'OFF' : 'ON'}`, VIEW_W / 2, 96, { color: '#cfc6e8', align: 'center' });
   }
+}
+
+// The player: the sprite-sheet character once it has loaded, the code-drawn mouse before that.
+// (x, y) is the top-left of the hitbox on screen; the sprite stands on its bottom edge.
+export function drawPlayer(ctx, p, x, y, juice, clock) {
+  if (!spriteReady()) return drawMouse(ctx, p, x, y, juice);
+  const [anim, i] = pickFrame(p, clock);
+  drawFrame(ctx, anim, i, x + p.w / 2, y + p.h, p.facing < 0, juice ? p.sx : 1, juice ? p.sy : 1);
 }
 
 // Placeholder mouse: body, round ears, tail, eye, scarf. Squash/stretch scales around the feet.

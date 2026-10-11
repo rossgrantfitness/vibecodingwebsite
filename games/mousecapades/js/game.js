@@ -1,4 +1,4 @@
-import { T, TILE, VIEW_W, VIEW_H } from './config.js';
+import { T, TILE, VIEW_W, VIEW_H, PLAYER_H } from './config.js';
 import { BLOCK, USED, METAL } from './level.js';
 import { Player } from './player.js';
 import { Camera } from './camera.js';
@@ -227,7 +227,7 @@ export class Game {
     const cp = this.checkpoint;
     if (cp && !cp.active && p.x + p.w > cp.x) {
       cp.active = true;
-      this.respawnAt = { x: cp.x - 4, y: cp.groundY - 14 };
+      this.respawnAt = { x: cp.x - 4, y: cp.groundY - PLAYER_H };
       this.fx.sparkle(cp.x + 2, cp.y + 4, '#3df0ff', 10);
       sfx('checkpoint');
     }

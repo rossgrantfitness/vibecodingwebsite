@@ -31,7 +31,9 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
 
 - Plain JS ES modules, no bundler, `<canvas>` rendering at a low internal resolution scaled up with
   nearest-neighbour (pixel-perfect). Fixed 60 Hz simulation timestep, decoupled from rendering.
-- Keep modules small and focused (input, physics, level, entities, render, audio) so changes are targeted edits.
+- Keep modules small and focused so changes are targeted edits: `game.js` (state machine, collisions, scoring),
+  `player.js` / `entities.js` (built on `body.js` tile collision), `level.js` + `level1.js` (tiles and layout),
+  `render.js` / `sprites.js` / `font.js` (drawing), `camera.js`, `input.js`, `audio.js`, `fx.js`, `debug.js`.
 - All movement tuning lives in one constants object, editable live from the in-game debug panel (`~`).
 - ES modules don't load from `file://` — test with `python3 -m http.server` from the repo root.
 - Original art and audio only (generated in code or CC0 assets). No Nintendo assets.

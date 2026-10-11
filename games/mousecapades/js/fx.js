@@ -1,4 +1,4 @@
-// Dust and sparks. Purely cosmetic; driven by events the player emits.
+// Dust and sparks. Purely cosmetic; driven by events from the player and the game.
 
 export class FX {
   constructor() {
@@ -22,6 +22,20 @@ export class FX {
       case 'bump':
         for (let i = 0; i < 4; i++) this.add(fx, p.y, (i - 1.5) * 0.6, -Math.random() * 0.8, 10, '#ffe27a');
         break;
+      case 'stomp':
+        for (let i = 0; i < 6; i++) {
+          const a = Math.PI + (i / 5) * Math.PI;
+          this.add(fx, p.y + 2, Math.cos(a) * 1.4, Math.sin(a) * 1.2, 12, '#ffffff');
+        }
+        break;
+    }
+  }
+
+  sparkle(x, y, color, n) {
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const s = 0.8 + Math.random() * 0.8;
+      this.add(x, y, Math.cos(a) * s, Math.sin(a) * s - 0.3, 14 + (Math.random() * 8 | 0), color);
     }
   }
 

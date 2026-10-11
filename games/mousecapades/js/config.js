@@ -29,6 +29,7 @@ export const DEFAULTS = {
   apexThreshold: 0.6,
   apexGravityMult: 0.6,
   maxFallSpeed: 4.5,
+  stompBounce: 5.0,
   // Assists
   coyoteFrames: 6,
   jumpBufferFrames: 6,
@@ -64,6 +65,7 @@ export const PARAMS = [
     ['apexThreshold', 0, 2, 0.05, 'Apex hang window (|vy| <)'],
     ['apexGravityMult', 0.1, 1, 0.05, 'Apex hang gravity ×'],
     ['maxFallSpeed', 1, 8, 0.1, 'Max fall speed'],
+    ['stompBounce', 1, 8, 0.05, 'Stomp bounce speed'],
   ]},
   { group: 'Assists', items: [
     ['coyoteFrames', 0, 15, 1, 'Coyote time (frames)'],

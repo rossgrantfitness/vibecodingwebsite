@@ -24,11 +24,13 @@ One step per session. End each with "commit and push", then start the next sessi
       Test course, left to right: low ceiling + lone block (head bumps, corner nudge) → gaps of 3 / 5 / 7
       tiles → stairs → pillars 3 / 4 / 5 tiles tall → one-way platforms up to a high ledge → long runway
       to fill the P-meter → 9- and 10-tile sprint gaps.
-- [ ] **3. Level 1 + gameplay** — 2–3 min level, stompable enemies, collectibles, item blocks,
-      power-ups, checkpoint, goal, HUD, death/respawn.
+- [x] **3. Level 1 + gameplay** — Sector 1 (Gutter District): Scuttlebots (stomp), Spikebots (avoid),
+      drones (stomp; hold jump for a high bounce), cheese chips, item blocks, 3 Golden Cheeses, checkpoint,
+      exit gate, HUD, death/respawn, title screen, pause, win screen with best time, Web Audio SFX.
+      Still to do: a power-up (and the hit-to-shrink damage model that comes with it).
 - [ ] **4. Art + game feel** — mouse-girl animations, tileset, parallax dystopia background, particles,
       squash & stretch, screen shake, hit-stop, Web Audio SFX.
-- [ ] **5. Polish + ship** — title screen, pause, results screen, touch controls, back link, switch the
+- [ ] **5. Polish + ship** — touch controls, music, back link, switch the
       portfolio card to Live, delete `synthwave_runner.html`.
 - [ ] **6. Final site pass** — real card screenshots, social preview/SEO meta, mobile check, GitHub Pages deploy.
 
@@ -36,6 +38,7 @@ One step per session. End each with "commit and push", then start the next sessi
 
 ES modules don't load from `file://`. From the repo root run `python3 -m http.server`, then open
 <http://localhost:8000/games/mousecapades/>. Press `` ` `` (or the Tuning button) for the tuning panel.
+Add `?play` to skip the title screen, or `?level=test` for the movement test course.
 
 ## Still needed from you
 

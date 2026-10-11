@@ -1,26 +1,20 @@
 import { TILE } from './config.js';
+import { Body } from './body.js';
 
 const W = 10;
 const STAND_H = 14;
 const DUCK_H = 9;
 
-// Position is an integer pixel (top-left of the hitbox) plus a sub-pixel remainder, and movement
-// steps one pixel at a time against the tilemap, so collisions are exact at any speed.
-export class Player {
+export class Player extends Body {
   constructor(level) {
-    this.level = level;
+    super(level, level.spawn.x, level.spawn.y, W, STAND_H);
     this.reset(level.spawn.x, level.spawn.y);
   }
 
   reset(x, y) {
+    this.place(x, y);
     this.w = W;
     this.h = STAND_H;
-    this.x = x;
-    this.y = y;
-    this.rx = 0;
-    this.ry = 0;
-    this.px = x; // previous-step position, for render interpolation
-    this.py = y;
     this.vx = 0;
     this.vy = 0;
     this.facing = 1;
@@ -34,15 +28,12 @@ export class Player {
     this.anim = 0;
     this.sx = 1; // squash & stretch, visual only
     this.sy = 1;
-    this.safeX = x;
-    this.safeY = y;
     this.grounded = this.onGround();
   }
 
   update(input, T, emit) {
     const L = this.level;
-    this.px = this.x + this.rx;
-    this.py = this.y + this.ry;
+    this.savePrev();
     const dir = (input.held.right ? 1 : 0) - (input.held.left ? 1 : 0);
 
     // Duck starts only on the ground and ends when down is released and there's headroom.
@@ -114,13 +105,13 @@ export class Player {
     }
 
     // --- Move and collide.
-    this.moveX(this.vx);
+    if (this.moveX(this.vx)) this.vx = 0;
     const fall = this.vy;
     if (this.moveY(this.vy, T.cornerCorrection)) {
       this.vy = 0;
       if (fall < 0) {
         this.jumpHeld = false;
-        emit('bump', this);
+        emit('bump', this, this.headTile());
       }
     }
 
@@ -135,12 +126,6 @@ export class Player {
         this.sy = 1 - 0.3 * k;
         emit('land', this, fall);
       }
-      // Remember the last spot with solid footing under both edges, for respawning after a fall.
-      const row = (this.y + this.h) / TILE;
-      if (!this.ducking && L.get(Math.floor(this.x / TILE), row) && L.get(Math.floor((this.x + this.w - 1) / TILE), row)) {
-        this.safeX = this.x;
-        this.safeY = this.y;
-      }
     }
 
     // --- Presentation state.
@@ -154,6 +139,26 @@ export class Player {
     else if (this.pMeter >= T.pMeterFrames && absVx > T.runSpeed) this.state = 'sprint';
     else this.state = absVx > T.walkSpeed + 0.05 ? 'run' : 'walk';
     if (this.grounded && absVx >= 0.05) this.anim += 0.08 + absVx * 0.07;
+    else if (!this.grounded) this.anim += 0.1;
+  }
+
+  // Bounce off a stomped enemy. Holding jump gives the higher, floatier bounce.
+  bounce(T, held) {
+    this.vy = -T.stompBounce;
+    this.jumpHeld = held;
+    this.grounded = false;
+    this.coyote = 0;
+    this.sx = 0.8;
+    this.sy = 1.25;
+  }
+
+  // The tile the player's head just hit: the one above her centre, else whichever corner hit.
+  headTile() {
+    const r = Math.floor((this.y - 1) / TILE);
+    const cx = Math.floor((this.x + this.w / 2) / TILE);
+    if (this.level.isSolid(cx, r)) return { c: cx, r };
+    const cl = Math.floor(this.x / TILE);
+    return { c: this.level.isSolid(cl, r) ? cl : Math.floor((this.x + this.w - 1) / TILE), r };
   }
 
   setDuck(on) {
@@ -167,63 +172,5 @@ export class Player {
       this.h = STAND_H;
       this.ducking = false;
     }
-  }
-
-  onGround() {
-    return this.level.solidAt(this.x, this.y + 1, this.w, this.h) || this.level.semiBelow(this.x, this.y, this.w, this.h);
-  }
-
-  moveX(amount) {
-    this.rx += amount;
-    let move = Math.round(this.rx);
-    if (move === 0) return false;
-    this.rx -= move;
-    const s = Math.sign(move);
-    while (move !== 0) {
-      if (this.level.solidAt(this.x + s, this.y, this.w, this.h)) {
-        this.vx = 0;
-        this.rx = 0;
-        return true;
-      }
-      this.x += s;
-      move -= s;
-    }
-    return false;
-  }
-
-  // Returns true if blocked. Rising into a block corner nudges sideways up to `corner` px instead.
-  moveY(amount, corner) {
-    const L = this.level;
-    this.ry += amount;
-    let move = Math.round(this.ry);
-    if (move === 0) return false;
-    this.ry -= move;
-    const s = Math.sign(move);
-    while (move !== 0) {
-      const blocked = s > 0
-        ? L.solidAt(this.x, this.y + 1, this.w, this.h) || L.semiBelow(this.x, this.y, this.w, this.h)
-        : L.solidAt(this.x, this.y - 1, this.w, this.h) && !this.cornerNudge(corner);
-      if (blocked) {
-        this.ry = 0;
-        return true;
-      }
-      this.y += s;
-      move -= s;
-    }
-    return false;
-  }
-
-  cornerNudge(max) {
-    const L = this.level;
-    for (let d = 1; d <= max; d++) {
-      for (const dx of [d, -d]) {
-        if (!L.solidAt(this.x + dx, this.y - 1, this.w, this.h) && !L.solidAt(this.x + dx, this.y, this.w, this.h)) {
-          this.x += dx;
-          this.rx = 0;
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }

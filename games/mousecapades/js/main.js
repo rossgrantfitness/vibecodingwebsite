@@ -1,54 +1,42 @@
-import { T, STEP, VIEW_W, VIEW_H } from './config.js';
+import { STEP, VIEW_W, VIEW_H } from './config.js';
 import { Input, isFormField } from './input.js';
 import { buildTestLevel } from './level.js';
-import { Player } from './player.js';
-import { Camera } from './camera.js';
-import { FX } from './fx.js';
+import { buildLevel1 } from './level1.js';
+import { Game } from './game.js';
 import { Renderer } from './render.js';
 import { createDebugPanel } from './debug.js';
+import { unlockAudio, toggleMute } from './audio.js';
+
+// ?level=test opens the movement test course; ?play skips the title screen.
+const params = new URLSearchParams(location.search);
+const testCourse = params.get('level') === 'test';
+const game = new Game(testCourse ? buildTestLevel : buildLevel1, {
+  skipTitle: testCourse || params.has('play'),
+  trackBest: !testCourse,
+});
 
 const canvas = document.getElementById('game');
-const level = buildTestLevel();
-const player = new Player(level);
-const camera = new Camera(level);
-const fx = new FX();
 const input = new Input();
-const game = {
-  T, level, player, camera, fx, input,
-  dead: 0,
-  opts: { hitboxes: false, juice: true, timeScale: 1, paused: false },
-};
-const renderer = new Renderer(canvas, level);
+const renderer = new Renderer(canvas);
 const debug = createDebugPanel(game);
-const emit = (type, p, arg) => fx.emit(type, p, arg);
-camera.snap(player, T);
-
-function respawn(x, y) {
-  player.reset(x, y);
-  camera.snap(player, T);
-  game.dead = 0;
-}
 
 // One fixed 60 Hz simulation step.
-function step() {
+function step(force = false) {
   input.update();
-  if (game.dead) {
-    if (--game.dead === 0) respawn(player.safeX, player.safeY);
-  } else {
-    player.update(input, T, emit);
-    if (player.y > level.height + 32) game.dead = 40;
-    camera.update(player, T);
-  }
-  fx.update();
+  game.step(input, force);
 }
 
 window.addEventListener('keydown', (e) => {
+  unlockAudio();
   if (isFormField(e.target)) return;
   if (e.code === 'Backquote') debug.toggle();
-  else if (e.code === 'KeyR') respawn(level.spawn.x, level.spawn.y);
-  else if (e.code === 'KeyP') game.opts.paused = !game.opts.paused;
-  else if (e.code === 'KeyN' && game.opts.paused) step();
+  else if (e.code === 'KeyR') game.restart();
+  else if (e.code === 'KeyM') toggleMute();
+  else if (e.code === 'KeyP' && game.state === 'play') game.paused = !game.paused;
+  else if (e.code === 'KeyN' && game.paused) step(true);
 });
+window.addEventListener('pointerdown', unlockAudio);
+window.addEventListener('blur', () => { if (game.state === 'play') game.paused = true; });
 
 // Fixed timestep with render interpolation: physics is identical at 60, 120 or 144 Hz.
 let last = performance.now();
@@ -57,11 +45,11 @@ let frames = 0, fps = 0, fpsTime = last;
 function frame(now) {
   const dt = Math.min(0.1, (now - last) / 1000);
   last = now;
-  if (!game.opts.paused) acc += dt * game.opts.timeScale;
+  acc += dt * game.opts.timeScale;
   let steps = 0;
   while (acc >= STEP && steps < 5) { step(); acc -= STEP; steps++; }
   if (steps === 5) acc = 0;
-  renderer.draw(game, acc / STEP);
+  renderer.draw(game, game.paused ? 1 : acc / STEP);
 
   frames++;
   if (now - fpsTime >= 500) { fps = Math.round((frames * 1000) / (now - fpsTime)); frames = 0; fpsTime = now; }

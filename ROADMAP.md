@@ -8,7 +8,7 @@ One step per session. End each with "commit and push", then start the next sessi
 | --- | --- | --- |
 | ATX Pulse (`pulse.html`) | — | Live (sample data) |
 | Mousecapades (`games/mousecapades/`) | Claude | In development (playable prototype) |
-| VibePaint Studio | Gemini | Live |
+| VibePaint v2 (`vibepaint/`, Photoshop lite) | Claude (v1: Gemini) | Live |
 | Campaign Forge | Gemini | Live |
 | VibeSync Audio | Gemini | Live |
 | Site redesign (homepage + 3 case studies) | Claude | Live |

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VibePaint — case study · Ross Grant</title>
-    <meta name="description" content="Interface design for a layered browser painting app that keeps the canvas front and center.">
+    <meta name="description" content="A Photoshop-lite browser image editor: layers, blend modes, selections, curves and filters, in a quiet dark interface.">
     <meta property="og:title" content="VibePaint — case study · Ross Grant">
-    <meta property="og:description" content="Interface design for a layered browser painting app that keeps the canvas front and center.">
+    <meta property="og:description" content="A Photoshop-lite browser image editor: layers, blend modes, selections, curves and filters, in a quiet dark interface.">
     <meta property="og:image" content="https://rossgrantfitness.github.io/vibecodingwebsite/assets/img/og.png">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
@@ -33,55 +33,86 @@
         <section class="cs-hero">
             <a href="../index.html#work">← Back to all work</a>
             <h1>VibePaint</h1>
-            <p class="lede">A layered painting app in the browser, designed so the tools step back and the artwork comes forward.</p>
+            <p class="lede">A Photoshop-lite image editor in the browser: layers, selections, brushes, adjustments and filters, in an interface that steps back so the artwork comes forward.</p>
             <div class="btn-row" style="margin-top:var(--s4)">
-                <a class="btn btn-primary" href="../vibe_paint.html">Open VibePaint</a>
+                <a class="btn btn-primary" href="../vibepaint/">Open VibePaint</a>
             </div>
             <dl class="cs-meta">
-                <div><dt>Role</dt><dd>Interface design, AI-directed build</dd></div>
-                <div><dt>Status</dt><dd>Working prototype</dd></div>
-                <div><dt>Built with</dt><dd>HTML, Canvas, Tailwind, Gemini</dd></div>
+                <div><dt>Role</dt><dd>Product direction, interface design, AI-directed build</dd></div>
+                <div><dt>Status</dt><dd>v2, working prototype</dd></div>
+                <div><dt>Built with</dt><dd>HTML, Canvas 2D, JavaScript modules, Claude</dd></div>
                 <div><dt>Best on</dt><dd>Desktop, mouse or pen</dd></div>
             </dl>
             <div class="glance">
-                <div><strong>Result</strong>A working layered paint app: five tools, layers with opacity, four filters, 20-step undo and PNG export.</div>
-                <div><strong>My part</strong>Layout, palette, tool set and interaction details, directed and reviewed through each build pass.</div>
-                <div><strong>Design idea</strong>The interface stays dark and quiet so the painting is always the brightest thing on screen.</div>
+                <div><strong>Result</strong>21 tools, layers with 16 blend modes, 14 adjustments, 18 filters, a 60-step history and pen pressure. It runs entirely in the browser, with no sign-up and no uploads.</div>
+                <div><strong>My part</strong>Set the scope ("Photoshop lite"), carried the v1 look forward, and tested and reviewed each tool against how Photoshop and Photopea behave.</div>
+                <div><strong>Proof</strong>Open a photo, or play with it right here on this page. Your work autosaves in your own browser.</div>
             </div>
             <p class="updated">Last updated October 2026</p>
         </section>
 
-        <figure class="cs-cover">
-            <img src="../assets/img/work/vibepaint.webp" width="1200" height="750" alt="VibePaint: rolling olive and sage brush strokes on a dark canvas, with a slim tool rail on the left and a floating layers panel on the right.">
+        <figure class="cs-cover embed" data-embed="../vibepaint/" data-embed-title="VibePaint image editor">
+            <img src="../assets/img/work/vibepaint.webp" width="1200" height="750" alt="VibePaint: a pixel-art mouse and a glowing sun over a purple-to-gold sky gradient, with a tool rail on the left and color, layers and history panels on the right.">
+            <button class="embed-play" type="button">▶ Try it here</button>
         </figure>
 
         <article class="prose">
             <h2>The goal</h2>
-            <p>Most browser paint tools bury the canvas under toolbars. I wanted the opposite: a calm, dark workspace where the painting is the brightest thing on screen and every control is one reach away.</p>
+            <p>Version 1 was a simple layered paint app: five tools, four filters and a 20-step undo. It looked right, but it couldn't do real work. For version 2 the brief was a "Photoshop lite": the tools people actually reach for in Photoshop, Photopea or GIMP, working the way their hands already expect, in a single browser tab.</p>
+            <p>The visual idea from v1 stayed: a dark, quiet interface with a single olive accent, so the painting is always the brightest thing on screen.</p>
+
+            <h2>What's in it</h2>
+            <ul>
+                <li><strong>Painting:</strong> brush, pencil, eraser, clone stamp, smudge, blur/sharpen and dodge/burn. Brushes have size, hardness, opacity, flow, spacing and smoothing, and respond to pen pressure.</li>
+                <li><strong>Selections:</strong> rectangle, ellipse, lasso, polygonal lasso and magic wand, with add/subtract/intersect, feather, expand/contract and marching ants. Every filter respects the selection.</li>
+                <li><strong>Layers:</strong> 16 blend modes, opacity, lock transparency, duplicate, merge, flatten and "layer via copy".</li>
+                <li><strong>Transform:</strong> move, free transform with handles, crop, rotate and flip, and image and canvas size.</li>
+                <li><strong>Color:</strong> Levels, Curves, Hue/Saturation, Color Balance, Black &amp; White, Gradient Map and more, each with a live preview.</li>
+                <li><strong>Filters:</strong> blurs, Unsharp Mask, noise, mosaic, halftone, emboss, distortions such as Twirl and Wave, and Clouds.</li>
+                <li><strong>Files:</strong> open or drop images, paste from the clipboard, export PNG, JPEG or WebP, and save the layered project to reopen later.</li>
+            </ul>
+
+            <figure class="figure">
+                <img src="../assets/img/work/vibepaint-curves.webp" width="1200" height="750" loading="lazy" alt="The Curves dialog open over the artwork, with an S-shaped curve and a histogram behind it.">
+                <figcaption>Curves, with the histogram behind the curve and a live preview on the canvas.</figcaption>
+            </figure>
 
             <h2>Key design decisions</h2>
-            <h3>1. The canvas gets the room</h3>
-            <p>Tools live in a narrow rail on the left, and layers float in a panel on the right. Everything else is canvas. The panel is translucent, so you never lose track of the painting underneath it.</p>
+            <h3>1. Borrow the muscle memory</h3>
+            <p>People who edit images already know B for brush, M for marquee, Ctrl+M for Curves and Alt+Backspace to fill. VibePaint uses the same shortcuts and modifiers: Shift adds to a selection, Alt subtracts, and Shift snaps lines to 45°. Hover any tool to see its shortcut. There's also a full list under Help.</p>
 
-            <h3>2. A palette that recedes</h3>
-            <p>The interface is near-black with a single olive accent for the active tool and layer. The swatches run from light to dark and then through a set of earthy greens, so the defaults already sit well together.</p>
+            <h3>2. Preview everything, commit once</h3>
+            <p>Every adjustment and filter previews live on the canvas while you drag its sliders, and nothing touches your pixels until you press OK. Cancel always gets you back to exactly where you were.</p>
 
-            <h3>3. Shortcuts where artists expect them</h3>
-            <p>Brush (B), Eraser (E), Line (L), Rectangle (R), Circle (C), plus Undo and Redo with Ctrl+Z and Ctrl+Y. Every shortcut is shown in the tool's tooltip, so you learn them just by hovering.</p>
+            <h3>3. One options bar, not a dozen panels</h3>
+            <p>Each tool's settings sit in a single bar above the canvas and change with the tool. Color, layers and history stack in one column on the right. On a narrow screen they fold away into a drawer.</p>
 
-            <h3>4. Layers and adjustments, kept simple</h3>
-            <p>Layers can be added, hidden and faded with an opacity slider. The Adjust tab offers brightness, contrast, grayscale and blur, and "Bake filters to layer" commits them when you're happy. Undo keeps the last 20 steps. When you're done, Export PNG saves the result.</p>
-            <!-- TODO(Ross): add early sketches of the panel layout and a before/after of the toolbar. -->
+            <h3>4. Nothing leaves your machine</h3>
+            <p>Images are opened and edited locally, and autosave writes to your own browser's storage. There's no account and no upload, so it's safe to open a personal photo.</p>
+            <!-- TODO(Ross): add your own call here: one thing you changed after trying it with a pen or on a real photo. -->
+
+            <h2>What broke, and how it got fixed</h2>
+            <ul>
+                <li><strong>Shortcuts that silently vanished.</strong> Each tool stored its shortcut letter and its keyboard handler under the same name, so the handler overwrote the letter and the shortcut stopped showing. Renaming the handler fixed it.</li>
+                <li><strong>A "drop image here" overlay that never left.</strong> A style rule overrode the browser's "hidden" flag, so the hint covered the canvas permanently. One extra rule fixed it.</li>
+                <li><strong>A phone layout wider than the phone.</strong> The tool rail and the menu pushed the page out to 466px on a 390px screen, and the menu covered the panel button. The layout now shrinks to fit, the menu scrolls sideways, and the panels open as a drawer.</li>
+            </ul>
 
             <h2>Working with AI</h2>
-            <p>VibePaint was built with Gemini from my design direction: the layout, palette and tool set came first, then rounds of review on spacing, states and shortcuts.</p>
+            <p>Version 1 was built with Gemini from my design direction. For version 2 I set the scope and the reference point (Photoshop, Photopea, GIMP), and Claude wrote the code as a set of small modules. My job was testing: does this feel like the tools I know, is anything confusing, what's missing? Everything was also checked with scripted browser tests that paint, select, transform, filter, undo and export.</p>
             <!-- TODO(Ross): paste one prompt that worked and one that didn't, with a line on what you changed. -->
+
+            <h2>Version history</h2>
+            <ul class="versions">
+                <li><strong>v1: Paint app.</strong> Five tools, layers with opacity, four filters, 20-step undo, PNG export. Built with Gemini.</li>
+                <li><strong>v2: Photoshop lite.</strong> Rebuilt from scratch: 21 tools, blend modes, selections, 14 adjustments and 18 filters with live preview, pen pressure, a history panel, project files and autosave.</li>
+            </ul>
 
             <h2>What's next</h2>
             <ul>
-                <li>Pressure-sensitive brushes for pen tablets.</li>
-                <li>Drag-to-reorder layers and blend modes.</li>
-                <li>A touch-friendly layout for tablets.</li>
+                <li>Layer masks and adjustment layers, so edits stay non-destructive.</li>
+                <li>Editable text layers (text is flattened to pixels once placed).</li>
+                <li>A tablet-first layout.</li>
             </ul>
 
             <div class="cs-next">

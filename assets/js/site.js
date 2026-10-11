@@ -64,7 +64,7 @@
     btn.addEventListener('click', () => {
       const frame = document.createElement('iframe');
       frame.src = fig.dataset.embed;
-      frame.title = 'Playable game';
+      frame.title = fig.dataset.embedTitle || 'Playable game';
       frame.allow = 'gamepad; fullscreen; autoplay';
       fig.replaceChildren(frame);
       frame.addEventListener('load', () => frame.focus());

@@ -20,7 +20,13 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
 - `assets/js/hero-mouse.js` — hero animation + Konami easter egg; imports the game's own sprite/font code.
 - `assets/img/` — generated game art (`mousecapades/`, 1× pixel PNGs shown with `.pixel`), app screenshots (`work/`, WebP), `og.png`.
 - `pulse.html` — ATX Pulse dashboard (sample data).
-- `vibe_paint.html`, `vibe_sync.html`, `campaign_forge.html` — web apps built in Gemini (live). Leave these to the owner
+- `vibepaint/` — VibePaint v2, a Photoshop-lite editor built with Claude. Plain ES modules, no bundler:
+  `js/core/` (event bus, document + layers + blend modes, history, selection mask, pixel helpers, viewport),
+  `js/tools/` (each tool is an object with `options` + pointer handlers; `onKey` for keys, `key` is the shortcut),
+  `js/filters/` (`ADJUSTMENTS`, `FILTERS`; dialogs preview live), `js/ui/` (menus, panels, dialogs),
+  `commands.js` (menu actions), `io.js` (open/export, `.vpaint` project files, IndexedDB autosave), `main.js` (input + shortcuts).
+  `vibe_paint.html` is now just a redirect to it; v1 lives in git history.
+- `vibe_sync.html`, `campaign_forge.html` — web apps built in Gemini (live). Leave these to the owner
   except for bug fixes.
 - `OLDindex.html`, `newOLDindex.html` — the owner's backup copies of earlier landing pages. Leave them alone.
 - `games/mousecapades/` — the mouse-girl platformer (in development).

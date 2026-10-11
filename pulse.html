@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATX 78729 | Community Pulse</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        bgDark: '#0a0a0a',
+                        panel: '#171717',
+                        panelHover: '#262626',
+                        accent: '#3b82f6',
+                        accentGlow: 'rgba(59, 130, 246, 0.5)',
+                        textMuted: '#a3a3a3'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+        }
+        .glass-panel {
+            background: rgba(23, 23, 23, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+        }
+        /* Custom scrollbar for data lists */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="antialiased h-screen flex overflow-hidden">
+
+    <aside class="w-20 md:w-64 border-r border-white/5 h-full flex flex-col justify-between p-4 bg-panel/50 shrink-0">
+        <div>
+            <div class="flex items-center gap-3 mb-10 px-2 mt-2">
+                <div class="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.4)]">
+                    <i class="ph ph-waves text-xl text-white"></i>
+                </div>
+                <h1 class="font-bold text-lg hidden md:block tracking-tight">Pulse<span class="text-textMuted font-normal">78729</span></h1>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-xl bg-white/10 text-white transition-colors">
+                    <i class="ph ph-squares-four text-xl"></i>
+                    <span class="hidden md:block font-medium text-sm">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-xl text-textMuted hover:bg-white/5 hover:text-white transition-colors">
+                    <i class="ph ph-chart-line-up text-xl"></i>
+                    <span class="hidden md:block font-medium text-sm">Market Data</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-xl text-textMuted hover:bg-white/5 hover:text-white transition-colors">
+                    <i class="ph ph-map-pin text-xl"></i>
+                    <span class="hidden md:block font-medium text-sm">Infrastructure</span>
+                </a>
+            </nav>
+        </div>
+        
+        <div class="px-2 hidden md:block">
+            <a href="index.html" class="flex items-center gap-2 text-xs text-textMuted hover:text-white transition-colors">
+                <i class="ph ph-arrow-left"></i> Back to Portfolio
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 h-full overflow-y-auto p-6 md:p-8 custom-scroll relative">
+        <!-- Background decorative glows -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full filter blur-[100px] pointer-events-none"></div>
+
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h2 class="text-2xl font-semibold mb-1">North Austin Intelligence</h2>
+                <p class="text-sm text-textMuted">Real-time localized metrics for zip code 78729.</p>
+            </div>
+            <div class="flex items-center gap-3 bg-panel border border-white/5 px-4 py-2 rounded-full">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-xs font-medium text-textMuted">System Online</span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <!-- Metric 1 -->
+            <div class="glass-panel p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 text-white/5 text-9xl group-hover:scale-110 transition-transform duration-500">
+                    <i class="ph-fill ph-house"></i>
+                </div>
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-xs text-textMuted font-semibold uppercase tracking-wider mb-1">Avg Home Price</p>
+                        <h3 class="text-3xl font-bold">$485,200</h3>
+                    </div>
+                    <div class="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+                        <i class="ph ph-trend-up"></i> 2.4%
+                    </div>
+                </div>
+                <p class="text-xs text-textMuted relative z-10">Updated 24 hours ago</p>
+            </div>
+
+            <!-- Metric 2 -->
+            <div class="glass-panel p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 text-white/5 text-9xl group-hover:scale-110 transition-transform duration-500">
+                    <i class="ph-fill ph-cpu"></i>
+                </div>
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-xs text-textMuted font-semibold uppercase tracking-wider mb-1">Tech Jobs Available</p>
+                        <h3 class="text-3xl font-bold">1,248</h3>
+                    </div>
+                    <div class="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+                        <i class="ph ph-map-pin"></i> &lt; 5 miles
+                    </div>
+                </div>
+                <p class="text-xs text-textMuted relative z-10">Apple, Dell, EA nearby</p>
+            </div>
+
+            <!-- Metric 3 -->
+            <div class="glass-panel p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 text-white/5 text-9xl group-hover:scale-110 transition-transform duration-500">
+                    <i class="ph-fill ph-users"></i>
+                </div>
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-xs text-textMuted font-semibold uppercase tracking-wider mb-1">Walkability Score</p>
+                        <h3 class="text-3xl font-bold">42/100</h3>
+                    </div>
+                    <div class="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+                        Car-Dependent
+                    </div>
+                </div>
+                <p class="text-xs text-textMuted relative z-10">Rattan Creek Park access</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- Chart Panel -->
+            <div class="glass-panel p-6 lg:col-span-2 flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 class="font-semibold">Market Trajectory (5 YR)</h3>
+                        <p class="text-xs text-textMuted">Property valuation vs. Rental index</p>
+                    </div>
+                    <button class="text-xs bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg transition-colors border border-white/5">Export CSV</button>
+                </div>
+                <div class="flex-1 w-full relative min-h-[300px]">
+                    <canvas id="marketChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Async API Panel (Simulated Live Data) -->
+            <div class="glass-panel p-6 flex flex-col">
+                <h3 class="font-semibold mb-1">Live Sensor Array</h3>
+                <p class="text-xs text-textMuted mb-6">Fetching environmental & traffic APIs...</p>
+                
+                <div id="api-container" class="space-y-4 flex-1">
+                    <!-- Loading state shown initially -->
+                    <div id="loading-state" class="flex flex-col items-center justify-center h-full space-y-3 opacity-100 transition-opacity duration-500">
+                        <i class="ph ph-spinner-gap text-3xl animate-spin text-accent"></i>
+                        <span class="text-xs text-textMuted animate-pulse">Resolving endpoints...</span>
+                    </div>
+
+                    <!-- Data state (hidden initially) -->
+                    <div id="data-state" class="hidden flex-col h-full space-y-4">
+                        <!-- Simulated DOM elements injected here via JS -->
+                    </div>
+                </div>
+                <button onclick="refreshData()" class="mt-4 w-full py-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-xs font-medium transition-colors flex items-center justify-center gap-2">
+                    <i class="ph ph-arrows-clockwise"></i> Force Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="glass-panel p-6">
+            <h3 class="font-semibold mb-4">Key Infrastructure Proximity</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                
+                <div class="p-4 rounded-xl bg-panel/50 border border-white/5 hover:border-white/20 transition-colors">
+                    <div class="flex justify-between items-start mb-2">
+                        <i class="ph ph-apple-logo text-2xl text-gray-300"></i>
+                        <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded-full">2.1 mi</span>
+                    </div>
+                    <h4 class="font-medium text-sm">Apple Campus</h4>
+                    <p class="text-xs text-textMuted mt-1">Parmer Lane Tech Corridor</p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-panel/50 border border-white/5 hover:border-white/20 transition-colors">
+                    <div class="flex justify-between items-start mb-2">
+                        <i class="ph ph-tree text-2xl text-green-400"></i>
+                        <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded-full">0.5 mi</span>
+                    </div>
+                    <h4 class="font-medium text-sm">Rattan Creek Park</h4>
+                    <p class="text-xs text-textMuted mt-1">Trails, pools, community hub</p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-panel/50 border border-white/5 hover:border-white/20 transition-colors">
+                    <div class="flex justify-between items-start mb-2">
+                        <i class="ph ph-shopping-bag text-2xl text-purple-400"></i>
+                        <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded-full">4.3 mi</span>
+                    </div>
+                    <h4 class="font-medium text-sm">The Domain</h4>
+                    <p class="text-xs text-textMuted mt-1">Major retail & entertainment</p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-panel/50 border border-white/5 hover:border-white/20 transition-colors">
+                    <div class="flex justify-between items-start mb-2">
+                        <i class="ph ph-airplane text-2xl text-blue-400"></i>
+                        <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded-full">19 mi</span>
+                    </div>
+                    <h4 class="font-medium text-sm">ABIA Airport</h4>
+                    <p class="text-xs text-textMuted mt-1">Approx. 35 min commute</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 1. Chart.js Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            
+            // Gradient for the line
+            const gradientBlue = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientBlue.addColorStop(0, 'rgba(59, 130, 246, 0.5)'); // Blue
+            gradientBlue.addColorStop(1, 'rgba(59, 130, 246, 0)');
+
+            const gradientGray = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientGray.addColorStop(0, 'rgba(163, 163, 163, 0.3)'); // Gray
+            gradientGray.addColorStop(1, 'rgba(163, 163, 163, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026'],
+                    datasets: [
+                        {
+                            label: 'Avg Home Valuation ($)',
+                            data: [350000, 420000, 510000, 490000, 475000, 482000, 485200],
+                            borderColor: '#3b82f6', // Tailwind blue-500
+                            backgroundColor: gradientBlue,
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#0a0a0a',
+                            pointBorderColor: '#3b82f6',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Avg Rent Index (Scaled)',
+                            data: [310000, 330000, 380000, 420000, 440000, 450000, 460000],
+                            borderColor: '#a3a3a3', // Tailwind neutral-400
+                            backgroundColor: gradientGray,
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#0a0a0a',
+                            pointBorderColor: '#a3a3a3',
+                            pointRadius: 0,
+                            pointHoverRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#a3a3a3',
+                                usePointStyle: true,
+                                boxWidth: 8
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(23, 23, 23, 0.9)',
+                            titleColor: '#f5f5f5',
+                            bodyColor: '#a3a3a3',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            padding: 10
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: '#737373',
+                                callback: function(value) {
+                                    return '$' + value / 1000 + 'k';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: '#737373'
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+
+            // Initial data fetch
+            simulateAPICall();
+        });
+
+        // 2. Asynchronous API Simulation Logic
+        function simulateAPICall() {
+            const loadingState = document.getElementById('loading-state');
+            const dataState = document.getElementById('data-state');
+            
+            // Reset UI to loading
+            loadingState.style.display = 'flex';
+            dataState.style.display = 'none';
+            dataState.innerHTML = ''; // Clear old data
+
+            // Use a Promise to simulate network latency (1.5 seconds)
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // Mock data payload
+                    const sensorData = [
+                        { label: 'Air Quality (AQI)', value: '32 (Good)', icon: 'ph-wind', color: 'text-green-400', bg: 'bg-green-500/10' },
+                        { label: 'Traffic: Parmer Ln', value: 'Moderate', icon: 'ph-car-profile', color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
+                        { label: 'Current Weather', value: '82°F / Clear', icon: 'ph-sun', color: 'text-orange-400', bg: 'bg-orange-500/10' },
+                        { label: 'Power Grid Status', value: 'Stable', icon: 'ph-lightning', color: 'text-blue-400', bg: 'bg-blue-500/10' }
+                    ];
+                    resolve(sensorData);
+                }, 1500);
+            }).then((data) => {
+                // Network request complete, render UI
+                loadingState.style.display = 'none';
+                dataState.style.display = 'flex';
+                
+                data.forEach(metric => {
+                    const el = document.createElement('div');
+                    el.className = 'flex items-center justify-between p-3 rounded-xl border border-white/5 bg-panel/50 hover:bg-panel transition-colors';
+                    el.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg ${metric.bg} ${metric.color} flex items-center justify-center">
+                                <i class="ph ${metric.icon} text-lg"></i>
+                            </div>
+                            <span class="text-sm text-textMuted">${metric.label}</span>
+                        </div>
+                        <span class="text-sm font-medium">${metric.value}</span>
+                    `;
+                    dataState.appendChild(el);
+                });
+            });
+        }
+
+        // Triggered by the refresh button
+        function refreshData() {
+            simulateAPICall();
+        }
+    </script>
+</body>
+</html>

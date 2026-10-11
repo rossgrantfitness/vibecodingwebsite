@@ -12,6 +12,7 @@ One step per session. End each with "commit and push", then start the next sessi
 | Campaign Forge | Gemini | Live |
 | VibeSync Audio | Gemini | Live |
 | Site redesign (homepage + 3 case studies) | Claude | Live |
+| Portfolio v2 (résumé, notes, services, touch controls, playable embed) | Claude | Live; see `docs/V2-STRATEGY.md` |
 
 ## Steps
 
@@ -30,7 +31,7 @@ One step per session. End each with "commit and push", then start the next sessi
       Still to do: a power-up (and the hit-to-shrink damage model that comes with it).
 - [ ] **4. Art + game feel** — mouse-girl animations, tileset, parallax dystopia background, particles,
       squash & stretch, screen shake, hit-stop, Web Audio SFX.
-- [ ] **5. Polish + ship** — touch controls, music, back link, switch the
+- [ ] **5. Polish + ship** — ~~touch controls~~ (done in v2), music, itch.io release, switch the
       portfolio card to Live, delete `synthwave_runner.html`.
 - [ ] **6. Final site pass** — real card screenshots, social preview/SEO meta, mobile check, GitHub Pages deploy.
 

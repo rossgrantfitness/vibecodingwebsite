@@ -24,7 +24,8 @@ export class Input {
     this.held = {};
     this.pressed = {};
     this.released = {};
-    for (const a of ACTIONS) this.held[a] = this.pressed[a] = this.released[a] = false;
+    this.touch = {};          // on-screen buttons currently held
+    for (const a of ACTIONS) this.held[a] = this.pressed[a] = this.released[a] = this.touch[a] = false;
 
     window.addEventListener('keydown', (e) => {
       const action = KEYS[e.code];
@@ -38,10 +39,34 @@ export class Input {
     window.addEventListener('blur', () => this.codes.clear());
   }
 
+  // Wire on-screen buttons (elements with data-action). Each tracks its own pointer, so
+  // holding run while tapping jump works with two thumbs.
+  bindTouch(root) {
+    root.querySelectorAll('[data-action]').forEach((el) => {
+      const action = el.dataset.action;
+      const press = (e) => {
+        e.preventDefault();
+        try { el.setPointerCapture(e.pointerId); } catch { /* synthetic or already-released pointer */ }
+        this.touch[action] = true;
+        this.latched.add(action);
+        el.classList.add('on');
+      };
+      const release = () => {
+        this.touch[action] = false;
+        el.classList.remove('on');
+      };
+      el.addEventListener('pointerdown', press);
+      el.addEventListener('pointerup', release);
+      el.addEventListener('pointercancel', release);
+      el.addEventListener('lostpointercapture', release);
+      el.addEventListener('contextmenu', (e) => e.preventDefault());
+    });
+  }
+
   update() {
     const pad = readGamepads();
     for (const a of ACTIONS) {
-      let down = pad[a];
+      let down = pad[a] || this.touch[a];
       if (!down) for (const c of this.codes) if (KEYS[c] === a) { down = true; break; }
       const was = this.held[a];
       this.pressed[a] = (down && !was) || this.latched.has(a);

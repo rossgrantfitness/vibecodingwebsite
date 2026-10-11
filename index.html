@@ -13,6 +13,20 @@
     <meta property="og:image" content="https://rossgrantfitness.github.io/vibecodingwebsite/assets/img/og.png">
     <meta property="og:url" content="https://rossgrantfitness.github.io/vibecodingwebsite/">
     <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://rossgrantfitness.github.io/vibecodingwebsite/">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Ross Grant",
+      "jobTitle": "Designer & Creative Technologist",
+      "url": "https://rossgrantfitness.github.io/vibecodingwebsite/",
+      "email": "mailto:ross.v.grant@gmail.com",
+      "address": { "@type": "PostalAddress", "addressLocality": "Austin", "addressRegion": "TX", "addressCountry": "US" },
+      "sameAs": ["https://www.linkedin.com/in/rossvgrant/", "https://github.com/rossgrantfitness"],
+      "knowsAbout": ["UI design", "UX design", "Pixel art", "Game design", "Creative coding"]
+    }
+    </script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,8 +48,10 @@
                     <a href="#work">Work</a>
                     <a href="#art">Art</a>
                     <a href="#process">Process</a>
+                    <a href="#notes">Notes</a>
                     <a href="#about">About</a>
                     <a href="#contact">Contact</a>
+                    <a href="resume.html">Résumé</a>
                 </div>
                 <button class="icon-btn" type="button" data-theme-toggle>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -55,7 +71,7 @@
                     <div class="btn-row">
                         <a class="btn btn-primary" href="#work">See my work</a>
                         <a class="btn" href="games/mousecapades/">Play Mousecapades</a>
-                        <a class="btn" href="https://www.linkedin.com/in/rossvgrant/" rel="noopener" target="_blank">LinkedIn ↗</a>
+                        <a class="btn" href="resume.html">Résumé</a>
                     </div>
                 </div>
                 <figure class="stage" style="margin:0">
@@ -86,7 +102,7 @@
                         <div class="card-body">
                             <ul class="tags"><li>Game design</li><li>Pixel art</li><li>Level design</li></ul>
                             <h3><a href="work/mousecapades.html" style="text-decoration:none">Mousecapades</a></h3>
-                            <p class="role">Design, art and AI-directed build · <span class="status">Playable prototype</span></p>
+                            <p class="role">2026 · Design, art and AI-directed build · <span class="status">Playable on phone and desktop</span></p>
                             <p>An SNES-style platformer about one small mouse in a big neon city. I designed the character, the level and the movement feel, then built the engine around a live tuning panel so I could dial in every jump by hand.</p>
                             <div class="card-links">
                                 <a href="work/mousecapades.html">Read the case study</a>
@@ -103,8 +119,8 @@
                             <div class="card-body">
                                 <ul class="tags"><li>Tool UX</li><li>Interaction design</li></ul>
                                 <h3><a href="work/vibepaint.html" style="text-decoration:none">VibePaint</a></h3>
-                                <p class="role">Design and AI-directed build</p>
-                                <p>A layered painting app in the browser. A slim tool rail and a floating layers panel keep the canvas front and centre, so the artwork stays the loudest thing on screen.</p>
+                                <p class="role">2026 · Design and AI-directed build</p>
+                                <p>A layered painting app in the browser. A slim tool rail and a floating layers panel keep the canvas front and center, so the artwork stays the loudest thing on screen.</p>
                                 <div class="card-links">
                                     <a href="work/vibepaint.html">Read the case study</a>
                                     <a href="vibe_paint.html">Try it</a>
@@ -119,7 +135,7 @@
                             <div class="card-body">
                                 <ul class="tags"><li>Generative art</li><li>Creative coding</li></ul>
                                 <h3><a href="work/vibesync.html" style="text-decoration:none">VibeSync</a></h3>
-                                <p class="role">Design and AI-directed build</p>
+                                <p class="role">2026 · Design and AI-directed build</p>
                                 <p>Live visuals that react to your microphone: three visual modes and one reactivity dial. It explains exactly what it does with your audio before it asks for permission, and it records nothing.</p>
                                 <div class="card-links">
                                     <a href="work/vibesync.html">Read the case study</a>
@@ -142,7 +158,7 @@
                         <div class="card-body">
                             <ul class="tags"><li>Typography</li><li>Layout</li></ul>
                             <h3>Campaign Forge</h3>
-                            <p>A type and layout study. Swap the headline, copy length, button colour and social proof, and watch the hierarchy of a landing page change live. The metrics are simulated.</p>
+                            <p>A type and layout study. Swap the headline, copy length, button color and social proof, and watch the hierarchy of a landing page change live. The metrics are simulated.</p>
                             <div class="card-links"><a href="campaign_forge.html">Open the study</a></div>
                         </div>
                     </article>
@@ -153,7 +169,7 @@
                         <div class="card-body">
                             <ul class="tags"><li>Information design</li></ul>
                             <h3>ATX Pulse</h3>
-                            <p>A neighbourhood dashboard for North Austin, designed for scanning: big numbers first, context second, detail on demand. It runs on sample data.</p>
+                            <p>A neighborhood dashboard for North Austin, designed for scanning: big numbers first, context second, detail on demand. It runs on sample data.</p>
                             <div class="card-links"><a href="pulse.html">Open the dashboard</a></div>
                         </div>
                     </article>
@@ -224,11 +240,32 @@
                 </div>
                 <ol class="steps reveal">
                     <li><h3>Sketch</h3><p>Thumbnails, gestures and rough layouts on paper. They're cheap to change and fast to throw away.</p></li>
-                    <li><h3>Moodboard</h3><p>References for colour, type and feel, gathered before any code. For Mousecapades: SNES-era platformers and neon city nights.</p></li>
+                    <li><h3>Moodboard</h3><p>References for color, type and feel, gathered before any code. For Mousecapades: SNES-era platformers and neon city nights.</p></li>
                     <li><h3>Design</h3><p>Palette, type scale, sprites and layout. Decisions get made here, not halfway through the build.</p></li>
                     <li><h3>Build with AI</h3><p>I write the brief, the AI drafts the code, and I review every pass. I steer with specifics like "the turnaround feels sluggish", not vague vibes.</p></li>
                     <li><h3>Playtest &amp; iterate</h3><p>Real devices, real hands. I tune by feel, check screenshots line by line, and cut what doesn't earn its place.</p></li>
                 </ol>
+                <div class="split reveal">
+                    <div>
+                        <h3>What I decide</h3>
+                        <ul>
+                            <li>The brief, the scope and who it's for</li>
+                            <li>Visual direction: palette, type, sprites, layout</li>
+                            <li>How it should feel, tuned by hand</li>
+                            <li>What gets cut, and when it's ready to ship</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>What AI helps with</h3>
+                        <ul>
+                            <li>Drafting code from my brief</li>
+                            <li>Trying variations quickly</li>
+                            <li>Finding and fixing bugs</li>
+                            <li>Scripted playtests that check my numbers</li>
+                        </ul>
+                    </div>
+                    <p class="split-note">I can walk you through every project decision by decision, including the drafts I threw away.</p>
+                </div>
                 <div class="process-proof">
                     <div class="quote-box reveal">
                         <span class="eyebrow">From my original brief</span>
@@ -239,6 +276,53 @@
                         <img src="assets/img/work/tuning-panel.webp" width="1200" height="750" loading="lazy" alt="Mousecapades movement test course with the tuning panel open, showing sliders for walk speed, run speed, acceleration and friction.">
                         <figcaption>The tuning panel on the movement test course, with hitboxes switched on.</figcaption>
                     </figure>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notes -->
+        <section class="section" id="notes" style="padding-top:0">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">Notes &amp; devlogs</span>
+                    <h2>Thinking out loud.</h2>
+                    <p class="lede">Short write-ups on the decisions behind the work: what I tried, what I threw away and why.</p>
+                </div>
+                <div class="notes-list reveal">
+                    <a class="note-link" href="notes/tuning-the-jump.html">
+                        <span>Devlog · Mousecapades · October 2026</span>
+                        <h3>Tuning the jump</h3>
+                        <span>The dozen numbers behind a platformer jump that feels good, and how I found each one.</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work with me -->
+        <section class="section" id="services" style="padding-top:0">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">Work with me</span>
+                    <h2>Need something that feels crafted?</h2>
+                    <p class="lede">I'm looking for a full-time design role first, and I also take a few freelance projects at a time. Every project gets a fixed-price quote before any work starts.</p>
+                </div>
+                <div class="services reveal">
+                    <article class="service">
+                        <h3>Microsites &amp; landing pages</h3>
+                        <p>A small site with a custom layout, considered type and one playful detail people remember. Fast, accessible and easy to host.</p>
+                    </article>
+                    <article class="service">
+                        <h3>Pixel art &amp; game UI</h3>
+                        <p>Characters, tilesets, HUDs and menus, drawn in a palette built for your game and delivered as clean sprite sheets.</p>
+                    </article>
+                    <article class="service">
+                        <h3>Playable prototypes</h3>
+                        <p>A browser-playable slice of your idea to pitch, test or show off, with the feel tuned by hand rather than left to defaults.</p>
+                    </article>
+                </div>
+                <div class="btn-row reveal" style="margin-top:var(--s5)">
+                    <a class="btn btn-primary" href="mailto:ross.v.grant@gmail.com?subject=Project%20inquiry&amp;body=Hi%20Ross%2C%0A%0AWhat%20I%27m%20making%3A%0ATimeline%3A%0ABudget%20range%3A%0A">Tell me about your project</a>
+                    <a class="btn" href="resume.html">Hiring? See my résumé</a>
                 </div>
             </div>
         </section>
@@ -277,6 +361,7 @@
                     <button class="btn" type="button" data-copy-email="ross.v.grant@gmail.com" aria-controls="copy-status">Copy email</button>
                     <a class="btn" href="https://www.linkedin.com/in/rossvgrant/" rel="noopener" target="_blank">LinkedIn ↗</a>
                     <a class="btn" href="https://github.com/rossgrantfitness" rel="noopener" target="_blank">GitHub ↗</a>
+                    <a class="btn" href="resume.html">Résumé</a>
                 </div>
                 <p class="copied" id="copy-status" role="status"></p>
             </div>

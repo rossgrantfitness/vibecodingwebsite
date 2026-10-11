@@ -20,6 +20,18 @@ const input = new Input();
 const renderer = new Renderer(canvas);
 const debug = createDebugPanel(game);
 
+// Touch devices get on-screen buttons (shown on the first touch, or up front on coarse pointers).
+const touchUI = document.querySelector('.touch');
+input.bindTouch(touchUI);
+function enableTouch() {
+  if (!touchUI.hidden) return;
+  touchUI.hidden = false;
+  document.body.classList.add('touch-ui');
+  fit();
+}
+if (window.matchMedia('(pointer: coarse)').matches) enableTouch();
+window.addEventListener('touchstart', () => { unlockAudio(); enableTouch(); }, { passive: true });
+
 // One fixed 60 Hz simulation step.
 function step(force = false) {
   input.update();
@@ -59,7 +71,11 @@ function frame(now) {
 
 // Integer scaling keeps every pixel square; very small screens fall back to fractional.
 function fit() {
-  const s = Math.min(window.innerWidth / VIEW_W, window.innerHeight / VIEW_H);
+  // In portrait with touch controls, keep the bottom clear for the buttons.
+  const touching = document.body.classList.contains('touch-ui');
+  const reserve = touching && window.innerHeight > window.innerWidth ? 190 : 0;
+  document.documentElement.style.setProperty('--reserve', `${reserve}px`);
+  const s = Math.min(window.innerWidth / VIEW_W, (window.innerHeight - reserve) / VIEW_H);
   const scale = s >= 2 ? Math.floor(s) : s;
   canvas.style.width = `${Math.floor(VIEW_W * scale)}px`;
   canvas.style.height = `${Math.floor(VIEW_H * scale)}px`;

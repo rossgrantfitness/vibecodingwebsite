@@ -57,5 +57,19 @@
     });
   });
 
+  // Click-to-play embeds: load the game only when asked, then hand it keyboard focus.
+  document.querySelectorAll('[data-embed]').forEach((fig) => {
+    const btn = fig.querySelector('.embed-play');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const frame = document.createElement('iframe');
+      frame.src = fig.dataset.embed;
+      frame.title = 'Playable game';
+      frame.allow = 'gamepad; fullscreen; autoplay';
+      fig.replaceChildren(frame);
+      frame.addEventListener('load', () => frame.focus());
+    });
+  });
+
   document.querySelectorAll('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 })();

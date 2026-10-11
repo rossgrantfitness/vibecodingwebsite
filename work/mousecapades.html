@@ -42,12 +42,19 @@
                 <div><dt>Role</dt><dd>Game design, pixel art, level design, AI-directed build</dd></div>
                 <div><dt>Status</dt><dd>Playable prototype, one level</dd></div>
                 <div><dt>Built with</dt><dd>JavaScript, Canvas, Web Audio, Claude</dd></div>
-                <div><dt>Controls</dt><dd>Keyboard or gamepad</dd></div>
+                <div><dt>Plays on</dt><dd>Keyboard, gamepad or touch</dd></div>
             </dl>
+            <div class="glance">
+                <div><strong>Result</strong>A 2–3 minute level that runs in any browser, playable on keyboard, gamepad or a phone.</div>
+                <div><strong>My part</strong>Character, palette, sprites, level layout and movement feel. I directed and reviewed every build pass.</div>
+                <div><strong>Proof of craft</strong>All 25 movement values were tuned by hand in a live panel, not left at defaults.</div>
+            </div>
+            <p class="updated">Last updated October 2026 · v0.3</p>
         </section>
 
-        <figure class="cs-cover">
+        <figure class="cs-cover embed" data-embed="../games/mousecapades/?embed">
             <img class="pixel" src="../assets/img/mousecapades/gameplay.png" width="320" height="180" alt="Mousecapades gameplay: the mouse mid-jump beside a row of glowing item blocks in a purple night city.">
+            <button class="embed-play" type="button">▶ Play it here</button>
         </figure>
 
         <article class="prose">
@@ -69,7 +76,7 @@
             </figure>
 
             <h3>2. Forgiveness you never notice</h3>
-            <p>Good platformers quietly cheat in the player's favour. You can still jump for a few frames after running off a ledge. A jump pressed just before landing is remembered. If her head clips the corner of a block, she slides around it instead of stopping dead. None of it is visible, but without it the controls feel unfair.</p>
+            <p>Good platformers quietly cheat in the player's favor. You can still jump for a few frames after running off a ledge. A jump pressed just before landing is remembered. If her head clips the corner of a block, she slides around it instead of stopping dead. None of it is visible, but without it the controls feel unfair.</p>
 
             <h3>3. Show the speed</h3>
             <p>Running fills a six-segment meter, and when it's full she sprints and jumps further. The meter sits in the HUD, the camera leans ahead in the direction you're running, and the ground uses a subtle checker pattern so you can read your speed at a glance.</p>
@@ -97,17 +104,24 @@
             </div>
 
             <h2>Working with AI</h2>
-            <p>The code was written by Claude, directed by me. I treated it like a collaborator who builds fast and needs a clear brief and honest feedback.</p>
+            <p>The code was written by Claude, directed by me. I own every decision on this page: the AI proposes, I choose, and anything that doesn't feel right goes back.</p>
             <div class="prompt">
                 <strong>A prompt that worked</strong>
                 "Running, momentum and inertia, tight controls that feel so good to play, pixel-perfect platforming, gravity and momentum just like Mario… a vertical slice is all that's needed, but it has to feel amazing."
             </div>
             <p>It worked because it described a feeling and a scope, not an implementation. The AI's answer was to build a tuning panel first and hand the final call back to me, which was exactly right.</p>
             <div class="prompt miss">
-                <strong>Feedback that needed sharpening</strong>
-                "It doesn't feel right."
+                <strong>Where I had to step in</strong>
+                "Wait, you're just working on the game for right now, right?"
             </div>
-            <p>Vague notes cost round trips. Feedback that names the moment and the problem, like "the turnaround is too slow" or "the jump floats too long at the top", maps straight onto one slider and gets fixed in one pass.</p>
+            <p>Early on, the AI started tidying up the rest of my website when I'd only asked for the game. I pulled it back to one job at a time. Now every brief states its scope up front.</p>
+
+            <h3>Drafts I rejected</h3>
+            <ul>
+                <li><strong>"Gutterlight."</strong> The AI's working title. Moody, but it said nothing about a mouse. Rejected.</li>
+                <li><strong>"Mouse Monogatari."</strong> One of my own ideas, but too niche: a recruiter needs to get the joke in half a second. <strong>Mousecapades</strong> won.</li>
+                <li><strong>A 3×5 pixel logo.</strong> The first title screen reused the HUD font, and the M read as an H. I redrew it in 5×7 (see above).</li>
+            </ul>
 
             <h2>What broke, and how it got fixed</h2>
             <ul>
@@ -115,12 +129,20 @@
                 <li><strong>The unreadable logo.</strong> See the before and after above.</li>
             </ul>
 
+            <h2>Version history</h2>
+            <ul class="versions">
+                <li><strong>v0.1: Movement.</strong> Greybox test course, momentum physics, the live tuning panel.</li>
+                <li><strong>v0.2: A real level.</strong> Sector 1, enemies, cheese and item blocks, a checkpoint, the exit gate, title and win screens, sound effects.</li>
+                <li><strong>v0.3: Anywhere.</strong> On-screen touch controls so it plays on a phone.</li>
+            </ul>
+
             <h2>What's next</h2>
             <ul>
                 <li>Final character art: a full animation set to replace the placeholder sprite.</li>
                 <li>A power-up, with a hit that shrinks you instead of ending the run.</li>
-                <li>Touch controls for phones, and a soundtrack.</li>
+                <li>A soundtrack, and a release on itch.io.</li>
             </ul>
+            <p>Want the details? Read the devlog: <a href="../notes/tuning-the-jump.html">Tuning the jump</a>.</p>
 
             <div class="cs-next">
                 <a href="../index.html#work">← All work</a>

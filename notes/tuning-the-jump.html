@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuning the jump in Mousecapades · Ross Grant</title>
+    <meta name="description" content="The numbers behind a platformer jump that feels good: momentum, variable height, coyote time and jump buffering.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Tuning the jump in Mousecapades">
+    <meta property="og:description" content="The numbers behind a platformer jump that feels good.">
+    <meta property="og:image" content="https://rossgrantfitness.github.io/vibecodingwebsite/assets/img/og.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,500..700,0..100,0..1;1,9..144,500..700,0..100,0..1&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="wrap">
+            <a class="wordmark" href="../index.html"><img class="pixel" src="../favicon.svg" alt="" width="28" height="28">Ross Grant</a>
+            <nav class="nav" aria-label="Primary">
+                <div class="nav-links"><a href="../index.html#work">← All work</a><a href="../index.html#contact">Contact</a></div>
+                <button class="icon-btn" type="button" data-theme-toggle>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="cs-hero">
+            <a href="../index.html#notes">← All notes</a>
+            <span class="eyebrow" style="display:flex;margin-top:var(--s4)">Devlog · Mousecapades</span>
+            <h1>Tuning the jump</h1>
+            <p class="lede">A good platformer jump is built from about a dozen numbers. Here are mine, why each one exists, and how I found them.</p>
+        </section>
+
+        <article class="prose">
+            <p>When I started <a href="../work/mousecapades.html">Mousecapades</a>, the brief was one sentence: it has to feel amazing to play. You can't write "feels amazing" into code, so the first thing we built wasn't a level. It was a <strong>tuning panel</strong>: a sidebar of sliders wired straight into the physics, so I could change a value mid-jump and feel the difference immediately.</p>
+            <figure class="figure">
+                <img src="../assets/img/work/tuning-panel.webp" width="1200" height="750" loading="lazy" alt="The Mousecapades test course with the tuning panel open.">
+                <figcaption>The test course and tuning panel. Every slider changes the game live.</figcaption>
+            </figure>
+
+            <h2>Units first</h2>
+            <p>Everything runs at a fixed 60 steps per second, on a 320 × 180 canvas with 16-pixel tiles. Speeds are in pixels per frame, so "2.5" means 2.5 pixels every sixtieth of a second. Small, readable numbers make tuning a conversation instead of guesswork.</p>
+
+            <h2>Running: three speeds and a skid</h2>
+            <ul>
+                <li><strong>Walk 1.5, run 2.5, sprint 3.25.</strong> Hold run and you reach 2.5. Keep running flat out and a six-segment meter fills, and once it's full you can hit 3.25.</li>
+                <li><strong>Acceleration 0.09.</strong> It takes about half a second to reach running speed. Fast enough to feel responsive, slow enough to feel like weight.</li>
+                <li><strong>Friction 0.07, skid 0.25.</strong> Let go and she coasts. Push the other way and she digs in more than three times harder. That difference is what makes turning around feel deliberate.</li>
+            </ul>
+
+            <h2>Jumping: two gravities</h2>
+            <p>The trick behind "hold to jump higher" is that gravity changes. While you hold the button on the way up, gravity is a light <strong>0.17</strong>. Let go, or start falling, and it jumps to <strong>0.5</strong>.</p>
+            <ul>
+                <li><strong>Launch speed 5.0</strong> gives a full jump of 72 pixels, four and a half tiles. A quick tap gives about 26.</li>
+                <li><strong>Run bonus 0.2:</strong> every pixel per frame of running speed adds to the launch, so a sprinting jump clears around six tiles high and twelve across.</li>
+                <li><strong>Apex hang:</strong> near the top of the jump gravity is cut a little more, which gives a beat of air to line up a landing.</li>
+                <li><strong>Falling is faster than rising.</strong> The jump goes up floaty and comes down snappy, so landings feel decisive.</li>
+            </ul>
+
+            <h2>Forgiveness: the invisible part</h2>
+            <ul>
+                <li><strong>Coyote time, 6 frames.</strong> Run off a ledge and you can still jump for a tenth of a second. Players think they jumped on time, and with this they did.</li>
+                <li><strong>Jump buffer, 6 frames.</strong> Press jump just before you land and it fires the moment you touch down.</li>
+                <li><strong>Corner nudge, 4 pixels.</strong> Clip the edge of a block with your head and you slide past it instead of bonking.</li>
+            </ul>
+            <div class="callout">None of these are visible, and players never thank you for them. Without them, though, the controls feel unfair, and people blame themselves for the game's mistakes.</div>
+
+            <h2>How I found the numbers</h2>
+            <p>I built a test course where each stretch measures one thing: gaps of 3, 5 and 7 tiles, pillars of 3, 4 and 5 tiles, and a long runway to fill the sprint meter. I play a section, move one slider, and play it again. When something feels off, I try to name the exact moment, like "the turnaround is sluggish" or "it hangs too long at the top", because a precise note maps onto a single slider. The panel's "copy values" button then saves the result back into the game.</p>
+            <p>The AI wrote the physics. I decided what it should feel like. Splitting the work that way is the whole point of the panel.</p>
+
+            <div class="cs-next">
+                <a href="../games/mousecapades/?level=test">Try the test course →</a>
+                <a href="../work/mousecapades.html">Read the full case study →</a>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrap">
+            <span>© <span data-year>2026</span> Ross Grant</span>
+            <nav aria-label="Footer"><a href="mailto:ross.v.grant@gmail.com">Email</a><a href="https://www.linkedin.com/in/rossvgrant/" rel="noopener" target="_blank">LinkedIn</a></nav>
+        </div>
+    </footer>
+    <script src="../assets/js/site.js"></script>
+</body>
+</html>

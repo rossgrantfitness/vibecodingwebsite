@@ -21,6 +21,7 @@ html, body {
 #stage {
     position: fixed;
     inset: 0;
+    bottom: var(--reserve, 0px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,6 +84,50 @@ kbd {
     background: #2a1414;
     border: 1px solid #7f1d1d;
     border-radius: 12px;
+}
+
+body.embed .back, body.embed .hint, body.embed .open-tuning { display: none; }
+
+/* On-screen controls for touch devices */
+body.touch-ui { touch-action: none; -webkit-user-select: none; user-select: none; }
+body.touch-ui .hint, body.touch-ui .open-tuning { display: none; }
+body.touch-ui .back span { display: none; }
+@media (orientation: portrait) { body.touch-ui #stage { align-items: flex-start; padding-top: 64px; } }
+.touch[hidden] { display: none; }
+.touch {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    pointer-events: none;
+}
+.touch .pad { display: flex; gap: 10px; align-items: flex-end; pointer-events: auto; }
+.touch button {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    background: rgba(18, 18, 18, 0.55);
+    color: #E5E5E5;
+    font: 700 13px 'Plus Jakarta Sans', system-ui, sans-serif;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.touch button.on { background: rgba(255, 79, 216, 0.45); border-color: #ff4fd8; }
+.touch .jump { width: 76px; height: 76px; margin-bottom: 18px; }
+.touch .pause {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    width: 44px;
+    height: 36px;
+    border-radius: 999px;
+    transform: translateX(-50%);
+    font-size: 11px;
+    pointer-events: auto;
 }
 
 @media (max-width: 640px) {

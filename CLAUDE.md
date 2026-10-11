@@ -9,7 +9,12 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
 
 ## Layout
 
-- `index.html` — homepage: hero (live pixel mouse), featured work, experiments, art gallery, process, about, contact.
+- `index.html` — homepage: hero (live pixel mouse), featured work, experiments, art gallery, process, notes,
+  work-with-me (freelance services), about, contact.
+- `resume.html` — HTML résumé in the site's design system; print stylesheet makes "Save as PDF" a clean one-pager.
+- `notes/*.html` — devlogs / write-ups (same template as case studies). List new ones in the homepage Notes section and `sitemap.xml`.
+- `404.html`, `robots.txt`, `sitemap.xml` — GitHub Pages extras; 404 uses root-absolute `/vibecodingwebsite/` paths.
+- `docs/V2-STRATEGY.md` — hiring + monetization research behind v2, and the owner's action plan.
 - `work/*.html` — case studies (Mousecapades, VibePaint, VibeSync), all sharing one template. Copy one to add more.
 - `assets/css/site.css`, `assets/js/site.js` — shared design system and behaviour for homepage + case studies.
 - `assets/js/hero-mouse.js` — hero animation + Konami easter egg; imports the game's own sprite/font code.
@@ -28,6 +33,10 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
   with light/dark themes: cream, espresso, olive accent, sage, burgundy, cheese-gold. **No blues or navy.**
 - Type: Fraunces (display) + Plus Jakarta Sans (body), from Google Fonts. Spacing scale 4/8/16/24/32/48/64/96.
 - Pixel art is exported at 1× and scaled in CSS with `.pixel` (`image-rendering: pixelated`).
+- Case studies open with an "At a glance" box (result, role, proof) and show a "Last updated" date.
+  Interactive work should be playable in-page (`data-embed` click-to-play iframe), not just screenshots.
+- Only claim what Ross can defend in an interview; AI is always framed as "I decided X, AI helped with Y".
+- Selling, tips and hiring links must point off-site (itch.io, Gumroad, Ko-fi, Contra): GitHub Pages forbids e-commerce.
 - Respect `prefers-reduced-motion`; every image gets alt text; no placeholder or `#` links on live pages.
   Owner-only TODOs go in HTML comments (`<!-- TODO(Ross): ... -->`).
 - The Gemini app pages use Tailwind CDN + Plus Jakarta Sans; pin any CDN script to an exact version.

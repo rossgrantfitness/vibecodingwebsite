@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 
     <script>
         tailwind.config = {
@@ -85,9 +85,9 @@
             </nav>
         </div>
         
-        <div class="px-2 hidden md:block">
-            <a href="index.html" class="flex items-center gap-2 text-xs text-textMuted hover:text-white transition-colors">
-                <i class="ph ph-arrow-left"></i> Back to Portfolio
+        <div class="px-2">
+            <a href="index.html" class="flex items-center justify-center md:justify-start gap-2 text-xs text-textMuted hover:text-white transition-colors" aria-label="Back to Portfolio">
+                <i class="ph ph-arrow-left text-xl md:text-xs"></i> <span class="hidden md:inline">Back to Portfolio</span>
             </a>
         </div>
     </aside>

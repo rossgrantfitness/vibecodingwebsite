@@ -9,8 +9,8 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
 
 - `index.html` — portfolio landing page. The "Selected Work" grid links to each project.
 - `pulse.html` — ATX 78729 Pulse dashboard (live).
-- `games/gutterlight/` — the mouse-girl platformer (in development; working title).
-- `synthwave_runner.html` — old arcade game, superseded by Gutterlight. Unlinked; delete once Gutterlight ships.
+- `games/mousecapades/` — the mouse-girl platformer (in development).
+- `synthwave_runner.html` — old arcade game, superseded by Mousecapades. Unlinked; delete once Mousecapades ships.
 - New web apps go at the repo root as `<name>.html` (single file) or in `<name>/index.html` if they need several files.
 
 ## Site conventions
@@ -24,7 +24,7 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
   unbuilt one is a `<div class="... cursor-default">` with a "Coming soon" / "In development" badge.
   When a project ships, switch its card from `<div>` to `<a>` and change the badge.
 
-## Game (`games/gutterlight/`)
+## Game (`games/mousecapades/`)
 
 - Plain JS ES modules, no bundler, `<canvas>` rendering at a low internal resolution scaled up with
   nearest-neighbour (pixel-perfect). Fixed 60 Hz simulation timestep, decoupled from rendering.

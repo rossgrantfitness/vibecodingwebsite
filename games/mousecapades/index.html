@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mousecapades</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="back" href="../../index.html" aria-label="Back to Portfolio">← <span>Back to Portfolio</span></a>
+    <button class="open-tuning" type="button" title="Movement tuning (`)">Tuning <kbd>`</kbd></button>
+
+    <div id="stage">
+        <canvas id="game" width="320" height="180"></canvas>
+    </div>
+
+    <p class="hint">
+        <kbd>←</kbd><kbd>→</kbd> move · <kbd>Z</kbd>/<kbd>Space</kbd> jump · hold <kbd>X</kbd>/<kbd>Shift</kbd> run ·
+        <kbd>↓</kbd> duck · <kbd>R</kbd> restart · gamepad works too
+    </p>
+
+    <p class="file-warning" hidden>
+        This game uses JavaScript modules, which browsers block on <code>file://</code>.
+        Run <code>python3 -m http.server</code> in the repo root and open
+        <code>http://localhost:8000/games/mousecapades/</code>.
+    </p>
+    <script>
+        if (location.protocol === 'file:') document.querySelector('.file-warning').hidden = false;
+        document.querySelector('.open-tuning').addEventListener('click', (e) => {
+            e.currentTarget.blur();
+            window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Backquote' }));
+        });
+    </script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

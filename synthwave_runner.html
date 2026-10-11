@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SynthWave Runner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            color: #E5E5E5;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            touch-action: none; /* Prevents zooming/scrolling on mobile */
+        }
+        
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at 50% 50%, #1a0b2e 0%, #050505 100%);
+        }
+
+        canvas {
+            display: block;
+            box-shadow: 0 0 50px rgba(139, 92, 246, 0.2);
+        }
+
+        /* UI Overlays */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-col;
+            justify-content: space-between;
+        }
+
+        .hud-text {
+            text-shadow: 0 0 10px rgba(52, 211, 153, 0.8);
+        }
+
+        /* Mobile Controls */
+        #mobile-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: none; /* Hidden by default, shown via JS on touch devices */
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            pointer-events: auto;
+            z-index: 50;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .control-btn:active {
+            background: rgba(52, 211, 153, 0.4);
+            border-color: #34d399;
+        }
+
+        /* Screens */
+        .screen {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            pointer-events: auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .btn-play {
+            background: transparent;
+            color: #34d399;
+            border: 2px solid #34d399;
+            padding: 12px 32px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .btn-play:hover {
+            background: #34d399;
+            color: #050505;
+            box-shadow: 0 0 25px rgba(52, 211, 153, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- The Game Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Heads Up Display -->
+        <div id="ui-layer" class="p-6">
+            <div class="flex justify-between w-full">
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-1">Data Shards</p>
+                    <p id="score-display" class="text-3xl font-bold text-emerald-400 hud-text">0 / 15</p>
+                </div>
+                <div class="text-right pointer-events-auto">
+                    <a href="index.html" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/10">
+                        <i class="ph ph-arrow-left"></i> Exit
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- On-Screen Controls for Mobile -->
+        <div id="mobile-controls">
+            <div class="flex gap-4">
+                <div class="control-btn" id="btn-left"><i class="ph-bold ph-caret-left"></i></div>
+                <div class="control-btn" id="btn-right"><i class="ph-bold ph-caret-right"></i></div>
+            </div>
+            <div>
+                <div class="control-btn" id="btn-jump" style="width: 70px; height: 70px; border-radius: 20px;"><i class="ph-bold ph-caret-up"></i></div>
+            </div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center mb-6 border border-emerald-500/50 shadow-[0_0_30px_rgba(52,211,153,0.3)]">
+                <i class="ph-fill ph-game-controller text-4xl text-emerald-400"></i>
+            </div>
+            <h1 class="text-5xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-500 tracking-tight">SYNTHWAVE</h1>
+            <h2 class="text-3xl font-light text-gray-300 mb-8 tracking-widest">RUNNER</h2>
+            <div class="flex gap-6 mb-12 text-sm text-gray-400">
+                <div class="flex items-center gap-2"><div class="px-2 py-1 border border-gray-600 rounded">A</div> <div class="px-2 py-1 border border-gray-600 rounded">D</div> Move</div>
+                <div class="flex items-center gap-2"><div class="px-2 py-1 border border-gray-600 rounded">SPACE</div> Jump</div>
+            </div>
+            <button id="start-btn" class="btn-play">Initialize System</button>
+        </div>
+
+        <!-- Victory Screen -->
+        <div id="victory-screen" class="screen hidden">
+            <h1 class="text-5xl font-extrabold mb-4 text-emerald-400 text-shadow-glow">SYSTEM RESTORED</h1>
+            <p class="text-xl text-gray-300 mb-8">All Data Shards Collected!</p>
+            <p class="text-gray-400 mb-10 max-w-md text-center text-sm leading-relaxed">
+                Portfolio Note: This simulation demonstrates custom 2D physics, camera tracking, and precise collision detection written in vanilla JavaScript.
+            </p>
+            <button id="restart-btn" class="btn-play">Reboot</button>
+        </div>
+        
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="screen hidden">
+            <h1 class="text-5xl font-extrabold mb-4 text-rose-500 shadow-rose">FATAL ERROR</h1>
+            <p class="text-xl text-gray-300 mb-8">You fell into the void.</p>
+            <button id="retry-btn" class="btn-play" style="color: #f43f5e; border-color: #f43f5e;">Retry</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // UI Elements
+        const scoreDisplay = document.getElementById('score-display');
+        const startScreen = document.getElementById('start-screen');
+        const victoryScreen = document.getElementById('victory-screen');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const mobileControls = document.getElementById('mobile-controls');
+
+        // Responsive Canvas Setup
+        let GAME_WIDTH = 800;
+        let GAME_HEIGHT = 600;
+        
+        function resize() {
+            // Keep a nice aspect ratio but fit the screen
+            const aspect = GAME_WIDTH / GAME_HEIGHT;
+            let windowWidth = window.innerWidth;
+            let windowHeight = window.innerHeight;
+            
+            // Show mobile controls on small screens
+            if (windowWidth < 768 || 'ontouchstart' in window) {
+                mobileControls.style.display = 'flex';
+                GAME_WIDTH = windowWidth; // full width for mobile
+                GAME_HEIGHT = windowHeight;
+            }
+
+            canvas.width = GAME_WIDTH;
+            canvas.height = GAME_HEIGHT;
+            
+            // Center canvas physically if on desktop
+            if (windowWidth >= 768) {
+                if (windowWidth / windowHeight < aspect) {
+                    canvas.style.width = windowWidth + 'px';
+                    canvas.style.height = (windowWidth / aspect) + 'px';
+                } else {
+                    canvas.style.width = (windowHeight * aspect) + 'px';
+                    canvas.style.height = windowHeight + 'px';
+                }
+                canvas.style.borderRadius = '16px';
+            } else {
+                canvas.style.width = '100%';
+                canvas.style.height = '100%';
+                canvas.style.borderRadius = '0';
+            }
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Game State
+        let gameState = 'START'; // START, PLAYING, WON, OVER
+        let animationId;
+        let score = 0;
+        const maxScore = 15;
+
+        // Camera Offset
+        let camera = { x: 0, y: 0 };
+
+        // Input Tracking
+        const keys = { left: false, right: false, up: false };
+
+        const player = {
+            x: 100,
+            y: 300,
+            width: 30,
+            height: 30,
+            vx: 0,
+            vy: 0,
+            speed: 5,
+            jumpPower: -12, // Negative is UP in canvas
+            gravity: 0.6,
+            grounded: false,
+            color: '#34d399', // Emerald 400
+            trail: []
+        };
+
+        // Environment Data Arrays
+        let platforms = [];
+        let collectibles = [];
+        let particles = [];
+        
+        // Level Generation
+        function buildLevel() {
+            platforms = [];
+            collectibles = [];
+            score = 0;
+            scoreDisplay.innerText = `${score} / ${maxScore}`;
+            
+            // Platform definition: x, y, width, height, isDeathZone
+            
+            // Start zone
+            platforms.push({ x: 0, y: 500, w: 400, h: 200, color: '#1e1b4b' }); 
+            
+            // Gap jumps
+            platforms.push({ x: 500, y: 450, w: 150, h: 20, color: '#312e81' });
+            collectibles.push({ x: 565, y: 400, collected: false });
+
+            platforms.push({ x: 750, y: 400, w: 150, h: 20, color: '#312e81' });
+            collectibles.push({ x: 815, y: 350, collected: false });
+
+            // High path / Low path split
+            platforms.push({ x: 1000, y: 500, w: 600, h: 200, color: '#1e1b4b' });
+            collectibles.push({ x: 1100, y: 450, collected: false });
+            collectibles.push({ x: 1200, y: 450, collected: false });
+            
+            platforms.push({ x: 1150, y: 350, w: 100, h: 20, color: '#4338ca' }); // higher plat
+            collectibles.push({ x: 1190, y: 300, collected: false });
+
+            platforms.push({ x: 1400, y: 250, w: 100, h: 20, color: '#4c1d95' });
+            collectibles.push({ x: 1440, y: 200, collected: false });
+
+            // Big gap with stepping stones
+            platforms.push({ x: 1700, y: 400, w: 80, h: 20, color: '#312e81' });
+            collectibles.push({ x: 1730, y: 350, collected: false });
+            
+            platforms.push({ x: 1900, y: 300, w: 80, h: 20, color: '#4338ca' });
+            collectibles.push({ x: 1930, y: 250, collected: false });
+
+            platforms.push({ x: 2100, y: 200, w: 80, h: 20, color: '#5b21b6' });
+            collectibles.push({ x: 2130, y: 150, collected: false });
+
+            // Final stretch
+            platforms.push({ x: 2350, y: 400, w: 800, h: 200, color: '#1e1b4b' });
+            for(let i=0; i<5; i++) {
+                collectibles.push({ x: 2450 + (i*100), y: 350, collected: false });
+            }
+            
+            // Giant invisible floor acting as death barrier
+            platforms.push({ x: -1000, y: GAME_HEIGHT + 200, w: 10000, h: 100, isDeathZone: true });
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+            if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+            if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') keys.up = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+            if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+            if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') keys.up = false;
+        });
+
+        // Touch Controls
+        const bindTouch = (id, key) => {
+            const el = document.getElementById(id);
+            if(!el) return;
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; });
+            el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
+        };
+        bindTouch('btn-left', 'left');
+        bindTouch('btn-right', 'right');
+        bindTouch('btn-jump', 'up');
+
+        function update() {
+            if (gameState !== 'PLAYING') return;
+
+            // 1. Horizontal Movement
+            if (keys.left) player.vx -= 1;
+            if (keys.right) player.vx += 1;
+            
+            // Friction/Drag
+            player.vx *= 0.8;
+            player.x += player.vx;
+
+            // AABB Collision (Horizontal)
+            player.grounded = false; // Reset grounded state
+            
+            for (let p of platforms) {
+                if (checkCollision(player, p)) {
+                    // Resolve horizontal overlap
+                    if (player.vx > 0) player.x = p.x - player.width; // Hit left side of wall
+                    else if (player.vx < 0) player.x = p.x + p.w; // Hit right side of wall
+                    player.vx = 0;
+                }
+            }
+
+            // 2. Vertical Movement (Gravity & Jump)
+            player.vy += player.gravity;
+            
+            // Terminal velocity
+            if (player.vy > 15) player.vy = 15;
+            player.y += player.vy;
+
+            // AABB Collision (Vertical)
+            for (let p of platforms) {
+                if (checkCollision(player, p)) {
+                    if (p.isDeathZone) {
+                        gameOver();
+                        return;
+                    }
+                    // Resolve vertical overlap
+                    if (player.vy > 0) { 
+                        player.y = p.y - player.height; // Landed on top
+                        player.grounded = true;
+                        player.vy = 0;
+                    } else if (player.vy < 0) {
+                        player.y = p.y + p.h; // Hit head on bottom
+                        player.vy = 0;
+                    }
+                }
+            }
+
+            // Jumping Logic
+            if (keys.up && player.grounded) {
+                player.vy = player.jumpPower;
+                player.grounded = false;
+                createParticles(player.x + player.width/2, player.y + player.height, '#ffffff', 5);
+            }
+
+            // 3. Camera Tracking (Keep player centeredish)
+            let targetCamX = player.x - GAME_WIDTH / 3;
+            // Smooth camera lerp
+            camera.x += (targetCamX - camera.x) * 0.1;
+            // Don't let camera go left of start
+            if (camera.x < 0) camera.x = 0;
+
+            // 4. Collectibles Logic
+            for (let c of collectibles) {
+                if (!c.collected) {
+                    // Simple distance check for collection
+                    let dx = (player.x + player.width/2) - (c.x + 10);
+                    let dy = (player.y + player.height/2) - (c.y + 10);
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (dist < 25) { // Collection radius
+                        c.collected = true;
+                        score++;
+                        scoreDisplay.innerText = `${score} / ${maxScore}`;
+                        createParticles(c.x + 10, c.y + 10, '#34d399', 10);
+                        
+                        // Victory Check
+                        if (score >= maxScore) {
+                            winGame();
+                        }
+                    }
+                }
+            }
+
+            // 5. Update Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.02;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+
+            // 6. Trail Effect
+            player.trail.push({x: player.x, y: player.y});
+            if (player.trail.length > 10) player.trail.shift();
+        }
+
+        // Utility: Axis-Aligned Bounding Box (AABB) Collision
+        function checkCollision(r1, r2) {
+            return r1.x < r2.x + r2.w &&
+                   r1.x + r1.width > r2.x &&
+                   r1.y < r2.y + r2.h &&
+                   r1.y + r1.height > r2.y;
+        }
+
+        function createParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    life: 1,
+                    color: color
+                });
+            }
+        }
+
+        function draw() {
+            // Clear screen
+            ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+            if (gameState !== 'PLAYING' && gameState !== 'WON') return;
+
+            // Save context for camera offset
+            ctx.save();
+            ctx.translate(-camera.x, -camera.y);
+
+            // Draw Background Grid (parallax effect)
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.1)';
+            ctx.lineWidth = 1;
+            const bgOffsetX = camera.x * 0.5;
+            const startX = Math.floor(bgOffsetX / 50) * 50;
+            ctx.beginPath();
+            for(let i = startX; i < startX + GAME_WIDTH + 100; i+=50) {
+                ctx.moveTo(i, 0); ctx.lineTo(i, GAME_HEIGHT + camera.y);
+            }
+            for(let i = 0; i < GAME_HEIGHT + camera.y; i+=50) {
+                ctx.moveTo(startX, i); ctx.lineTo(startX + GAME_WIDTH + 100, i);
+            }
+            ctx.stroke();
+
+            // Draw Platforms
+            for (let p of platforms) {
+                if (p.isDeathZone) continue;
+                
+                // Only draw if on screen
+                if (p.x + p.w > camera.x && p.x < camera.x + GAME_WIDTH) {
+                    ctx.fillStyle = p.color;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = p.color;
+                    ctx.fillRect(p.x, p.y, p.w, p.h);
+                    
+                    // Top edge highlight
+                    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                    ctx.shadowBlur = 0;
+                    ctx.fillRect(p.x, p.y, p.w, 3);
+                }
+            }
+
+            // Draw Collectibles
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = '#34d399';
+            for (let c of collectibles) {
+                if (!c.collected) {
+                    // Floating animation
+                    let floatY = Math.sin(Date.now() / 200 + c.x) * 5;
+                    
+                    ctx.fillStyle = '#34d399';
+                    ctx.beginPath();
+                    // Draw a diamond shape
+                    ctx.moveTo(c.x + 10, c.y + floatY);
+                    ctx.lineTo(c.x + 20, c.y + 10 + floatY);
+                    ctx.lineTo(c.x + 10, c.y + 20 + floatY);
+                    ctx.lineTo(c.x, c.y + 10 + floatY);
+                    ctx.fill();
+                }
+            }
+
+            // Draw Player Trail
+            ctx.shadowBlur = 0;
+            for (let i = 0; i < player.trail.length; i++) {
+                let t = player.trail[i];
+                let alpha = i / player.trail.length;
+                ctx.fillStyle = `rgba(52, 211, 153, ${alpha * 0.3})`;
+                ctx.fillRect(t.x, t.y, player.width, player.height);
+            }
+
+            // Draw Player
+            ctx.fillStyle = player.color;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Draw Player Eye (direction)
+            ctx.fillStyle = '#fff';
+            ctx.shadowBlur = 0;
+            if (player.vx > 0.5) ctx.fillRect(player.x + 20, player.y + 5, 5, 5); // looking right
+            else if (player.vx < -0.5) ctx.fillRect(player.x + 5, player.y + 5, 5, 5); // looking left
+            else ctx.fillRect(player.x + 20, player.y + 5, 5, 5); // default right
+
+            // Draw Particles
+            for (let p of particles) {
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.globalAlpha = 1.0;
+
+            ctx.restore();
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        function startGame() {
+            startScreen.classList.add('hidden');
+            gameOverScreen.classList.add('hidden');
+            victoryScreen.classList.add('hidden');
+            
+            // Reset Player
+            player.x = 100;
+            player.y = 300;
+            player.vx = 0;
+            player.vy = 0;
+            player.trail = [];
+            camera.x = 0;
+            
+            buildLevel();
+            gameState = 'PLAYING';
+        }
+
+        function gameOver() {
+            gameState = 'OVER';
+            gameOverScreen.classList.remove('hidden');
+        }
+
+        function winGame() {
+            gameState = 'WON';
+            victoryScreen.classList.remove('hidden');
+        }
+
+        // Event Listeners for UI
+        document.getElementById('start-btn').addEventListener('click', () => {
+            startGame();
+            if (!animationId) gameLoop();
+        });
+        
+        document.getElementById('retry-btn').addEventListener('click', startGame);
+        document.getElementById('restart-btn').addEventListener('click', startGame);
+
+        // Initial render to draw background before starting
+        draw();
+    </script>
+</body>
+</html>

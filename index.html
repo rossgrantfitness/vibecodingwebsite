@@ -114,16 +114,17 @@
     <main>
         <!-- Hero Section -->
         <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-            <!-- Animated Background Gradients -->
-            <div class="absolute top-1/4 -left-10 w-96 h-96 bg-blue-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
-            <div class="absolute top-1/3 -right-10 w-96 h-96 bg-purple-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
-            <div class="absolute -bottom-8 left-1/2 w-96 h-96 bg-gray-800/30 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-4000"></div>
+            <!-- Animated Background Gradients - CHANGED TO GREENS -->
+            <div class="absolute top-1/4 -left-10 w-96 h-96 bg-emerald-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+            <div class="absolute top-1/3 -right-10 w-96 h-96 bg-teal-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
+            <div class="absolute -bottom-8 left-1/2 w-96 h-96 bg-green-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-4000"></div>
 
             <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
                 <div class="inline-flex items-center space-x-2 bg-surfaceLight/50 rounded-full px-4 py-1.5 mb-8 border border-white/5 opacity-0 animate-fade-in-up" style="animation-delay: 0.1s;">
                     <span class="relative flex h-2 w-2">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                      <!-- Ping changed to green -->
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
                     <span class="text-xs font-medium text-secondary tracking-wide uppercase">Available for Hire (Remote / Austin, TX)</span>
                 </div>
@@ -212,118 +213,117 @@
                 <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
                     <div class="max-w-2xl">
                         <h2 class="text-3xl md:text-5xl font-medium tracking-tight mb-4">Selected Work.</h2>
-                        <p class="text-secondary font-light">Real applications, architected via advanced prompt engineering. Spanning data, security, and UI/UX.</p>
+                        <p class="text-secondary font-light">Real applications, architected via advanced prompt engineering. Spanning creative tools, interactive media, and logic-driven dashboards.</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
-                    <!-- Project 1: Data -->
-                    <a href="#" class="group block reveal">
+                    <!-- Project 1: Logic/Local -->
+                    <a href="pulse.html" class="group block reveal">
                         <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent"></div>
-                            <!-- Placeholder for actual app screenshot -->
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-chart-line-up text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Data</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">React</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">OmniMetrics Dashboard</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">A real-time data visualization platform aggregating complex API streams into a clean, actionable business intelligence interface.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 2: UI/UX -->
-                    <a href="#" class="group block reveal" style="transition-delay: 100ms;">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-transparent"></div>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-layout text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">UX/UI</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Tailwind</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">Aura Design System</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">A comprehensive, accessible component library focused on micro-interactions and smooth glassmorphism aesthetics.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 3: Security -->
-                    <a href="#" class="group block reveal" style="transition-delay: 200ms;">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent"></div>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-lock-key text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Security</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Node.js</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VaultFlow Auth</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">A mock implementation of a secure, zero-knowledge proof authentication flow with biometric fallback capabilities.</p>
-                        </div>
-                    </a>
-
-                     <!-- Project 4: Engineering -->
-                     <a href="#" class="group block reveal">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-transparent"></div>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-git-branch text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Engineering</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">API</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">SyncState Engine</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">A state management and synchronization tool demonstrating complex asynchronous logic and error boundary handling.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 5: Local/Product -->
-                    <a href="#" class="group block reveal" style="transition-delay: 100ms;">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-red-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent"></div>
                             <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
                                 <i class="ph ph-map-pin text-7xl text-white/50"></i>
                             </div>
                         </div>
                         <div>
                             <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Product</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Maps API</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Logic</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Data Dash</span>
                             </div>
                             <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">ATX 78729 Pulse</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">A highly localized real estate and community event tracker for North Austin, utilizing mapping APIs and web scraping.</p>
+                            <p class="text-sm text-secondary font-light line-clamp-2">A highly localized real estate and community event tracker for North Austin, utilizing mapping APIs and simulated live data streams.</p>
                         </div>
                     </a>
 
-                    <!-- Project 6: Creative -->
-                    <a href="#" class="group block reveal" style="transition-delay: 200ms;">
+                    <!-- Project 2: Creative / Tool -->
+                    <a href="#" class="group block reveal" style="transition-delay: 100ms;">
                         <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-pink-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent"></div>
                             <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-sparkle text-7xl text-white/50"></i>
+                                <i class="ph ph-palette text-7xl text-white/50"></i>
                             </div>
                         </div>
                         <div>
                             <div class="flex gap-2 mb-3">
                                 <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Creative</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Canvas</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Canvas API</span>
                             </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VibeSync Visuals</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">An interactive, browser-based audio visualizer using the Web Audio API and HTML5 Canvas to create generative art.</p>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VibePaint Studio</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">A fully functional, browser-based digital painting application. Features custom brush engines, layer simulation, and local storage saves.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 3: Games -->
+                    <a href="#" class="group block reveal" style="transition-delay: 200ms;">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-game-controller text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Game Dev</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Physics</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">SynthWave Runner</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">A playable 2D arcade game built entirely in HTML5/JS. Features collision detection, particle effects, and a custom game loop architecture.</p>
+                        </div>
+                    </a>
+
+                     <!-- Project 4: Marketing -->
+                     <a href="#" class="group block reveal">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-megaphone text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Marketing</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">UI/UX</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">Campaign Forge</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">An interactive landing page builder mockup demonstrating deep understanding of conversion rate optimization (CRO) and modern web typography.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 5: Media / Audio -->
+                    <a href="#" class="group block reveal" style="transition-delay: 100ms;">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-lime-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-wave-waveform text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Media</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Web Audio</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VibeSync Audio</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">An interactive, browser-based audio visualizer using the Web Audio API to create generative art reactive to user microphone input.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 6: Logic / Security -->
+                    <a href="#" class="group block reveal" style="transition-delay: 200ms;">
+                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent"></div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                                <i class="ph ph-shield-check text-7xl text-white/50"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Security</span>
+                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Logic</span>
+                            </div>
+                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VaultFlow Auth</h3>
+                            <p class="text-sm text-secondary font-light line-clamp-2">A frontend mock implementation of a secure, zero-knowledge proof authentication flow with biometric fallback UI states.</p>
                         </div>
                     </a>
 

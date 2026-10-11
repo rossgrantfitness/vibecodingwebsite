@@ -339,7 +339,7 @@ export class Renderer {
 }
 
 // Placeholder mouse: body, round ears, tail, eye, scarf. Squash/stretch scales around the feet.
-function drawMouse(ctx, p, x, y, juice) {
+export function drawMouse(ctx, p, x, y, juice) {
   const sx = juice ? p.sx : 1;
   const sy = juice ? p.sy : 1;
   const w = Math.max(4, Math.round(p.w * sx));

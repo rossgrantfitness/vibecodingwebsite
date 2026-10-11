@@ -218,8 +218,6 @@
             // Re-init particles on resize to fit new screen
             initParticles();
         }
-        window.addEventListener('resize', resize);
-        resize();
 
         // --- Particle Engine (Kinetics Mode) ---
         class Particle {
@@ -301,6 +299,10 @@
                 particles.push(new Particle());
             }
         }
+
+        // Size the canvas only once Particle exists (calling resize() earlier threw a ReferenceError).
+        window.addEventListener('resize', resize);
+        resize();
 
         // --- Audio Initialization ---
         async function initAudio() {

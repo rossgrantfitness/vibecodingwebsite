@@ -6,12 +6,12 @@ One step per session. End each with "commit and push", then start the next sessi
 
 | Project | Built by | Status |
 | --- | --- | --- |
-| ATX 78729 Pulse (`pulse.html`) | — | Live |
+| ATX Pulse (`pulse.html`) | — | Live (sample data) |
 | Mousecapades (`games/mousecapades/`) | Claude | In development (playable prototype) |
 | VibePaint Studio | Gemini | Live |
 | Campaign Forge | Gemini | Live |
 | VibeSync Audio | Gemini | Live |
-| VaultFlow Auth | Gemini | Live |
+| Site redesign (homepage + 3 case studies) | Claude | Live |
 
 ## Steps
 
@@ -42,15 +42,22 @@ Add `?play` to skip the title screen, or `?level=test` for the movement test cou
 
 ## Still needed from you
 
-- Real email (currently `hello@example.com` in the Contact section) and LinkedIn URL (currently `#`).
-- A name for the mouse girl (game title is Mousecapades).
-- GitHub Pages: in the repo, go to Settings → Pages → Deploy from branch → `main` / root.
+Content only you can supply (search the HTML for `TODO(Ross)`):
+- A real photo for About (`assets/img/ross.jpg`, swap it into the `.portrait` block in `index.html`).
+- A résumé PDF (`assets/resume.pdf`), then add a "Résumé" button in the hero and contact rows.
+- Sketches / moodboard for the Mousecapades case study.
+- For VibePaint and VibeSync: one prompt that worked, one that didn't, and early sketches.
+- Screenshots of the Godot project (Jackie) to replace the placeholder art on its card.
+- A name for the mouse girl.
+- Optional: a custom domain (e.g. rossgrant.design) or rename the GitHub account/repo. If the URL changes,
+  update the `og:url` / `og:image` meta tags in `index.html` and `work/*.html`.
 
 ## Brief for apps built in other tools (paste into Gemini)
 
-> Build a single self-contained HTML file named `<name>.html` for my portfolio. Match this style: dark
-> background `#050505`, panels `#121212` with subtle `rgba(255,255,255,0.05)` borders and rounded-3xl
-> corners, text `#E5E5E5` / muted `#A3A3A3`, emerald/teal accent glows, Plus Jakarta Sans font, Tailwind
-> via `https://cdn.tailwindcss.com`, Phosphor icons via `https://unpkg.com/@phosphor-icons/web@2.1.2`.
-> Pin any other CDN library to an exact version. Include a "← Back to Portfolio" link to `index.html`
-> that stays visible on mobile. No build step, no backend; everything runs in the browser.
+> Build a single self-contained HTML file named `<name>.html` for my portfolio (Ross Grant, designer &
+> creative technologist). Match my site: warm cream background `#f3eee4` (dark mode `#15110e`), espresso
+> text `#221c17`, muted `#6b6258`, olive accent `#556b2f`, sage `#8f9f74`, burgundy `#7a2531`, and a
+> cheese-gold highlight `#d99a1e`. No blue or navy anywhere. Headings in Fraunces, body in Plus Jakarta
+> Sans (Google Fonts). Rounded 18px cards with 1px borders, generous whitespace. Pin any CDN library to an
+> exact version. Include a "← Back to Portfolio" link to `index.html` that stays visible on mobile. No
+> build step, no backend; everything runs in the browser. Be honest in the copy about mockups and sample data.

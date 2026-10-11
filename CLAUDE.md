@@ -1,15 +1,22 @@
 # Vibe Coding Portfolio
 
-Static portfolio site for an AI-augmented developer, hosted on GitHub Pages. No build step:
-every page is plain HTML/CSS/JS that works when served from the repo root.
+Static portfolio for Ross Grant — designer & creative technologist (UX/UI, visual design, pixel art,
+interactive work). Hosted on GitHub Pages. No build step: every page is plain HTML/CSS/JS served from
+the repo root. Positioning: design taste and creative output first; AI is part of the process, never
+the headline. No backend/security/"10x" claims; label prototypes and sample data honestly.
 
 See `ROADMAP.md` for the build plan and what's live vs. pending.
 
 ## Layout
 
-- `index.html` — portfolio landing page. The "Selected Work" grid links to each project.
-- `pulse.html` — ATX 78729 Pulse dashboard (live).
-- `vibe_paint.html`, `vibe_sync.html`, `campaign_forge.html`, `vault_flow.html` — web apps built in Gemini (live). Leave these to the owner.
+- `index.html` — homepage: hero (live pixel mouse), featured work, experiments, art gallery, process, about, contact.
+- `work/*.html` — case studies (Mousecapades, VibePaint, VibeSync), all sharing one template. Copy one to add more.
+- `assets/css/site.css`, `assets/js/site.js` — shared design system and behaviour for homepage + case studies.
+- `assets/js/hero-mouse.js` — hero animation + Konami easter egg; imports the game's own sprite/font code.
+- `assets/img/` — generated game art (`mousecapades/`, 1× pixel PNGs shown with `.pixel`), app screenshots (`work/`, WebP), `og.png`.
+- `pulse.html` — ATX Pulse dashboard (sample data).
+- `vibe_paint.html`, `vibe_sync.html`, `campaign_forge.html` — web apps built in Gemini (live). Leave these to the owner
+  except for bug fixes.
 - `OLDindex.html`, `newOLDindex.html` — the owner's backup copies of earlier landing pages. Leave them alone.
 - `games/mousecapades/` — the mouse-girl platformer (in development).
 - `synthwave_runner.html` — old arcade game, superseded by Mousecapades. Unlinked; delete once Mousecapades ships.
@@ -17,15 +24,14 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
 
 ## Site conventions
 
-- Dark theme: background `#050505`, surface `#121212`, text `#E5E5E5`, muted `#A3A3A3`, emerald/teal accent glows.
-- Font: Plus Jakarta Sans (Google Fonts). Icons: Phosphor (`@phosphor-icons/web@2.1.2`).
-- Tailwind via `cdn.tailwindcss.com` with the inline `tailwind.config` block used in `index.html`.
-- Pin every CDN script to an exact version.
+- Homepage + case studies use `assets/css/site.css` (hand-written CSS, no Tailwind). Colours are CSS variables
+  with light/dark themes: cream, espresso, olive accent, sage, burgundy, cheese-gold. **No blues or navy.**
+- Type: Fraunces (display) + Plus Jakarta Sans (body), from Google Fonts. Spacing scale 4/8/16/24/32/48/64/96.
+- Pixel art is exported at 1× and scaled in CSS with `.pixel` (`image-rendering: pixelated`).
+- Respect `prefers-reduced-motion`; every image gets alt text; no placeholder or `#` links on live pages.
+  Owner-only TODOs go in HTML comments (`<!-- TODO(Ross): ... -->`).
+- The Gemini app pages use Tailwind CDN + Plus Jakarta Sans; pin any CDN script to an exact version.
 - Every project page has a visible "← Back to Portfolio" link to `index.html`, including on mobile.
-- Project cards in `index.html`: a live project is an `<a href="...">` with a green "Live" badge; an
-  unbuilt one is a `<div class="... cursor-default">` with a "Coming soon" badge; a playable
-  work-in-progress is an `<a>` with an "In development" badge.
-  When a project ships, switch its card from `<div>` to `<a>` and change the badge.
 
 ## Game (`games/mousecapades/`)
 

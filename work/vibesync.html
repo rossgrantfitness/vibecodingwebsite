@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeSync — case study · Ross Grant</title>
+    <meta name="description" content="Generative, microphone-reactive visuals with a privacy-first intro and a single reactivity dial.">
+    <meta property="og:title" content="VibeSync — case study · Ross Grant">
+    <meta property="og:description" content="Generative, microphone-reactive visuals with a privacy-first intro and a single reactivity dial.">
+    <meta property="og:image" content="https://rossgrantfitness.github.io/vibecodingwebsite/assets/img/og.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,500..700,0..100,0..1;1,9..144,500..700,0..100,0..1&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="wrap">
+            <a class="wordmark" href="../index.html"><img class="pixel" src="../favicon.svg" alt="" width="28" height="28">Ross Grant</a>
+            <nav class="nav" aria-label="Primary">
+                <div class="nav-links"><a href="../index.html#work">← All work</a><a href="../index.html#contact">Contact</a></div>
+                <button class="icon-btn" type="button" data-theme-toggle>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="cs-hero">
+            <a href="../index.html#work">← Back to all work</a>
+            <h1>VibeSync</h1>
+            <p class="lede">Live generative visuals driven by your microphone. Sing, clap or play music, and the screen answers.</p>
+            <div class="btn-row" style="margin-top:var(--s4)">
+                <a class="btn btn-primary" href="../vibe_sync.html">Open VibeSync</a>
+            </div>
+            <dl class="cs-meta">
+                <div><dt>Role</dt><dd>Visual design, interaction design, AI-directed build</dd></div>
+                <div><dt>Status</dt><dd>Working prototype</dd></div>
+                <div><dt>Built with</dt><dd>Web Audio API, Canvas, Gemini</dd></div>
+                <div><dt>Needs</dt><dd>A microphone (nothing is recorded)</dd></div>
+            </dl>
+        </section>
+
+        <figure class="cs-cover">
+            <img src="../assets/img/work/vibesync-radial.webp" width="1200" height="750" alt="VibeSync radial mode: olive lines bursting outward in a ring, with a control panel for visual mode and reactivity.">
+        </figure>
+
+        <article class="prose">
+            <h2>The goal</h2>
+            <p>Make sound visible, with as little interface as possible. The visuals should be the whole experience, and the controls should only be there to shape them.</p>
+
+            <h2>Key design decisions</h2>
+            <h3>1. Earn trust before asking for the mic</h3>
+            <p>Microphone prompts are scary. Before the browser asks, an intro screen explains in one line what the app does and promises that audio stays in your browser and is never recorded or sent. Only then does the "Allow microphone &amp; start" button appear.</p>
+
+            <h3>2. Three moods, one dial</h3>
+            <p>Kinetics (particles), Radial (a ring of frequency bars) and Waveform (the raw signal) each give the same sound a different character. One reactivity slider covers every mode, because more knobs would mean less looking.</p>
+            <div class="compare figure">
+                <figure><div class="label">Kinetics</div><img src="../assets/img/work/vibesync-kinetics.webp" width="1200" height="750" loading="lazy" alt="Kinetics mode: particles drifting on a dark field."></figure>
+                <figure><div class="label">Waveform</div><img src="../assets/img/work/vibesync-waveform.webp" width="1200" height="750" loading="lazy" alt="Waveform mode: a single glowing line tracing the audio signal."></figure>
+            </div>
+
+            <h3>3. Quiet chrome</h3>
+            <p>The controls sit in one small frosted panel at the bottom, and everything else is black. The olive accent marks only the active mode and the slider handle.</p>
+
+            <h2>What broke, and how it got fixed</h2>
+            <p>While preparing this case study I found that VibeSync crashed on load: the code sized the canvas, which creates the particles, before the particle code existed, so the Start button never worked. Moving a single call fixed it. The lesson: open every project fresh in a clean browser before linking to it.</p>
+
+            <h2>Working with AI</h2>
+            <p>VibeSync was built with Gemini from my brief on the three modes, the privacy-first intro and the minimal control panel. The load bug was diagnosed and fixed with Claude.</p>
+            <!-- TODO(Ross): paste one prompt that worked and one that didn't, with a line on what you changed. -->
+
+            <h2>What's next</h2>
+            <ul>
+                <li>A demo mode with a built-in track, so people can see it without a microphone.</li>
+                <li>Palette presets that match my other work.</li>
+                <li>Full-screen and record-to-GIF.</li>
+            </ul>
+
+            <div class="cs-next">
+                <a href="vibepaint.html">← VibePaint</a>
+                <a href="../index.html#work">All work →</a>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrap">
+            <span>© <span data-year>2026</span> Ross Grant</span>
+            <nav aria-label="Footer"><a href="mailto:ross.v.grant@gmail.com">Email</a><a href="https://www.linkedin.com/in/rossvgrant/" rel="noopener" target="_blank">LinkedIn</a></nav>
+        </div>
+    </footer>
+    <script src="../assets/js/site.js"></script>
+</body>
+</html>

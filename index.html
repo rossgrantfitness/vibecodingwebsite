@@ -1,400 +1,300 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Augmented Developer | Portfolio</title>
-    
-    <!-- Fonts: Plus Jakarta Sans for a modern, sleek tech vibe -->
+    <title>Ross Grant — Designer &amp; Creative Technologist</title>
+    <meta name="description" content="Ross Grant designs and builds playful, polished digital experiences: interfaces, games and interactive art. Austin, TX.">
+    <meta name="theme-color" content="#f3eee4" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#15110e" media="(prefers-color-scheme: dark)">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ross Grant — Designer & Creative Technologist">
+    <meta property="og:description" content="Interfaces, games and interactive art — designed by hand, built with code, directed with AI.">
+    <meta property="og:image" content="https://rossgrantfitness.github.io/vibecodingwebsite/assets/img/og.png">
+    <meta property="og:url" content="https://rossgrantfitness.github.io/vibecodingwebsite/">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        background: '#050505',
-                        surface: '#121212',
-                        surfaceLight: '#1E1E1E',
-                        primary: '#E5E5E5',
-                        secondary: '#A3A3A3',
-                        accent: '#3B82F6',
-                    },
-                    animation: {
-                        'blob': 'blob 7s infinite',
-                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                    },
-                    keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #050505;
-            color: #E5E5E5;
-            overflow-x: hidden;
-        }
-        
-        /* Reveal animations triggered by JS */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Glassmorphism utilities */
-        .glass {
-            background: rgba(18, 18, 18, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #050505;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,500..700,0..100,0..1;1,9..144,500..700,0..100,0..1&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/site.css">
 </head>
-<body class="antialiased selection:bg-white selection:text-black">
+<body>
+    <a class="skip" href="#main">Skip to content</a>
 
-    <nav class="fixed top-0 w-full z-50 glass transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold tracking-tighter hover:text-white transition-colors">
-                <span class="text-secondary">AI</span>Architect.
+    <header class="site-header">
+        <div class="wrap">
+            <a class="wordmark" href="#top" aria-label="Ross Grant, home">
+                <img class="pixel" src="favicon.svg" alt="" width="28" height="28">
+                Ross Grant
             </a>
-            <div class="hidden md:flex space-x-8 text-sm font-medium text-secondary">
-                <a href="#capabilities" class="hover:text-primary transition-colors">Capabilities</a>
-                <a href="#work" class="hover:text-primary transition-colors">Work</a>
-                <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
-            </div>
-            <a href="#contact" class="px-5 py-2.5 bg-white text-black text-sm font-semibold rounded-full hover:bg-gray-200 transition-all shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]">
-                Let's Build
-            </a>
+            <nav class="nav" aria-label="Primary">
+                <div class="nav-links">
+                    <a href="#work">Work</a>
+                    <a href="#art">Art</a>
+                    <a href="#process">Process</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <button class="icon-btn" type="button" data-theme-toggle>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+                </button>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-            <!-- Animated Background Gradients - CHANGED TO GREENS -->
-            <div class="absolute top-1/4 -left-10 w-96 h-96 bg-emerald-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
-            <div class="absolute top-1/3 -right-10 w-96 h-96 bg-teal-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
-            <div class="absolute -bottom-8 left-1/2 w-96 h-96 bg-green-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-4000"></div>
-
-            <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
-                <div class="inline-flex items-center space-x-2 bg-surfaceLight/50 rounded-full px-4 py-1.5 mb-8 border border-white/5 opacity-0 animate-fade-in-up" style="animation-delay: 0.1s;">
-                    <span class="relative flex h-2 w-2">
-                      <!-- Ping changed to green -->
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    <span class="text-xs font-medium text-secondary tracking-wide uppercase">Available for Hire (Remote / Austin, TX)</span>
+    <main id="main">
+        <!-- Hero -->
+        <section class="hero" id="top">
+            <div class="wrap hero-grid">
+                <div>
+                    <span class="eyebrow">Designer &amp; creative technologist · Austin, TX</span>
+                    <h1>I design and build <em>playful,</em> polished digital experiences.</h1>
+                    <p class="lede">Interfaces, games and interactive art: sketched by hand, built with code and directed with AI. I sweat the small stuff, like the bounce of a jump, the weight of a button and the rhythm of a page.</p>
+                    <div class="btn-row">
+                        <a class="btn btn-primary" href="#work">See my work</a>
+                        <a class="btn" href="games/mousecapades/">Play Mousecapades</a>
+                        <a class="btn" href="https://www.linkedin.com/in/rossvgrant/" rel="noopener" target="_blank">LinkedIn ↗</a>
+                    </div>
                 </div>
-                
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[1.1] mb-8 opacity-0 animate-fade-in-up" style="animation-delay: 0.2s;">
-                    I don't just write code.<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600">I direct it.</span>
-                </h1>
-                
-                <p class="mt-6 text-lg md:text-xl text-secondary max-w-2xl mx-auto font-light leading-relaxed opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
-                    I am an AI-Augmented Developer & Designer. By leveraging advanced prompt engineering, I build robust data pipelines, secure infrastructures, and stunning UI/UX at 10x the speed of traditional development.
-                </p>
-                
-                <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-in-up" style="animation-delay: 0.4s;">
-                    <a href="#work" class="px-8 py-3.5 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-all w-full sm:w-auto">
-                        View My Work
-                    </a>
-                    <a href="#contact" class="px-8 py-3.5 bg-surface border border-white/10 text-white font-medium rounded-full hover:bg-surfaceLight transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
-                        <i class="ph ph-envelope-simple text-lg"></i> Contact Me
-                    </a>
+                <figure class="stage" style="margin:0">
+                    <canvas id="hero-stage" class="pixel" width="256" height="120" tabindex="0"
+                        aria-label="Animated pixel-art mouse running and collecting cheese. Click or press Space to make her jump."></canvas>
+                    <figcaption class="stage-caption">
+                        <span>Click or press <kbd>Space</kbd> to jump</span>
+                        <a href="#mousecapades">She's from Mousecapades ↓</a>
+                    </figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- Featured work -->
+        <section class="section" id="work" style="padding-top:0">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">Featured work</span>
+                    <h2>Three projects, start to finish.</h2>
+                    <p class="lede">Each one has a case study covering the goal, the design decisions, and how I directed AI to build it.</p>
+                </div>
+
+                <div class="featured">
+                    <article class="card card-feature reveal" id="mousecapades">
+                        <a class="card-media" href="work/mousecapades.html" tabindex="-1" aria-hidden="true">
+                            <img class="pixel" src="assets/img/mousecapades/gameplay.png" width="320" height="180" alt="">
+                        </a>
+                        <div class="card-body">
+                            <ul class="tags"><li>Game design</li><li>Pixel art</li><li>Level design</li></ul>
+                            <h3><a href="work/mousecapades.html" style="text-decoration:none">Mousecapades</a></h3>
+                            <p class="role">Design, art and AI-directed build · <span class="status">Playable prototype</span></p>
+                            <p>An SNES-style platformer about one small mouse in a big neon city. I designed the character, the level and the movement feel, then built the engine around a live tuning panel so I could dial in every jump by hand.</p>
+                            <div class="card-links">
+                                <a href="work/mousecapades.html">Read the case study</a>
+                                <a href="games/mousecapades/">Play it</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="featured-pair">
+                        <article class="card reveal">
+                            <a class="card-media" href="work/vibepaint.html" tabindex="-1" aria-hidden="true">
+                                <img src="assets/img/work/vibepaint.webp" width="1200" height="750" loading="lazy" alt="">
+                            </a>
+                            <div class="card-body">
+                                <ul class="tags"><li>Tool UX</li><li>Interaction design</li></ul>
+                                <h3><a href="work/vibepaint.html" style="text-decoration:none">VibePaint</a></h3>
+                                <p class="role">Design and AI-directed build</p>
+                                <p>A layered painting app in the browser. A slim tool rail and a floating layers panel keep the canvas front and centre, so the artwork stays the loudest thing on screen.</p>
+                                <div class="card-links">
+                                    <a href="work/vibepaint.html">Read the case study</a>
+                                    <a href="vibe_paint.html">Try it</a>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="card reveal">
+                            <a class="card-media" href="work/vibesync.html" tabindex="-1" aria-hidden="true">
+                                <img src="assets/img/work/vibesync-radial.webp" width="1200" height="750" loading="lazy" alt="">
+                            </a>
+                            <div class="card-body">
+                                <ul class="tags"><li>Generative art</li><li>Creative coding</li></ul>
+                                <h3><a href="work/vibesync.html" style="text-decoration:none">VibeSync</a></h3>
+                                <p class="role">Design and AI-directed build</p>
+                                <p>Live visuals that react to your microphone: three visual modes and one reactivity dial. It explains exactly what it does with your audio before it asks for permission, and it records nothing.</p>
+                                <div class="card-links">
+                                    <a href="work/vibesync.html">Read the case study</a>
+                                    <a href="vibe_sync.html">Try it</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="section-head reveal" style="margin:var(--s8) 0 0">
+                    <span class="eyebrow">Experiments &amp; studies</span>
+                    <h2>More from the workbench.</h2>
+                </div>
+                <div class="more">
+                    <article class="card reveal">
+                        <a class="card-media" href="campaign_forge.html" tabindex="-1" aria-hidden="true">
+                            <img src="assets/img/work/campaign-forge.webp" width="1200" height="750" loading="lazy" alt="">
+                        </a>
+                        <div class="card-body">
+                            <ul class="tags"><li>Typography</li><li>Layout</li></ul>
+                            <h3>Campaign Forge</h3>
+                            <p>A type and layout study. Swap the headline, copy length, button colour and social proof, and watch the hierarchy of a landing page change live. The metrics are simulated.</p>
+                            <div class="card-links"><a href="campaign_forge.html">Open the study</a></div>
+                        </div>
+                    </article>
+                    <article class="card reveal">
+                        <a class="card-media" href="pulse.html" tabindex="-1" aria-hidden="true">
+                            <img src="assets/img/work/pulse.webp" width="1200" height="750" loading="lazy" alt="">
+                        </a>
+                        <div class="card-body">
+                            <ul class="tags"><li>Information design</li></ul>
+                            <h3>ATX Pulse</h3>
+                            <p>A neighbourhood dashboard for North Austin, designed for scanning: big numbers first, context second, detail on demand. It runs on sample data.</p>
+                            <div class="card-links"><a href="pulse.html">Open the dashboard</a></div>
+                        </div>
+                    </article>
+                    <article class="card reveal">
+                        <div class="card-media wip-art" role="img" aria-label="Placeholder art: a low-poly sunset over a dark ridge"><span>In progress</span></div>
+                        <div class="card-body">
+                            <ul class="tags"><li>3D</li><li>Game art</li><li>Godot</li></ul>
+                            <h3>Jackie <span style="font-weight:400;color:var(--muted)">(working title)</span></h3>
+                            <p>A 1990s PS1-style space-trucking action RPG in Godot, starring an animal-girl pilot named Jackie. It brings together low-poly modelling in Blender, gesture drawing, and a city-pop and synthwave soundtrack made with AI music tools.</p>
+                            <p class="role" style="margin:0">Screenshots coming soon.</p>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>
 
-        <!-- Capabilities Section -->
-        <section id="capabilities" class="py-32 relative">
-            <div class="max-w-7xl mx-auto px-6 md:px-12">
-                <div class="mb-20 max-w-3xl reveal">
-                    <h2 class="text-3xl md:text-5xl font-medium tracking-tight mb-6">Cross-Disciplinary Velocity.</h2>
-                    <p class="text-lg text-secondary leading-relaxed font-light">
-                        My lack of traditional bias is my greatest strength. I don't get bogged down in syntax; I focus on architecture, user experience, and business logic. I use AI to translate human intent into production-ready software across multiple domains.
-                    </p>
+        <!-- Art -->
+        <section class="section" id="art" style="background:var(--surface);border-block:1px solid var(--line)">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">Art &amp; visuals</span>
+                    <h2>Every pixel placed on purpose.</h2>
+                    <p class="lede">Sprites, tiles and screens from Mousecapades, all drawn to a 320 × 180 canvas and scaled up with hard edges. The mouse herself is still a work-in-progress sprite.</p>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- UX/UI -->
-                    <div class="glass p-8 rounded-3xl reveal transition-transform hover:-translate-y-2 duration-300 hover:border-white/20">
-                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-2xl">
-                            <i class="ph ph-bezier-curve"></i>
+                <div class="gallery reveal">
+                    <figure class="span2">
+                        <img class="pixel" src="assets/img/mousecapades/title.png" width="320" height="180" loading="lazy" alt="Mousecapades title screen: pink and cyan pixel logo over a night city, with a large pixel mouse.">
+                        <figcaption>Title screen</figcaption>
+                    </figure>
+                    <figure class="span2">
+                        <img class="pixel" src="assets/img/mousecapades/awnings.png" width="320" height="180" loading="lazy" alt="The mouse jumping between teal neon awnings toward a Golden Cheese.">
+                        <figcaption>Neon awnings: one-way platforms</figcaption>
+                    </figure>
+                    <figure class="span2">
+                        <img class="pixel" src="assets/img/mousecapades/sheet.png" width="168" height="64" loading="lazy" alt="Sprite sheet: seven mouse poses, two walker robots, a spiked robot, a drone, a cheese chip and a Golden Cheese.">
+                        <figcaption>Sprite sheet: mouse poses, Scuttlebot, Spikebot, drone, cheese</figcaption>
+                    </figure>
+                    <figure>
+                        <img class="pixel" src="assets/img/mousecapades/tiles.png" width="104" height="24" loading="lazy" alt="Five tiles: ground, riveted metal, item block, used block and a one-way awning.">
+                        <figcaption>Tileset</figcaption>
+                    </figure>
+                    <figure>
+                        <div class="palette" role="img" aria-label="Game palette swatches">
+                            <span style="background:#0d0820">0d0820</span><span style="background:#3a1a4a">3a1a4a</span>
+                            <span style="background:#363050">363050</span><span style="background:#8f7fd0">8f7fd0</span>
+                            <span style="background:#ff4fd8">ff4fd8</span><span style="background:#3df0ff;color:#0d0820;text-shadow:none">3df0ff</span>
+                            <span style="background:#ffd95e;color:#0d0820;text-shadow:none">ffd95e</span><span style="background:#d9d1ea;color:#0d0820;text-shadow:none">d9d1ea</span>
                         </div>
-                        <h3 class="text-xl font-medium mb-3">UX/UI Design</h3>
-                        <p class="text-sm text-secondary font-light leading-relaxed">
-                            Crafting intuitive, pixel-perfect interfaces that prioritize user psychology and modern aesthetics.
-                        </p>
-                    </div>
-                    
-                    <!-- Engineering -->
-                    <div class="glass p-8 rounded-3xl reveal transition-transform hover:-translate-y-2 duration-300 hover:border-white/20" style="transition-delay: 100ms;">
-                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-2xl">
-                            <i class="ph ph-code"></i>
+                        <figcaption>Palette</figcaption>
+                    </figure>
+                    <figure class="wide">
+                        <div class="map-scroll" tabindex="0" aria-label="Full level map, scrolls sideways">
+                            <img class="pixel" src="assets/img/mousecapades/level-map.png" width="4032" height="240" loading="lazy" alt="The whole of Sector 1 laid out end to end: pillars, awnings, gaps, runway, gauntlet, end staircase and exit gate.">
                         </div>
-                        <h3 class="text-xl font-medium mb-3">Web Engineering</h3>
-                        <p class="text-sm text-secondary font-light leading-relaxed">
-                            Architecting responsive, high-performance web applications using modern frameworks and clean logic.
-                        </p>
-                    </div>
-
-                    <!-- Data -->
-                    <div class="glass p-8 rounded-3xl reveal transition-transform hover:-translate-y-2 duration-300 hover:border-white/20" style="transition-delay: 200ms;">
-                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-2xl">
-                            <i class="ph ph-database"></i>
-                        </div>
-                        <h3 class="text-xl font-medium mb-3">Data Solutions</h3>
-                        <p class="text-sm text-secondary font-light leading-relaxed">
-                            Structuring robust databases, integrating complex APIs, and building dynamic data visualization dashboards.
-                        </p>
-                    </div>
-
-                    <!-- Security -->
-                    <div class="glass p-8 rounded-3xl reveal transition-transform hover:-translate-y-2 duration-300 hover:border-white/20" style="transition-delay: 300ms;">
-                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-2xl">
-                            <i class="ph ph-shield-check"></i>
-                        </div>
-                        <h3 class="text-xl font-medium mb-3">Security Focus</h3>
-                        <p class="text-sm text-secondary font-light leading-relaxed">
-                            Implementing secure authentication, data encryption, and robust error handling to protect user data.
-                        </p>
-                    </div>
+                        <figcaption>Sector 1, the whole level end to end (scroll sideways)</figcaption>
+                    </figure>
                 </div>
             </div>
         </section>
 
-        <!-- Work Section -->
-        <section id="work" class="py-32 bg-surface/30 border-y border-white/5 relative">
-            <div class="max-w-7xl mx-auto px-6 md:px-12">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
-                    <div class="max-w-2xl">
-                        <h2 class="text-3xl md:text-5xl font-medium tracking-tight mb-4">Selected Work.</h2>
-                        <p class="text-secondary font-light">Real applications, architected via advanced prompt engineering. Spanning creative tools, interactive media, and logic-driven dashboards.</p>
-                    </div>
+        <!-- Process -->
+        <section class="section" id="process">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">Process</span>
+                    <h2>Accuracy over speed.</h2>
+                    <p class="lede">I direct AI tools the way an art director directs a team: a clear brief, specific feedback, and nothing ships until I've reviewed it and it feels right.</p>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    
-                    <!-- Project 1: Logic/Local -->
-                    <a href="pulse.html" class="group block reveal">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent"></div>
-                            <span class="absolute top-4 right-4 px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300">Live</span>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-map-pin text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Logic</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Data Dash</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">ATX 78729 Pulse</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">A highly localized real estate and community event tracker for North Austin, utilizing mapping APIs and simulated live data streams.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 2: Creative / Tool -->
-                    <a href="vibe_paint.html" class="group block reveal" style="transition-delay: 100ms;">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent"></div>
-                            <span class="absolute top-4 right-4 px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300">Live</span>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-palette text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Creative</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Canvas API</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VibePaint Studio</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">A fully functional, browser-based digital painting application. Features custom brush engines, layer simulation, and local storage saves.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 3: Games -->
-                    <a href="games/mousecapades/" class="group block reveal" style="transition-delay: 200ms;">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent"></div>
-                            <span class="absolute top-4 right-4 px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase rounded-full bg-black/60 border border-white/10 text-secondary">In development</span>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-game-controller text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Game Dev</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Pixel Art</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">Mousecapades</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">A pixel-art platformer with SNES-era momentum physics. Run, skid and stomp robots across a neon sci-fi city to hunt down three Golden Cheeses.</p>
-                        </div>
-                    </a>
-
-                     <!-- Project 4: Marketing -->
-                     <a href="campaign_forge.html" class="group block reveal">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-transparent"></div>
-                            <span class="absolute top-4 right-4 px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300">Live</span>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-megaphone text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Marketing</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">UI/UX</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">Campaign Forge</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">An interactive landing page builder mockup demonstrating deep understanding of conversion rate optimization (CRO) and modern web typography.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 5: Media / Audio -->
-                    <a href="vibe_sync.html" class="group block reveal" style="transition-delay: 100ms;">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-lime-900/20 to-transparent"></div>
-                            <span class="absolute top-4 right-4 px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300">Live</span>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-waveform text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Media</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Web Audio</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VibeSync Audio</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">An interactive, browser-based audio visualizer using the Web Audio API to create generative art reactive to user microphone input.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 6: Logic / Security -->
-                    <a href="vault_flow.html" class="group block reveal" style="transition-delay: 200ms;">
-                        <div class="relative h-80 rounded-3xl overflow-hidden bg-surface mb-6 border border-white/5 group-hover:border-white/20 transition-all duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent"></div>
-                            <span class="absolute top-4 right-4 px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300">Live</span>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
-                                <i class="ph ph-shield-check text-7xl text-white/50"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex gap-2 mb-3">
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Security</span>
-                                <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase border border-white/10 rounded-full text-secondary">Logic</span>
-                            </div>
-                            <h3 class="text-xl font-medium mb-2 group-hover:text-white transition-colors">VaultFlow Auth</h3>
-                            <p class="text-sm text-secondary font-light line-clamp-2">A frontend mock implementation of a secure, zero-knowledge proof authentication flow with biometric fallback UI states.</p>
-                        </div>
-                    </a>
-
+                <ol class="steps reveal">
+                    <li><h3>Sketch</h3><p>Thumbnails, gestures and rough layouts on paper. They're cheap to change and fast to throw away.</p></li>
+                    <li><h3>Moodboard</h3><p>References for colour, type and feel, gathered before any code. For Mousecapades: SNES-era platformers and neon city nights.</p></li>
+                    <li><h3>Design</h3><p>Palette, type scale, sprites and layout. Decisions get made here, not halfway through the build.</p></li>
+                    <li><h3>Build with AI</h3><p>I write the brief, the AI drafts the code, and I review every pass. I steer with specifics like "the turnaround feels sluggish", not vague vibes.</p></li>
+                    <li><h3>Playtest &amp; iterate</h3><p>Real devices, real hands. I tune by feel, check screenshots line by line, and cut what doesn't earn its place.</p></li>
+                </ol>
+                <div class="process-proof">
+                    <div class="quote-box reveal">
+                        <span class="eyebrow">From my original brief</span>
+                        <blockquote>"Running, momentum and inertia, tight controls that feel so good to play, pixel-perfect platforming… it has to feel amazing to play."</blockquote>
+                        <p>Instead of guessing the right numbers, the AI and I built a tuning panel into the game. Every gravity, speed and friction value is a live slider, so the feel was set by my hands, not by the model.</p>
+                    </div>
+                    <figure class="shot reveal">
+                        <img src="assets/img/work/tuning-panel.webp" width="1200" height="750" loading="lazy" alt="Mousecapades movement test course with the tuning panel open, showing sliders for walk speed, run speed, acceleration and friction.">
+                        <figcaption>The tuning panel on the movement test course, with hitboxes switched on.</figcaption>
+                    </figure>
                 </div>
             </div>
         </section>
 
-        <!-- Contact Section -->
-        <section id="contact" class="py-32 relative overflow-hidden">
-            <!-- Background glow -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full filter blur-[120px] pointer-events-none"></div>
-            
-            <div class="max-w-4xl mx-auto px-6 text-center relative z-10 reveal">
-                <h2 class="text-4xl md:text-6xl font-medium tracking-tight mb-8">Ready to move fast?</h2>
-                <p class="text-xl text-secondary font-light mb-12 max-w-2xl mx-auto">
-                    I am actively seeking roles in Data, Security, Engineering, or UX/UI. Based near Austin TX (78729), open to local, hybrid, or remote opportunities.
-                </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-                    <a href="mailto:hello@example.com" class="px-8 py-4 bg-white text-black text-lg font-semibold rounded-full hover:bg-gray-200 transition-all w-full sm:w-auto shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-                        Get in Touch
-                    </a>
-                    <a href="#" class="px-8 py-4 glass border border-white/10 text-white text-lg font-medium rounded-full hover:bg-white/10 transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
-                        <i class="ph ph-linkedin-logo text-2xl"></i> Connect
-                    </a>
+        <!-- About -->
+        <section class="section" id="about" style="background:var(--surface);border-block:1px solid var(--line)">
+            <div class="wrap about-grid">
+                <div class="portrait reveal">
+                    <!-- TODO(Ross): swap in a real photo, e.g. assets/img/ross.jpg -->
+                    <img class="pixel" src="assets/img/mousecapades/mouse.png" width="18" height="20" alt="Pixel-art mouse avatar">
                 </div>
+                <div class="about-copy reveal">
+                    <span class="eyebrow">About</span>
+                    <h2 style="margin:var(--s3) 0 var(--s4)">Hi, I'm Ross.</h2>
+                    <p>I'm a designer in North Austin who builds the things I draw. My route here wasn't a straight line: restaurant floors, the US Navy, eleven years at Apple ending in Tier 2 fraud support, then four years running my own coaching business with more than a hundred clients. Every one of those jobs taught me the same lesson: people notice care.</p>
+                    <p>Now I put that care into interfaces, games and pixel art. I sketch first, build fast with AI, and iterate until it feels right. I'd rather ship one thing that's right than three that almost are.</p>
+                    <p>Away from the screen I train before sunrise, compete in men's physique, draw gestures, model low-poly in Blender, and run an offset smoker for Texas brisket.</p>
+                    <dl class="facts">
+                        <div><dt>Focus</dt><dd>UX/UI, visual design, game art and UI, creative technology</dd></div>
+                        <div><dt>Tools</dt><dd>HTML, CSS, JavaScript, Canvas, Web Audio, Godot, Blender, Claude, Gemini</dd></div>
+                        <div><dt>Based in</dt><dd>Austin, TX</dd></div>
+                        <div><dt>Open to</dt><dd>Local, hybrid or remote roles</dd></div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="section contact" id="contact">
+            <div class="wrap reveal">
+                <span class="eyebrow">Contact</span>
+                <h2>Let's make something that feels good.</h2>
+                <p class="lede">I'm looking for UX/UI, visual design and creative technology roles in Austin or remote. The fastest way to reach me is email.</p>
+                <div class="btn-row">
+                    <a class="btn btn-primary" href="mailto:ross.v.grant@gmail.com">ross.v.grant@gmail.com</a>
+                    <button class="btn" type="button" data-copy-email="ross.v.grant@gmail.com" aria-controls="copy-status">Copy email</button>
+                    <a class="btn" href="https://www.linkedin.com/in/rossvgrant/" rel="noopener" target="_blank">LinkedIn ↗</a>
+                    <a class="btn" href="https://github.com/rossgrantfitness" rel="noopener" target="_blank">GitHub ↗</a>
+                </div>
+                <p class="copied" id="copy-status" role="status"></p>
             </div>
         </section>
     </main>
 
-    <footer class="py-10 border-t border-white/5 text-center text-sm text-secondary font-light">
-        <p>&copy; 2026 AI Architect Portfolio. Built with intent.</p>
+    <footer class="site-footer">
+        <div class="wrap">
+            <span>© <span data-year>2026</span> Ross Grant · Designed by hand, built with code and AI.</span>
+            <nav aria-label="Footer">
+                <a href="mailto:ross.v.grant@gmail.com">Email</a>
+                <a href="https://www.linkedin.com/in/rossvgrant/" rel="noopener" target="_blank">LinkedIn</a>
+                <a href="https://github.com/rossgrantfitness/vibecodingwebsite" rel="noopener" target="_blank">Source</a>
+            </nav>
+        </div>
     </footer>
 
-    <script>
-        // Smooth reveal animation on scroll
-        document.addEventListener('DOMContentLoaded', () => {
-            const reveals = document.querySelectorAll('.reveal');
-
-            const revealOnScroll = () => {
-                const windowHeight = window.innerHeight;
-                const elementVisible = 100;
-
-                reveals.forEach((reveal) => {
-                    const elementTop = reveal.getBoundingClientRect().top;
-                    if (elementTop < windowHeight - elementVisible) {
-                        reveal.classList.add('active');
-                    }
-                });
-            };
-
-            window.addEventListener('scroll', revealOnScroll);
-            revealOnScroll(); // Trigger on load
-
-            // Navbar background change on scroll
-            const navbar = document.getElementById('navbar');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('bg-surface/80', 'shadow-lg', 'shadow-black/50');
-                    navbar.classList.remove('glass');
-                } else {
-                    navbar.classList.remove('bg-surface/80', 'shadow-lg', 'shadow-black/50');
-                    navbar.classList.add('glass');
-                }
-            });
-        });
-    </script>
+    <script src="assets/js/site.js"></script>
+    <script type="module" src="assets/js/hero-mouse.js"></script>
 </body>
 </html>

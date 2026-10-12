@@ -65,6 +65,72 @@ export class Input {
     });
   }
 
+  // Floating joystick: the first touch in `zone` drops the stick under the thumb; dragging past
+  // its rim drags the whole stick along, so it never runs out of travel. Maps to left/right/up/down.
+  bindJoystick(zone) {
+    const stick = zone.querySelector('.stick');
+    const knob = zone.querySelector('.knob');
+    const R = 44;        // knob travel, px
+    const DEAD = 12;     // horizontal dead zone
+    const VERT = 26;     // up/down need a deliberate push, so walking never ducks by accident
+    let id = null, ox = 0, oy = 0;
+    const place = (x, y) => {
+      const r = zone.getBoundingClientRect();
+      stick.style.left = `${x - r.left}px`;
+      stick.style.top = `${y - r.top}px`;
+    };
+    const rest = () => {
+      const r = zone.getBoundingClientRect();
+      place(r.left + 76, r.bottom - 92);
+    };
+    const set = (dx, dy) => {
+      knob.style.transform = `translate(${dx}px, ${dy}px)`;
+      const ax = Math.abs(dx), ay = Math.abs(dy);
+      const vertical = ay > VERT && ay > ax;
+      this.touch.left = dx < -DEAD && ax >= ay * 0.5;
+      this.touch.right = dx > DEAD && ax >= ay * 0.5;
+      this.touch.down = vertical && dy > 0;
+      this.touch.up = vertical && dy < 0;
+    };
+    zone.addEventListener('pointerdown', (e) => {
+      if (id !== null) return;
+      e.preventDefault();
+      id = e.pointerId;
+      try { zone.setPointerCapture(id); } catch { /* synthetic pointer */ }
+      ox = e.clientX;
+      oy = e.clientY;
+      place(ox, oy);
+      stick.classList.add('on');
+      set(0, 0);
+    });
+    zone.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== id) return;
+      let dx = e.clientX - ox, dy = e.clientY - oy;
+      const d = Math.hypot(dx, dy);
+      if (d > R) { // follow the thumb
+        ox += (dx / d) * (d - R);
+        oy += (dy / d) * (d - R);
+        place(ox, oy);
+        dx = e.clientX - ox;
+        dy = e.clientY - oy;
+      }
+      set(dx, dy);
+    });
+    const end = (e) => {
+      if (e.pointerId !== id) return;
+      id = null;
+      stick.classList.remove('on');
+      set(0, 0);
+      rest();
+    };
+    zone.addEventListener('pointerup', end);
+    zone.addEventListener('pointercancel', end);
+    zone.addEventListener('lostpointercapture', end);
+    zone.addEventListener('contextmenu', (e) => e.preventDefault());
+    window.addEventListener('resize', () => { if (id === null) rest(); });
+    return rest; // call once the controls are visible
+  }
+
   update() {
     const pad = readGamepads();
     for (const a of ACTIONS) {

@@ -104,7 +104,37 @@ body.touch-ui .back span { display: none; }
     padding: 0 max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     pointer-events: none;
 }
-.touch .pad { display: flex; gap: 10px; align-items: flex-end; pointer-events: auto; }
+.touch .pad { display: flex; gap: 10px; align-items: flex-end; pointer-events: auto; margin-left: auto; }
+/* The joystick zone covers the left side of the screen; the stick rests bottom-left until a thumb
+   lands, then jumps under it. */
+.stick-zone { position: fixed; top: 56px; left: 0; bottom: 0; width: 55%; z-index: 4; pointer-events: auto; touch-action: none; }
+.stick {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 104px;
+    height: 104px;
+    margin: -52px 0 0 -52px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.22);
+    background: rgba(18, 18, 18, 0.4);
+    opacity: 0.45;
+    transition: opacity 0.15s;
+    pointer-events: none;
+}
+.stick.on { opacity: 1; transition: none; }
+.knob {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    border-radius: 50%;
+    background: rgba(229, 229, 229, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+.stick.on .knob { background: rgba(255, 79, 216, 0.5); border-color: #ff4fd8; }
 .touch button {
     width: 64px;
     height: 64px;

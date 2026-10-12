@@ -23,11 +23,13 @@ const debug = createDebugPanel(game);
 // Touch devices get on-screen buttons (shown on the first touch, or up front on coarse pointers).
 const touchUI = document.querySelector('.touch');
 input.bindTouch(touchUI);
+const restStick = input.bindJoystick(touchUI.querySelector('.stick-zone'));
 function enableTouch() {
   if (!touchUI.hidden) return;
   touchUI.hidden = false;
   document.body.classList.add('touch-ui');
   fit();
+  restStick();
 }
 if (window.matchMedia('(pointer: coarse)').matches) enableTouch();
 window.addEventListener('touchstart', () => { unlockAudio(); enableTouch(); }, { passive: true });

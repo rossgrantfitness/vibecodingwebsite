@@ -31,6 +31,40 @@
     onScroll();
   }
 
+  // Phone menu: the section links open as a sheet; Esc, a link or a tap outside closes it.
+  const menuBtn = document.querySelector('[data-menu-toggle]');
+  const menu = menuBtn && document.getElementById(menuBtn.getAttribute('aria-controls'));
+  if (menu) {
+    const setOpen = (open, refocus) => {
+      menu.classList.toggle('open', open);
+      menuBtn.setAttribute('aria-expanded', String(open));
+      menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      if (open) menu.querySelector('a').focus();
+      else if (refocus) menuBtn.focus();
+    };
+    menuBtn.addEventListener('click', () => setOpen(!menu.classList.contains('open')));
+    menu.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('open')) setOpen(false, true); });
+    document.addEventListener('click', (e) => { if (menu.classList.contains('open') && !e.target.closest('.nav')) setOpen(false); });
+    window.matchMedia('(min-width: 820px)').addEventListener('change', () => setOpen(false));
+  }
+
+  // Scrollspy: highlight the nav link for the section on screen.
+  const spyLinks = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+  const spied = spyLinks.map((a) => document.getElementById(a.hash.slice(1))).filter(Boolean);
+  if (spied.length && 'IntersectionObserver' in window) {
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        spyLinks.forEach((a) => {
+          if (a.hash === `#${e.target.id}`) a.setAttribute('aria-current', 'true');
+          else a.removeAttribute('aria-current');
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    spied.forEach((el) => spy.observe(el));
+  }
+
   const reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {

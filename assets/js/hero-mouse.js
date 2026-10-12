@@ -1,13 +1,18 @@
-// Homepage hero: the Mousecapades mouse running a tiny endless strip, using the game's own
-// sprite and font code. Click, tap or press Space/↑ on the stage to jump. Also hosts the
-// Konami-code easter egg (cheese rain).
+// Homepage hero: the Mousecapades mouse running an endless rooftop, drawn with the game's own
+// sprite, font, skyline and rooftop code so the hero always matches the game. Click, tap or
+// press Space/↑ on the stage to jump. Also hosts the Konami-code easter egg (cheese rain).
 import { drawPlayer } from '../../games/mousecapades/js/render.js';
 import { makeSprites, blit } from '../../games/mousecapades/js/sprites.js';
 import { drawText } from '../../games/mousecapades/js/font.js';
+import { spriteReady } from '../../games/mousecapades/js/mouse-sprite.js';
+import { Backdrop } from '../../games/mousecapades/js/backdrop.js';
+import { buildScenery, drawLights } from '../../games/mousecapades/js/scenery.js';
+import { Level, builder } from '../../games/mousecapades/js/level.js';
 
-const W = 256;
-const H = 120;
-const FLOOR = 96;
+const W = 320;
+const H = 180;
+const FLOOR = 148;
+const ROOF_ROW = 9; // rooftop surface row in the strip below (9 × 16 = 144 px)
 
 const canvas = document.getElementById('hero-stage');
 const sp = makeSprites();
@@ -19,7 +24,8 @@ if (canvas) {
   canvas.height = H;
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
-  const city = skyline();
+  const backdrop = new Backdrop();
+  const roof = rooftop();
 
   const mouse = { x: 40, y: FLOOR - 17, w: 10, h: 17, vx: 0, vy: 0, facing: 1, grounded: true, anim: 0, sx: 1, sy: 1, state: 'idle', ducking: false };
   const chips = [];
@@ -94,21 +100,15 @@ if (canvas) {
   }
 
   function draw() {
-    const g = ctx.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0, '#0d0820'); g.addColorStop(0.7, '#2a1440'); g.addColorStop(1, '#3a1a4a');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, W, H);
-    const off = -Math.round(scroll * 0.3) % city.width;
-    for (let x = off; x < W; x += city.width) ctx.drawImage(city, x, FLOOR - city.height + 4);
-
-    // Ground strip in the game's tile colours.
-    const gOff = -Math.round(scroll) % 16;
-    for (let x = gOff; x < W; x += 16) {
-      ctx.fillStyle = ((x - gOff) / 16) % 2 ? '#3b3454' : '#363050';
-      ctx.fillRect(x, FLOOR, 16, H - FLOOR);
+    backdrop.draw(ctx, Math.round(scroll), 60, t);
+    // The rooftop strip tiles sideways; its lamps blink like the game's.
+    const rw = roof.canvas.width;
+    const rOff = Math.round(scroll) % rw;
+    const dy = FLOOR - ROOF_ROW * 16;
+    for (let x = -rOff; x < W; x += rw) {
+      ctx.drawImage(roof.canvas, x, dy);
+      drawLights(ctx, roof.lights, -x, -dy, t);
     }
-    ctx.fillStyle = '#8f7fd0'; ctx.fillRect(0, FLOOR, W, 2);
-    ctx.fillStyle = '#5c4f8f'; ctx.fillRect(0, FLOOR + 2, W, 1);
 
     for (const c of chips) blit(ctx, sp.chip, c.x, c.y + Math.round(Math.sin((t + c.bob * 10) * 0.08) * 1.5));
     ctx.fillStyle = '#ffd95e';
@@ -120,7 +120,10 @@ if (canvas) {
   }
 
   if (reduceMotion) {
+    // One still frame, redrawn once the sprite sheet has loaded.
     draw();
+    const wait = setInterval(() => { if (spriteReady()) { draw(); clearInterval(wait); } }, 100);
+    setTimeout(() => clearInterval(wait), 5000);
   } else {
     let visible = true;
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(canvas);
@@ -167,26 +170,9 @@ function cheeseRain() {
   setTimeout(() => layer.remove(), 5000);
 }
 
-// Small procedural skyline, same idea as the game's parallax layer.
-function skyline() {
-  const c = document.createElement('canvas');
-  c.width = 300;
-  c.height = 70;
-  const g = c.getContext('2d');
-  let seed = 7;
-  const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  let x = 0;
-  while (x < c.width) {
-    const w = 12 + Math.floor(rand() * 22);
-    const h = 18 + Math.floor(rand() * 48);
-    g.fillStyle = '#1a1230';
-    g.fillRect(x, c.height - h, w, h);
-    for (let wy = c.height - h + 4; wy < c.height - 4; wy += 5) {
-      for (let wx = x + 3; wx < x + w - 3; wx += 4) {
-        if (rand() < 0.12) { g.fillStyle = rand() < 0.5 ? '#ff4fd8' : '#ffd95e'; g.fillRect(wx, wy, 1, 2); }
-      }
-    }
-    x += w + Math.floor(rand() * 3);
-  }
-  return c;
+// A flat stretch of roof baked with the game's scenery painter (40 tiles, then it repeats).
+function rooftop() {
+  const L = new Level(40, 12);
+  builder(L, ROOF_ROW).ground(0, 39);
+  return buildScenery(L);
 }

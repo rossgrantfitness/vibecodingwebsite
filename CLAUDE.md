@@ -47,6 +47,11 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
   Owner-only TODOs go in HTML comments (`<!-- TODO(Ross): ... -->`).
 - The Gemini app pages use Tailwind CDN + Plus Jakarta Sans; pin any CDN script to an exact version.
 - Every project page has a visible "← Back to Portfolio" link to `index.html`, including on mobile.
+- Header nav: the homepage's section links collapse into a phone menu (`data-menu-toggle` + `#nav-links`, handled in
+  `site.js`, which also highlights the section on screen); subpages use `.nav-links.compact` (two short links that
+  stay inline on phones). Keep every page free of horizontal scroll down to 360px wide.
+- The homepage hero canvas reuses the game's own skyline (`backdrop.js`) and rooftop painter (`scenery.js`), so it
+  always matches the current game art.
 
 ## Game (`games/mousecapades/`)
 

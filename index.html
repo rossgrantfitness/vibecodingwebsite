@@ -44,7 +44,7 @@
                 Ross Grant
             </a>
             <nav class="nav" aria-label="Primary">
-                <div class="nav-links">
+                <div class="nav-links" id="nav-links">
                     <a href="#work">Work</a>
                     <a href="#art">Art</a>
                     <a href="#process">Process</a>
@@ -53,6 +53,9 @@
                     <a href="#contact">Contact</a>
                     <a href="resume.html">Résumé</a>
                 </div>
+                <button class="icon-btn menu-btn" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu" data-menu-toggle>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path class="menu-open" d="M4 7h16M4 12h16M4 17h16"/><path class="menu-close" d="M6 6l12 12M18 6L6 18"/></svg>
+                </button>
                 <button class="icon-btn" type="button" data-theme-toggle>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
                 </button>
@@ -75,8 +78,8 @@
                     </div>
                 </div>
                 <figure class="stage" style="margin:0">
-                    <canvas id="hero-stage" class="pixel" width="256" height="120" tabindex="0"
-                        aria-label="Animated pixel-art mouse running and collecting cheese. Click or press Space to make her jump."></canvas>
+                    <canvas id="hero-stage" class="pixel" width="320" height="180" tabindex="0"
+                        aria-label="Animated pixel-art mouse running across neon-lit rooftops and collecting cheese. Click or press Space to make her jump."></canvas>
                     <figcaption class="stage-caption">
                         <span>Click or press <kbd>Space</kbd> to jump</span>
                         <a href="#mousecapades">She's from Mousecapades ↓</a>
@@ -192,7 +195,7 @@
                 <div class="section-head reveal">
                     <span class="eyebrow">Art &amp; visuals</span>
                     <h2>Every pixel placed on purpose.</h2>
-                    <p class="lede">Sprites, tiles and screens from Mousecapades, all drawn to a 320 × 180 canvas and scaled up with hard edges.</p>
+                    <p class="lede">Characters, enemies and screens from Mousecapades. Everything renders at 320 × 180 and scales up with hard pixel edges.</p>
                 </div>
                 <div class="gallery reveal">
                     <figure class="span2">
@@ -215,7 +218,7 @@
                         <div class="palette" role="img" aria-label="Game palette swatches">
                             <span style="background:#162430">162430</span><span style="background:#365866">365866</span>
                             <span style="background:#282743">282743</span><span style="background:#655185">655185</span>
-                            <span style="background:#ff5fae">ff5fae</span><span style="background:#5ff0e0;color:#162430;text-shadow:none">5ff0e0</span>
+                            <span style="background:#ff5fae;color:#162430;text-shadow:none">ff5fae</span><span style="background:#5ff0e0;color:#162430;text-shadow:none">5ff0e0</span>
                             <span style="background:#ffd95e;color:#162430;text-shadow:none">ffd95e</span><span style="background:#a593c4;color:#162430;text-shadow:none">a593c4</span>
                         </div>
                         <figcaption>Palette</figcaption>
@@ -313,7 +316,7 @@
                     </article>
                     <article class="service">
                         <h3>Pixel art &amp; game UI</h3>
-                        <p>Characters, tilesets, HUDs and menus, drawn in a palette built for your game and delivered as clean sprite sheets.</p>
+                        <p>Characters, tilesets, HUDs and menus, art-directed to a palette built for your game and delivered as clean, game-ready sprite sheets.</p>
                     </article>
                     <article class="service">
                         <h3>Playable prototypes</h3>

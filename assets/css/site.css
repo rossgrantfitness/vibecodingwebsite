@@ -45,7 +45,7 @@
 /* ---- Base ---------------------------------------------------------------- */
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--paper);
@@ -128,14 +128,41 @@ p { margin: 0 0 var(--s3); }
 }
 .icon-btn:hover { border-color: var(--ink); }
 .icon-btn svg { width: 20px; height: 20px; }
+.nav a[aria-current="true"] { color: var(--ink); background: var(--surface-2); }
 .nav .nav-links { display: none; }
-@media (min-width: 820px) { .nav .nav-links { display: flex; } }
+.nav .nav-links.compact { display: flex; }
+.menu-btn .menu-close, .menu-btn[aria-expanded="true"] .menu-open { display: none; }
+.menu-btn[aria-expanded="true"] .menu-close { display: inline; }
+@media (min-width: 820px) {
+  .nav .nav-links { display: flex; }
+  .menu-btn { display: none; }
+}
+@media (max-width: 480px) {
+  .site-header .wrap { gap: var(--s2); }
+}
+/* Phones: the homepage's section links open as a sheet under the header; subpages keep their
+   two short links inline (.compact). */
+@media (max-width: 819px) {
+  .nav .nav-links.compact a { padding: 10px 8px; font-size: 0.9rem; white-space: nowrap; }
+  .wordmark { white-space: nowrap; }
+  .nav .nav-links.open {
+    display: flex; flex-direction: column; gap: 2px;
+    position: fixed; top: 68px; left: 0; right: 0; max-height: calc(100dvh - 68px); overflow-y: auto;
+    padding: var(--s2) var(--s3) var(--s4); background: var(--paper);
+    border-bottom: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .nav .nav-links.open a { padding: 14px 16px; font-size: 1.1rem; border-radius: var(--radius-sm); color: var(--ink); }
+}
+@media (max-width: 400px) {
+  .wordmark { font-size: 1.05rem; gap: 8px; }
+  .nav .nav-links.compact a { padding: 10px 6px; font-size: 0.85rem; }
+}
 
 /* ---- Hero ---------------------------------------------------------------- */
 
 .hero { padding-block: clamp(48px, 9vw, 112px) clamp(48px, 7vw, 88px); }
 .hero-grid { display: grid; gap: var(--s6); align-items: center; }
-@media (min-width: 960px) { .hero-grid { grid-template-columns: 1.1fr 0.9fr; } }
+@media (min-width: 960px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
 .hero h1 { margin: var(--s3) 0 var(--s4); }
 .hero h1 em { font-style: italic; color: var(--accent); font-variation-settings: 'SOFT' 100, 'opsz' 144, 'WONK' 1; }
 .hero .lede { margin-bottom: var(--s5); }

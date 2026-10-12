@@ -1,7 +1,10 @@
+import { MOVES } from './player.js';
+
 // Character sprite atlas: one row per animation, 32×32 cells, feet on the bottom row and the body
-// centred on x = 16, facing right. Falls back to the code-drawn mouse until the image has loaded.
+// centred on x = 16, facing right. Rows 7–8 (punch, kick) are attack poses built from her idle,
+// walk and jump frames. Falls back to the code-drawn mouse until the image has loaded.
 const CELL = 32;
-const ROWS = { idle: 0, walk: 1, run: 2, jump: 3, hurt: 4, die: 5, face: 6 };
+const ROWS = { idle: 0, walk: 1, run: 2, jump: 3, hurt: 4, die: 5, face: 6, punch: 7, kick: 8 };
 
 const atlas = new Image();
 let ready = false;
@@ -16,6 +19,11 @@ export const spriteReady = () => ready;
 // Which animation frame to show for the player's current state. `clock` is a frame counter.
 export function pickFrame(p, clock) {
   switch (p.state) {
+    case 'attack': {
+      const { t, kind } = p.attack;
+      const [, anim, i] = MOVES[kind].frames.find(([until]) => t < until);
+      return [anim, i];
+    }
     case 'hurt': return ['hurt', Math.floor(clock / 8) % 3];
     case 'duck': return ['jump', 0];
     case 'skid': return ['jump', 4];

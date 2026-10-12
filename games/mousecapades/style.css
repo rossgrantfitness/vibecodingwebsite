@@ -118,6 +118,11 @@ body.touch-ui .back span { display: none; }
 }
 .touch button.on { background: rgba(255, 79, 216, 0.45); border-color: #ff4fd8; }
 .touch .jump { width: 76px; height: 76px; margin-bottom: 18px; }
+/* Attack buttons sit above run/jump, SNES-pad style: two rows under the right thumb. */
+.touch .actions { display: grid; grid-template-columns: repeat(2, auto); align-items: end; justify-items: center; }
+.touch .actions .punch, .touch .actions .kick { width: 58px; height: 58px; font-size: 11px; }
+.touch .actions .kick { margin-bottom: 0; }
+.touch .punch.on, .touch .kick.on { background: rgba(233, 240, 106, 0.4); border-color: #e9f06a; }
 .touch .pause {
     position: fixed;
     top: 12px;

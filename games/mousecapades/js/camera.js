@@ -13,9 +13,16 @@ export class Camera {
     this.offset = 0;
     this.lookDir = 1;
     this.anchorY = 0;
+    this.lockX = null; // brawl zone: hold the screen here
+    this.ease = null;  // eased x while panning into or out of a lock
   }
 
+  lock(x) { this.lockX = x; this.ease = this.x; }
+  unlock() { this.lockX = null; this.ease = this.x; }
+
   snap(p, T) {
+    this.lockX = null;
+    this.ease = null;
     this.lookDir = p.facing;
     this.offset = p.facing * T.cameraLookahead;
     this.anchorY = this.groundAnchor(p);
@@ -33,7 +40,14 @@ export class Camera {
     if (Math.abs(p.vx) > 0.6) this.lookDir = Math.sign(p.vx);
     const d = this.lookDir * T.cameraLookahead - this.offset;
     this.offset += Math.sign(d) * Math.min(Math.abs(d), T.cameraPanSpeed);
-    this.x = this.followX(p);
+    const tx = this.lockX ?? this.followX(p);
+    if (this.ease === null) {
+      this.x = tx;
+    } else {
+      this.ease += Math.max(-4, Math.min(4, tx - this.ease));
+      this.x = this.ease;
+      if (this.lockX === null && Math.abs(tx - this.ease) < 1) this.ease = null;
+    }
 
     if (p.grounded) this.anchorY = this.groundAnchor(p);
     let ty = this.anchorY;

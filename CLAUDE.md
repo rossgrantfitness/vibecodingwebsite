@@ -54,13 +54,19 @@ See `ROADMAP.md` for the build plan and what's live vs. pending.
   nearest-neighbour (pixel-perfect). Fixed 60 Hz simulation timestep, decoupled from rendering.
 - Keep modules small and focused so changes are targeted edits: `game.js` (state machine, collisions, scoring),
   `player.js` / `entities.js` (built on `body.js` tile collision), `level.js` + `level1.js` (tiles and layout),
-  `render.js` / `sprites.js` / `font.js` (drawing), `camera.js`, `input.js`, `audio.js`, `fx.js`, `debug.js`.
+  `render.js` / `sprites.js` / `font.js` (drawing), `backdrop.js` (parallax city), `scenery.js` (rooftop art baked
+  once per level, lamps, steam), `camera.js`, `input.js`, `audio.js`, `fx.js`, `debug.js`, `rand.js`.
+- Combat (v0.5) sits on top of the movement and must never change it: `MOVES` in `player.js` (jab → cross → uppercut,
+  kick, sweep, flying kick; boxes are relative to her front edge and feet), hearts (`MAX_HP`), enemy hp/stun/knockdown
+  in `entities.js`, brawl zones via `b.arena(c0, waves)` in the level (20 flat columns; the camera locks, waves drop in).
 - All movement tuning lives in one constants object, editable live from the in-game debug panel (`~`).
 - ES modules don't load from `file://` — test with `python3 -m http.server` from the repo root.
-- Character art: `assets/mouse.png` is a 32×32-cell atlas (rows: idle, walk, run, jump, hurt, die, face; feet on the
-  bottom row, body centred on x=16, facing right) plus `assets/mouse-portrait.png`, cleaned from Ross's sprite sheet
-  and snapped to its 6-colour palette. `js/mouse-sprite.js` picks frames; hitbox size lives in `config.js` (`PLAYER_*`).
-- Everything else is original and generated in code (or CC0). No Nintendo assets.
+- Character art: `assets/mouse.png` is a 32×32-cell atlas (rows: idle, walk, run, jump, hurt, die, face, punch, kick;
+  feet on the bottom row, body centred on x=16, facing right) plus `assets/mouse-portrait.png`, cleaned from Ross's
+  AI-generated sprite sheet and snapped to its 6-colour palette (punch/kick rows were pixel-edited from her other
+  frames). `assets/frog.png` (rows: idle, croak, lunge, hurt, die) comes from his frog sheet the same way. Credit the
+  sheets as AI-generated from Ross's direction. `js/mouse-sprite.js` picks frames; hitbox size lives in `config.js`.
+- Everything else is generated in code (or CC0). No Nintendo or Technōs assets.
 
 ## Git
 

@@ -1,10 +1,17 @@
-import { TILE, VIEW_W, VIEW_H } from './config.js';
-import { GROUND, SEMI, BLOCK, USED, METAL } from './level.js';
+import { TILE, VIEW_W, VIEW_H, MAX_HP } from './config.js';
+import { BLOCK, USED, METAL } from './level.js';
 import { drawText } from './font.js';
 import { makeSprites, blit } from './sprites.js';
 import { isMuted } from './audio.js';
-import { Drone } from './entities.js';
+import { Drone, Frog, ENEMY_NAMES } from './entities.js';
 import { spriteReady, pickFrame, drawFrame, portrait } from './mouse-sprite.js';
+import { Backdrop } from './backdrop.js';
+import { buildScenery, Steam, drawLights } from './scenery.js';
+
+// Frog atlas: 32×32 cells facing right; rows idle, croak, lunge, hurt, die.
+const FROG_ROWS = { idle: 0, croak: 1, lunge: 2, hurt: 3, die: 4 };
+let frogAtlas = null; // loaded with the first Renderer, so pages that only borrow drawPlayer skip it
+const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 const lerp = (a, b, t) => a + (b - a) * t;
 const blink = (frame, on = 40, period = 60) => frame % period < on;
@@ -21,28 +28,42 @@ export class Renderer {
   constructor(canvas) {
     this.ctx = canvas.getContext('2d');
     this.ctx.imageSmoothingEnabled = false;
-    this.sky = this.ctx.createLinearGradient(0, 0, 0, VIEW_H);
-    this.sky.addColorStop(0, '#0d0820');
-    this.sky.addColorStop(0.6, '#24123d');
-    this.sky.addColorStop(1, '#3a1a4a');
-    this.far = skyline(480, 0.55, 0x51ed, '#1a1230', '#ff4fd8');
-    this.near = skyline(400, 0.8, 0x7a3, '#120c22', '#3df0ff');
+    if (!frogAtlas) {
+      frogAtlas = new Image();
+      frogAtlas.src = new URL('../assets/frog.png', import.meta.url).href;
+    }
+    this.backdrop = new Backdrop();
+    this.scenery = null; // built per level layout, see sceneryFor()
     this.sp = makeSprites();
     this.portrait = document.createElement('canvas');
     this.portrait.width = 24;
     this.portrait.height = 24;
   }
 
+  // Rooftop art depends only on the level's layout, so build it once per level builder.
+  sceneryFor(game) {
+    if (!this.scenery || this.scenery.build !== game.buildLevel) {
+      const sc = buildScenery(game.level);
+      this.scenery = { build: game.buildLevel, ...sc, steam: new Steam(sc.vents), frame: -1 };
+    }
+    return this.scenery;
+  }
+
   draw(game, alpha) {
     const cam = game.camera;
-    const cx = Math.round(lerp(cam.px, cam.x, alpha));
-    const cy = Math.round(lerp(cam.py, cam.y, alpha));
+    let cx = Math.round(lerp(cam.px, cam.x, alpha));
+    let cy = Math.round(lerp(cam.py, cam.y, alpha));
+    if (game.shake > 0 && !reducedMotion && !game.paused) {
+      cx += ((game.frame * 7) % 5) - 2;
+      cy += ((game.frame * 3) % 3) - 1;
+    }
     this.world(game, cx, cy, alpha);
 
     if (game.state === 'title') this.title(game);
     else {
       this.hud(game);
       if (game.state === 'play' && game.stats.frames < 150 && game.stats.deaths === 0) this.banner(game.stats.frames);
+      if (game.state === 'play' && game.go > 0) this.goSign(game.go, game.frame);
       if (game.state === 'clear' && game.t > 15) drawText(this.ctx, 'COURSE CLEAR!', VIEW_W / 2, 50, { scale: 2, big: true, color: '#3df0ff', align: 'center' });
       if (game.state === 'win') this.winScreen(game);
     }
@@ -54,10 +75,15 @@ export class Renderer {
   world(game, cx, cy, alpha) {
     const { ctx } = this;
     const { level, player: p, fx, opts } = game;
-    ctx.fillStyle = this.sky;
-    ctx.fillRect(0, 0, VIEW_W, VIEW_H);
-    this.parallax(this.far, cx * 0.15, cy * 0.05);
-    this.parallax(this.near, cx * 0.35, cy * 0.12);
+    const sc = this.sceneryFor(game);
+    this.backdrop.draw(ctx, cx, cy, game.frame);
+    if (sc.frame !== game.frame) {
+      sc.steam.update(cx);
+      sc.frame = game.frame;
+    }
+    sc.steam.draw(ctx, cx, cy);
+    ctx.drawImage(sc.canvas, cx, cy, VIEW_W, VIEW_H, 0, 0, VIEW_W, VIEW_H);
+    drawLights(ctx, sc.lights, cx, cy, game.frame);
 
     if (game.goal) this.goal(game.goal, cx, cy, game.frame);
     if (game.checkpoint) this.checkpoint(game.checkpoint, cx, cy, game.frame);
@@ -71,9 +97,7 @@ export class Renderer {
         if (c < 0 || c >= level.cols || !t) continue;
         const x = c * TILE - cx;
         const y = r * TILE - cy - (bumped.get(`${c},${r}`) || 0);
-        if (t === GROUND) this.groundTile(level, x, y, c, r);
-        else if (t === SEMI) this.semiTile(x, y);
-        else if (t === BLOCK) this.itemBlock(x, y, game.frame);
+        if (t === BLOCK) this.itemBlock(x, y, game.frame);
         else if (t === USED) this.usedBlock(x, y);
         else if (t === METAL) this.metalTile(x, y);
       }
@@ -83,10 +107,15 @@ export class Renderer {
       if (it.taken || it.x + 16 < cx || it.x - 16 > cx + VIEW_W) continue;
       const bob = Math.round(Math.sin(game.frame * 0.08 + it.x * 0.05) * 1.5);
       if (it.kind === 'chip') blit(ctx, this.sp.chip, it.x - cx, it.y - cy + bob);
+      else if (it.kind === 'heal') blit(ctx, this.sp.heart, it.x - cx, it.y - cy + bob);
       else this.goldPickup(it.x - cx, it.y - cy + bob, game.frame);
     }
 
-    for (const e of game.enemies) this.enemy(e, lerp(e.px, e.x + e.rx, alpha) - cx, lerp(e.py, e.y + e.ry, alpha) - cy);
+    for (const e of game.enemies) {
+      // Freshly hit enemies shudder through the hitstop.
+      const jolt = e.flash > 6 && game.hitstop > 0 ? (game.frame & 1 ? 1 : -1) : 0;
+      this.enemy(e, lerp(e.px, e.x + e.rx, alpha) - cx + jolt, lerp(e.py, e.y + e.ry, alpha) - cy, game.frame);
+    }
 
     for (const c of game.popups) {
       if (c.t % 4 < 3) blit(ctx, this.sp.chip, c.x - cx, c.y - cy);
@@ -97,44 +126,15 @@ export class Renderer {
     if (game.state !== 'title') {
       const x = Math.round(lerp(p.px, p.x + p.rx, alpha)) - cx;
       const y = Math.round(lerp(p.py, p.y + p.ry, alpha)) - cy;
-      drawPlayer(ctx, p, x, y, opts.juice, game.frame);
+      const flicker = p.invuln > 0 && p.hurtT === 0 && game.state === 'play' && (game.frame >> 1) & 1;
+      if (!flicker) drawPlayer(ctx, p, x, y, opts.juice, game.frame);
       if (opts.hitboxes) {
         outline(ctx, x, y, p.w, p.h, '#39ff88');
         for (const e of game.enemies) if (e.alive) outline(ctx, Math.round(e.x - cx), Math.round(e.y - cy), e.w, e.h, '#ff3b6b');
+        const box = p.attackBox();
+        if (box) outline(ctx, Math.round(box.x - cx), Math.round(box.y - cy), box.w, box.h, '#ffe066');
       }
     }
-  }
-
-  parallax(layer, ox, oy) {
-    const w = layer.width;
-    const x = -Math.round(ox) % w;
-    const y = VIEW_H - layer.height + 12 - Math.round(oy);
-    for (let i = x; i < VIEW_W; i += w) this.ctx.drawImage(layer, i, y);
-  }
-
-  groundTile(level, x, y, c, r) {
-    const { ctx } = this;
-    ctx.fillStyle = (c + r) % 2 ? '#3b3454' : '#363050'; // checker so speed reads clearly
-    ctx.fillRect(x, y, TILE, TILE);
-    ctx.fillStyle = '#2a243d';
-    ctx.fillRect(x, y + TILE - 1, TILE, 1);
-    ctx.fillRect(x + TILE - 1, y, 1, TILE);
-    if (level.get(c, r - 1) !== GROUND) {
-      ctx.fillStyle = '#8f7fd0';
-      ctx.fillRect(x, y, TILE, 2);
-      ctx.fillStyle = '#5c4f8f';
-      ctx.fillRect(x, y + 2, TILE, 1);
-    }
-  }
-
-  semiTile(x, y) {
-    const { ctx } = this;
-    ctx.fillStyle = '#2bd4c6';
-    ctx.fillRect(x, y, TILE, 2);
-    ctx.fillStyle = '#167a77';
-    ctx.fillRect(x, y + 2, TILE, 2);
-    ctx.fillRect(x + 3, y + 4, 1, 3);
-    ctx.fillRect(x + 12, y + 4, 1, 3);
   }
 
   metalTile(x, y) {
@@ -225,8 +225,10 @@ export class Renderer {
     if (blink(frame, 45, 60)) drawText(ctx, 'EXIT', x + goal.w / 2, y - 10, { color: '#ff4fd8', align: 'center' });
   }
 
-  enemy(e, x, y) {
+  enemy(e, x, y, frame) {
     const { ctx, sp } = this;
+    if (e.dead === 'ko' && e.timer < 30 && (frame >> 1) & 1) return; // blinking out
+    if (e instanceof Frog) return this.frog(e, x, y, frame);
     let s;
     if (e instanceof Drone) s = sp.drone[e.dead ? 1 : Math.floor(e.anim) % 2];
     else if (e.dead === 'squash') s = sp.scuttleFlat;
@@ -239,9 +241,49 @@ export class Renderer {
       ctx.scale(1, -1);
       blit(ctx, s, 0, 0, e.dir > 0);
       ctx.restore();
+    } else if (e.dead === 'ko' || e.down) {
+      // On its back.
+      ctx.save();
+      ctx.translate(sx, sy + s.h);
+      ctx.scale(1, -1);
+      blit(ctx, s, 0, 0, e.dir > 0);
+      ctx.restore();
     } else {
       blit(ctx, s, sx, sy, e.dir > 0);
     }
+    if (e.flash > 6) this.flashOver(sx, sy, s.w, s.h);
+  }
+
+  frog(e, x, y, frame) {
+    const { ctx } = this;
+    if (!frogAtlas.complete || !frogAtlas.naturalWidth) {
+      ctx.fillStyle = '#5c6e48';
+      ctx.fillRect(Math.round(x), Math.round(y), e.w, e.h);
+      return;
+    }
+    const [anim, i] = e.frame(frame);
+    const size = 32 * e.scale;
+    const dx = Math.round(x + e.w / 2 - size / 2);
+    const dy = Math.round(y + e.h - size + e.scale); // art sits a pixel low in its cell
+    ctx.save();
+    if (e.dir < 0) {
+      ctx.translate(dx + size, dy);
+      ctx.scale(-1, 1);
+    } else {
+      ctx.translate(dx, dy);
+    }
+    ctx.drawImage(frogAtlas, i * 32, FROG_ROWS[anim] * 32, 32, 32, 0, 0, size, size);
+    ctx.restore();
+    if (e.flash > 6) this.flashOver(Math.round(x), Math.round(y), e.w, e.h);
+  }
+
+  // White hit flash, clipped loosely to the body.
+  flashOver(x, y, w, h) {
+    const { ctx } = this;
+    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(Math.round(x) + 1, Math.round(y) + 1, w - 2, h - 2);
+    ctx.globalAlpha = 1;
   }
 
   // ---- HUD & screens -------------------------------------------------------
@@ -254,6 +296,44 @@ export class Renderer {
     s.gold.forEach((got, i) => blit(ctx, got ? sp.goldIcon : sp.chipDim, VIEW_W / 2 - 16 + i * 12, 4));
     drawText(ctx, formatTime(s.frames, false), VIEW_W - 6, 6, { align: 'right' });
     this.pMeter(game.player, game.T, game.frame);
+    this.hearts(game.player, game.frame);
+    if (game.target) this.targetBar(game.target.e);
+  }
+
+  hearts(p, frame) {
+    const low = p.hp <= 1 && blink(frame, 10, 20);
+    for (let i = 0; i < MAX_HP; i++) {
+      blit(this.ctx, i < p.hp ? (low ? this.sp.heartHot : this.sp.heartSmall) : this.sp.heartEmpty, 6 + i * 7, 21);
+    }
+  }
+
+  // Beat-'em-up style: the last enemy you hit, with its health.
+  targetBar(e) {
+    const { ctx } = this;
+    const name = ENEMY_NAMES[e.kind] || 'ENEMY';
+    drawText(ctx, name, VIEW_W - 6, 15, { align: 'right', color: '#cfc6e8' });
+    const w = 44;
+    const x = VIEW_W - 6 - w;
+    ctx.fillStyle = '#140f1f';
+    ctx.fillRect(x - 1, 22, w + 2, 5);
+    ctx.fillStyle = '#3a2d52';
+    ctx.fillRect(x, 23, w, 3);
+    ctx.fillStyle = e.hp > e.maxHp / 3 ? '#e9f06a' : '#ff4a5a';
+    ctx.fillRect(x, 23, Math.round((w * Math.max(0, e.hp)) / e.maxHp), 3);
+  }
+
+  goSign(t, frame) {
+    if (!blink(frame, 20, 30)) return;
+    const { ctx } = this;
+    const x = VIEW_W - 58, y = 70;
+    drawText(ctx, 'GO', x, y, { scale: 2, big: true, color: '#ffd96a' });
+    // A chunky arrow after the word.
+    ctx.fillStyle = '#000';
+    for (let i = 0; i < 7; i++) ctx.fillRect(x + 30 + i + 1, y + 1 + i, 1, 14 - i * 2);
+    ctx.fillRect(x + 25, y + 6, 6, 4);
+    ctx.fillStyle = '#ffd96a';
+    for (let i = 0; i < 7; i++) ctx.fillRect(x + 30 + i, y + i, 1, 14 - i * 2);
+    ctx.fillRect(x + 24, y + 5, 6, 4);
   }
 
   // SMW-style run meter: six arrows, then a flashing P when full.
@@ -308,9 +388,10 @@ export class Renderer {
       ctx.drawImage(this.portrait, VIEW_W / 2 - 36, 72, 72, 72);
     }
 
-    if (blink(f)) drawText(ctx, 'PRESS JUMP TO START', VIEW_W / 2, 146, { color: '#ffffff', align: 'center' });
-    drawText(ctx, 'ARROWS MOVE  Z JUMP  X RUN  ENTER PAUSE  M SOUND', VIEW_W / 2, 160, { color: '#8c84a6', align: 'center' });
-    if (game.best) drawText(ctx, `BEST ${formatTime(game.best)}`, VIEW_W / 2, 170, { color: '#ffb21e', align: 'center' });
+    if (blink(f)) drawText(ctx, 'PRESS JUMP TO START', VIEW_W / 2, 144, { color: '#ffffff', align: 'center' });
+    drawText(ctx, 'ARROWS MOVE  Z JUMP  X RUN  C PUNCH  V KICK', VIEW_W / 2, 156, { color: '#8c84a6', align: 'center' });
+    drawText(ctx, 'ENTER PAUSE  M SOUND', VIEW_W / 2, 164, { color: '#8c84a6', align: 'center' });
+    if (game.best) drawText(ctx, `BEST ${formatTime(game.best)}`, VIEW_W / 2, 173, { color: '#ffb21e', align: 'center' });
   }
 
   winScreen(game) {
@@ -326,11 +407,12 @@ export class Renderer {
       drawText(ctx, label, L, y, { big: true, color: '#8c84a6' });
       if (value !== null) drawText(ctx, value, R, y, { big: true, color, align: 'right' });
     };
-    row('TIME', formatTime(s.frames), 48);
-    row('CHIPS', `${s.chips}/${s.chipsTotal}`, 64, s.chips === s.chipsTotal ? '#ffd95e' : '#ffffff');
-    row('GOLDEN CHEESE', null, 80);
-    s.gold.forEach((got, i) => blit(ctx, got ? sp.gold : sp.goldDim, R - 13 - (s.gold.length - 1 - i) * 16, 78));
-    row('DEATHS', String(s.deaths), 96);
+    row('TIME', formatTime(s.frames), 44);
+    row('CHIPS', `${s.chips}/${s.chipsTotal}`, 58, s.chips === s.chipsTotal ? '#ffd95e' : '#ffffff');
+    row('GOLDEN CHEESE', null, 72);
+    s.gold.forEach((got, i) => blit(ctx, got ? sp.gold : sp.goldDim, R - 13 - (s.gold.length - 1 - i) * 16, 70));
+    row('KNOCKOUTS', String(s.kos), 86);
+    row('DEATHS', String(s.deaths), 100);
     if (game.newBest && blink(f, 20, 30)) drawText(ctx, 'NEW BEST TIME!', VIEW_W / 2, 120, { big: true, color: '#ff4fd8', align: 'center' });
     else if (!game.newBest && game.best) drawText(ctx, `BEST ${formatTime(game.best)}`, VIEW_W / 2, 122, { color: '#ffb21e', align: 'center' });
     if (game.t > 40 && blink(f)) drawText(ctx, 'PRESS JUMP TO PLAY AGAIN', VIEW_W / 2, 154, { color: '#ffffff', align: 'center' });
@@ -342,6 +424,8 @@ export class Renderer {
     ctx.fillRect(0, 0, VIEW_W, VIEW_H);
     drawText(ctx, 'PAUSED', VIEW_W / 2, 62, { scale: 2, big: true, align: 'center' });
     drawText(ctx, `ENTER RESUME   R RESTART   M SOUND ${isMuted() ? 'OFF' : 'ON'}`, VIEW_W / 2, 96, { color: '#cfc6e8', align: 'center' });
+    drawText(ctx, 'C PUNCH - TAP 3X TO COMBO   V KICK', VIEW_W / 2, 112, { color: '#8c84a6', align: 'center' });
+    drawText(ctx, 'DOWN+C UPPERCUT   DOWN+V SWEEP   JUMP+V FLYING KICK', VIEW_W / 2, 120, { color: '#8c84a6', align: 'center' });
   }
 }
 
@@ -415,36 +499,4 @@ function outline(ctx, x, y, w, h, color) {
   ctx.fillRect(x, y + h - 1, w, 1);
   ctx.fillRect(x, y, 1, h);
   ctx.fillRect(x + w - 1, y, 1, h);
-}
-
-// Procedural city silhouette with a scatter of lit windows, drawn once to an offscreen canvas.
-function skyline(width, heightFrac, seed, body, light) {
-  const c = document.createElement('canvas');
-  c.width = width;
-  c.height = Math.round(VIEW_H * heightFrac);
-  const g = c.getContext('2d');
-  const rand = mulberry32(seed);
-  let x = 0;
-  while (x < width) {
-    const w = 14 + Math.floor(rand() * 26);
-    const h = Math.floor(c.height * (0.35 + rand() * 0.6));
-    g.fillStyle = body;
-    g.fillRect(x, c.height - h, Math.min(w, width - x), h);
-    if (rand() < 0.3) g.fillRect(x + (w >> 1), c.height - h - 8, 1, 8); // antenna
-    g.fillStyle = light;
-    for (let wy = c.height - h + 4; wy < c.height - 4; wy += 5) {
-      for (let wx = x + 3; wx < x + w - 3 && wx < width; wx += 4) if (rand() < 0.12) g.fillRect(wx, wy, 1, 2);
-    }
-    x += w + Math.floor(rand() * 4);
-  }
-  return c;
-}
-
-function mulberry32(a) {
-  return () => {
-    a |= 0; a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
 }

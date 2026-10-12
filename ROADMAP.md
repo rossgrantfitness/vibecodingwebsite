@@ -7,7 +7,7 @@ One step per session. End each with "commit and push", then start the next sessi
 | Project | Built by | Status |
 | --- | --- | --- |
 | ATX Pulse (`pulse.html`) | — | Live (sample data) |
-| Mousecapades (`games/mousecapades/`) | Claude | In development (playable prototype) |
+| Mousecapades (`games/mousecapades/`) | Claude | v0.5 playable prototype: platforming + Double Dragon-style combat |
 | VibePaint v2 (`vibepaint/`, Photoshop lite) | Claude (v1: Gemini) | Live |
 | Campaign Forge | Gemini | Live |
 | VibeSync Audio | Gemini | Live |
@@ -28,9 +28,11 @@ One step per session. End each with "commit and push", then start the next sessi
 - [x] **3. Level 1 + gameplay** — Sector 1 (Gutter District): Scuttlebots (stomp), Spikebots (avoid),
       drones (stomp; hold jump for a high bounce), cheese chips, item blocks, 3 Golden Cheeses, checkpoint,
       exit gate, HUD, death/respawn, title screen, pause, win screen with best time, Web Audio SFX.
-      Still to do: a power-up (and the hit-to-shrink damage model that comes with it).
-- [ ] **4. Art + game feel** — ~~mouse-girl animations~~ (sprite sheet in, v0.4), tileset, parallax dystopia background, particles,
-      squash & stretch, screen shake, hit-stop, Web Audio SFX.
+      v0.5 replaced the one-hit deaths with hearts and added Double Dragon-style combat (punch combo, kick,
+      uppercut, sweep, flying kick), the Gutter Frog, two lock-screen brawl zones and a Big Toad boss.
+      Still to do: grab-and-throw; Ross to playtest the combat feel.
+- [x] **4. Art + game feel** — mouse-girl animations (v0.4), rooftop tileset + teal neon parallax city, steam,
+      blinking lamps, particles, squash & stretch, screen shake, hit-stop, hit stars, Web Audio SFX (v0.5).
 - [ ] **5. Polish + ship** — ~~touch controls~~ (done in v2), music, itch.io release, switch the
       portfolio card to Live, delete `synthwave_runner.html`.
 - [ ] **6. Final site pass** — real card screenshots, social preview/SEO meta, mobile check, GitHub Pages deploy.

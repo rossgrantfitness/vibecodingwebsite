@@ -33,37 +33,37 @@
         <section class="cs-hero">
             <a href="../index.html#work">← Back to all work</a>
             <h1>Mousecapades</h1>
-            <p class="lede">An SNES-style platformer about one small mouse in a big neon city, built to prove that game feel can be designed rather than left to luck.</p>
+            <p class="lede">An SNES-style platformer with beat-'em-up fists, about one small mouse in a big neon city. It's built to prove that game feel can be designed rather than left to luck.</p>
             <div class="btn-row" style="margin-top:var(--s4)">
                 <a class="btn btn-primary" href="../games/mousecapades/">Play it in your browser</a>
                 <a class="btn" href="https://github.com/rossgrantfitness/vibecodingwebsite/tree/main/games/mousecapades" rel="noopener" target="_blank">View the code ↗</a>
             </div>
             <dl class="cs-meta">
-                <div><dt>Role</dt><dd>Game design, pixel art, level design, AI-directed build</dd></div>
+                <div><dt>Role</dt><dd>Game design, art direction, level design, AI-directed build</dd></div>
                 <div><dt>Status</dt><dd>Playable prototype, one level</dd></div>
                 <div><dt>Built with</dt><dd>JavaScript, Canvas, Web Audio, Claude</dd></div>
                 <div><dt>Plays on</dt><dd>Keyboard, gamepad or touch</dd></div>
             </dl>
             <div class="glance">
-                <div><strong>Result</strong>A 2–3 minute level that runs in any browser, playable on keyboard, gamepad or a phone.</div>
+                <div><strong>Result</strong>A 2–3 minute level that runs in any browser: Mario-style movement, Double Dragon-style combat, two lock-screen brawls and a boss toad. Plays on keyboard, gamepad or a phone.</div>
                 <div><strong>My part</strong>Character direction, level layout, palette and movement feel. I directed and reviewed every build pass.</div>
                 <div><strong>Proof of craft</strong>All 25 movement values were tuned by hand in a live panel, not left at defaults.</div>
             </div>
-            <p class="updated">Last updated October 2026 · v0.4</p>
+            <p class="updated">Last updated October 2026 · v0.5</p>
         </section>
 
         <figure class="cs-cover embed" data-embed="../games/mousecapades/?embed">
-            <img class="pixel" src="../assets/img/mousecapades/gameplay.png" width="320" height="180" alt="Mousecapades gameplay: the mouse mid-jump beside a row of glowing item blocks in a purple night city.">
+            <img class="pixel" src="../assets/img/mousecapades/gameplay.png" width="320" height="180" alt="Mousecapades gameplay: the mouse punching a green frog on a purple rooftop, with a teal neon skyline behind and the frog's health bar in the corner.">
             <button class="embed-play" type="button">▶ Play it here</button>
         </figure>
 
         <article class="prose">
             <h2>The goal</h2>
             <p>I wanted one short level, two or three minutes long, that feels amazing in the hands. It should have the momentum and inertia of Super Mario World: a run that builds up speed, a skid when you turn, and jumps you can shape by how long you hold the button. Content was secondary. If the movement didn't feel good, nothing else would matter.</p>
-            <p>It's also a portfolio piece, so it had to be honest work: original art, original sound, nothing borrowed from Nintendo.</p>
+            <p>It's also a portfolio piece, so it had to be honest work: nothing borrowed from Nintendo or Technōs. The character and frog sprite sheets were generated with AI from my direction, then cleaned up and snapped to strict palettes for the game. The rooftops, skyline and sound effects are generated in code.</p>
 
             <h2>Inspiration</h2>
-            <p>The feel comes from SNES platformers. The look comes from neon city nights: deep purples, hot pink and cyan signage, with warm cheese-gold for anything you can collect. The heroine is a mouse girl with oversized pink ears and a red bob, small enough that the city always looks huge around her. Her crimson-and-plum palette pops against the purple night.</p>
+            <p>The feel comes from SNES platformers; the fights come from Double Dragon. The look comes from neon city nights: a teal skyline full of blade signs, weathered purple rooftops strung with cables, and warm cheese-gold for anything you can collect. The heroine is a mouse girl with oversized pink ears and a red bob, small enough that the city always looks huge around her. Her crimson-and-plum palette pops against the purple night.</p>
             <!-- TODO(Ross): add a moodboard image and early character sketches here. -->
 
             <h2>Key design decisions</h2>
@@ -79,7 +79,7 @@
             <p>Good platformers quietly cheat in the player's favor. You can still jump for a few frames after running off a ledge. A jump pressed just before landing is remembered. If her head clips the corner of a block, she slides around it instead of stopping dead. None of it is visible, but without it the controls feel unfair.</p>
 
             <h3>3. Show the speed</h3>
-            <p>Running fills a six-segment meter, and when it's full she sprints and jumps further. The meter sits in the HUD, the camera leans ahead in the direction you're running, and the ground uses a subtle checker pattern so you can read your speed at a glance.</p>
+            <p>Running fills a six-segment meter, and when it's full she sprints and jumps further. The meter sits in the HUD, the camera leans ahead in the direction you're running, and the rooftops are dense with vents, cables and rust stains, so you can read your speed against them at a glance.</p>
 
             <h3>4. A level that teaches without words</h3>
             <p>There's no tutorial. An arc of cheese shows you the first jump. Pillars rise one tile at a time. Gaps grow from 3 tiles to 5. The runway is long enough to fill the sprint meter right before the first gap that needs it. The last Golden Cheese can only be reached by bouncing off a drone while holding jump, which is a secret that rewards players who experiment.</p>
@@ -90,7 +90,19 @@
                 <figcaption>Sector 1, the whole level end to end. Scroll sideways.</figcaption>
             </figure>
 
-            <h3>5. A logo that reads at a glance</h3>
+            <h3>5. Two genres, one pair of hands</h3>
+            <p>Version 0.5 adds Double Dragon-style combat, with one rule: the Mario movement doesn't change. Every jump, skid and sprint value is exactly what I tuned before. Combat sits on top of it.</p>
+            <ul>
+                <li><strong>Punch</strong> chains a jab, a cross and a knockdown uppercut. <strong>Kick</strong> is slower, reaches further and shoves enemies back. Down turns them into an uppercut or a sweep, and either button in the air (or kick at a run) is a flying kick.</li>
+                <li><strong>Ground attacks plant her feet</strong>, the way a brawler should feel, but a jump cancels the recovery so platforming never waits on a punch.</li>
+                <li><strong>Stomping still works.</strong> Landing on a Scuttlebot squashes it, Mario-style. Spikebots can't be stomped, so they're the enemies you have to punch.</li>
+                <li><strong>Every hit lands.</strong> A few frames of hitstop, an impact star, a white flash and a shove, plus a health bar for whatever you just hit.</li>
+                <li><strong>Hearts instead of one-hit deaths.</strong> She has five, and gets knocked back and flickers when hit. Pits are still instant.</li>
+                <li><strong>Brawl zones.</strong> Twice in the level the screen locks and waves of enemies drop in from the rooftops. Clear them and a flashing GO → sends you on, just like 1987. The second zone ends with the Big Toad, a boss that doesn't flinch mid-lunge.</li>
+                <li><strong>The frog tells you before it bites.</strong> It turns to face you, puffs up its throat and croaks, and only then lunges. Read the croak and you can sidestep the lunge or punch it first.</li>
+            </ul>
+
+            <h3>6. A logo that reads at a glance</h3>
             <p>The first title screen reused the tiny 3×5 font from the HUD. At logo size the M looked like an H, so "MOUSECAPADES" read as "HOUSECAPADES". I caught it in a screenshot review and drew a 5×7 font just for headings.</p>
             <div class="compare figure">
                 <figure>
@@ -127,6 +139,8 @@
             <ul>
                 <li><strong>A Golden Cheese nobody could reach.</strong> Scripted playtests showed the drone bounce peaked 3 pixels short of the third cheese. The bounce went up from 4.5 to 5.0, enough to reach it, while a normal jump still can't, so the secret stays a secret.</li>
                 <li><strong>The unreadable logo.</strong> See the before and after above.</li>
+                <li><strong>A boss that wouldn't come out.</strong> In scripted fights, the Big Toad dropped in at the far side of the brawl zone and just sat there: it only hopped toward players within 260 pixels, and the zone is 320 wide. Enemies spawned in a brawl zone now always close the distance.</li>
+                <li><strong>A pause screen full of question marks.</strong> The new controls cheat sheet used brackets, which the 3×5 font doesn't have. Reworded it.</li>
             </ul>
 
             <h2>Version history</h2>
@@ -135,11 +149,12 @@
                 <li><strong>v0.2: A real level.</strong> Sector 1, enemies, cheese and item blocks, a checkpoint, the exit gate, title and win screens, sound effects.</li>
                 <li><strong>v0.3: Anywhere.</strong> On-screen touch controls so it plays on a phone.</li>
                 <li><strong>v0.4: Meet the heroine.</strong> The placeholder mouse is replaced by a full character sprite sheet (idle, walk, run, jump, hurt and defeat animations, plus expressions), cleaned up to a strict six-color palette.</li>
+                <li><strong>v0.5: Fists.</strong> Double Dragon-style punches, kicks and combos on top of unchanged Mario movement. Adds hearts, the Gutter Frog, two brawl zones, a Big Toad boss, and new rooftop art: a teal neon skyline, weathered concrete, cables and steam rising from the alleys.</li>
             </ul>
 
             <h2>What's next</h2>
             <ul>
-                <li>A power-up, with a hit that shrinks you instead of ending the run.</li>
+                <li>A grab-and-throw, the other half of the Double Dragon moveset.</li>
                 <li>A soundtrack, and a release on itch.io.</li>
             </ul>
             <p>Want the details? Read the devlog: <a href="../notes/tuning-the-jump.html">Tuning the jump</a>.</p>

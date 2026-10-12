@@ -17,6 +17,7 @@ export class Level {
     this.spawn = { x: 0, y: 0 };
     this.entities = [];         // { type, c, r, ...options } in tile coordinates
     this.blockItems = new Map(); // "c,r" -> 'chip' | 'multi'
+    this.arenas = [];            // brawl zones: { c0, waves: [[{ type, side, ... }]] }
   }
 
   get width() { return this.cols * TILE; }
@@ -71,6 +72,8 @@ export function builder(L, groundRow) {
     semi: (c, r, w) => L.fill(c, r, c + w - 1, r, SEMI),
     block: (c, r, item = 'chip') => { L.set(c, r, BLOCK); L.blockItems.set(`${c},${r}`, item); },
     add: (type, c, r, opts = {}) => L.entities.push({ type, c, r, ...opts }),
+    // A one-screen brawl zone starting at column c0 (needs 20 flat columns).
+    arena: (c0, waves) => L.arenas.push({ c0, waves }),
     // A row of chips, or an arc of chips rising `lift` tiles in the middle.
     chips: (c, r, n, lift = 0) => {
       for (let i = 0; i < n; i++) {

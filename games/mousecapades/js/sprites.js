@@ -48,6 +48,25 @@ const GOLD = [
   '.kkkkkkkkkkk.',
 ];
 
+const HEART = [
+  '.kk.kk.',
+  'kHHkwHk',
+  'kHHHHHk',
+  '.kHHHk.',
+  '..kHk..',
+  '...k...',
+];
+const BIG_HEART = [
+  '.kkk.kkk.',
+  'kHHHkHwHk',
+  'kHHHHHHwk',
+  'kHHHHHHHk',
+  '.kHHHHHk.',
+  '..kHHHk..',
+  '...kHk...',
+  '....k....',
+];
+
 const BOT_BODY = [
   '....kkkk....',
   '..kkmmmmkk..',
@@ -93,6 +112,10 @@ export function makeSprites() {
     goldIcon: bake(CHEESE, { ...ink, w: '#fff6c8', Y: '#ffb21e', o: '#d06a0a' }),
     gold: bake(GOLD, { ...ink, w: '#fff6c8', Y: '#ffb21e', o: '#d06a0a' }),
     goldDim: bake(GOLD, { k: '#2a2340', w: '#3b3456', Y: '#3b3456', o: '#2a2340' }),
+    heart: bake(BIG_HEART, { ...ink, H: '#ff4fd8', w: '#ffd0f2' }),
+    heartSmall: bake(HEART, { ...ink, H: '#ff4fd8', w: '#ffd0f2' }),
+    heartHot: bake(HEART, { ...ink, H: '#ffffff', w: '#ffffff' }),
+    heartEmpty: bake(HEART, { k: '#140f1f', H: '#2a2340', w: '#2a2340' }),
     scuttle: [bake([...BOT_BODY, ...LEGS_A], botPal), bake([...BOT_BODY, ...LEGS_B], botPal)],
     scuttleFlat: bake(FLAT, botPal),
     spike: [bake([...SPIKES, ...BOT_BODY.slice(1), ...LEGS_A], spikePal), bake([...SPIKES, ...BOT_BODY.slice(1), ...LEGS_B], spikePal)],

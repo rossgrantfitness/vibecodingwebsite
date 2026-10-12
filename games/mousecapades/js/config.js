@@ -11,6 +11,7 @@ export const STEP = 1 / 60;
 export const PLAYER_W = 10;
 export const PLAYER_H = 17;
 export const PLAYER_DUCK_H = 11;
+export const MAX_HP = 5;
 
 export const DEFAULTS = {
   // Ground

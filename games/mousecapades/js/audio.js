@@ -75,6 +75,16 @@ const SOUNDS = {
   die: () => { tone(880, 110, 0.6, 'square', 0.22); notes([392, 330, 262], 'triangle', 0.3, 0.16); },
   pause: () => tone(660, 660, 0.06, 'square', 0.15),
   start: () => notes([392, 523, 659, 784], 'square', 0.15, 0.07),
+  whiff: () => noise(0.07, 0.12, 0, 3200),
+  hit: () => { noise(0.07, 0.4, 0, 700); tone(180, 70, 0.08, 'square', 0.25); },
+  smash: () => { noise(0.14, 0.5, 0, 500); tone(150, 45, 0.16, 'square', 0.32); },
+  ko: () => { noise(0.2, 0.45, 0, 380); tone(260, 40, 0.3, 'sawtooth', 0.25); },
+  hurt: () => { tone(420, 160, 0.16, 'sawtooth', 0.25); noise(0.1, 0.3, 0, 900); },
+  croak: () => { tone(110, 90, 0.12, 'sawtooth', 0.3); tone(120, 80, 0.14, 'sawtooth', 0.3, 0.14); },
+  lunge: () => tone(200, 520, 0.12, 'triangle', 0.35),
+  splash: () => noise(0.18, 0.3, 0, 2600),
+  heal: () => notes([659, 880, 1175], 'triangle', 0.3, 0.07),
+  go: () => notes([523, 784, 523, 784], 'square', 0.14, 0.09),
   clear: () => {
     notes([523, 659, 784, 1046, 784, 1046], 'square', 0.14, 0.12);
     notes([262, 330, 392, 523, 392, 523], 'triangle', 0.3, 0.12);

@@ -1,7 +1,8 @@
 import { TILE, PLAYER_H } from './config.js';
 import { Level, builder } from './level.js';
 
-// Sector 1: Gutter District. Roughly 2–3 minutes; a checkpoint near the middle.
+// Sector 1: Gutter District. Roughly 2–3 minutes; a checkpoint near the middle and two brawl
+// zones where the screen locks until every wave is beaten.
 // Coordinates are tiles. Ground surface is row 12; a standing jump clears about 4 tiles up,
 // a running jump about 7 tiles across.
 export function buildLevel1() {
@@ -9,6 +10,7 @@ export function buildLevel1() {
   const b = builder(L, 12);
   const { G } = b;
   const walker = (c, opts) => b.add('walker', c, G, opts);
+  const frog = (c, opts) => b.add('frog', c, G, opts);
 
   // A. Start: an arc of chips to teach jumping, a row of item blocks, the first Scuttlebot.
   b.ground(0, 24);
@@ -32,7 +34,8 @@ export function buildLevel1() {
   walker(35);
   walker(41);
   b.chips(48, 11, 3);
-  walker(54, { spiky: true });
+  frog(51);
+  walker(56, { spiky: true });
 
   // C. Neon awnings: one-way platforms climbing to a Golden Cheese; a drone over the far side.
   b.ground(62, 92);
@@ -45,6 +48,7 @@ export function buildLevel1() {
   b.add('gold', 77, 1);
   walker(72);
   walker(80);
+  frog(89);
   b.semi(83, 8, 4);
   b.add('drone', 88, 7, { axis: 'x', range: 2.5, period: 200 });
 
@@ -58,8 +62,12 @@ export function buildLevel1() {
   b.metal(109, 10, 2);
   b.ground(112, 130);
   b.add('checkpoint', 116, G);
-  walker(123);
-  walker(126);
+  // Brawl zone 1: a warm-up pair, then a frog with backup from both sides.
+  b.arena(112, [
+    [{ type: 'walker', side: 'right' }, { type: 'walker', side: 'right' }],
+    [{ type: 'frog', side: 'right' }, { type: 'walker', side: 'left' }],
+    [{ type: 'walker', side: 'left', spiky: true }, { type: 'walker', side: 'right' }],
+  ]);
 
   // E. Runway: room to fill the P-meter. Bounce off the drone (hold jump) for the Golden Cheese.
   b.ground(131, 160);
@@ -85,14 +93,18 @@ export function buildLevel1() {
   b.chips(202, 7, 8);
   b.add('drone', 205, 6, { axis: 'x', range: 2, period: 160 });
 
-  // G. Home stretch: a few last Scuttlebots, the classic end staircase, the exit gate.
+  // G. Home stretch: the last brawl (the Big Toad waits at the end), the classic end staircase,
+  // the exit gate.
   b.ground(207, 251);
-  walker(214);
-  walker(217, { dir: 1 });
-  for (let i = 0; i < 6; i++) b.pillar(224 + i, i + 1, 1);
-  b.pillar(230, 6, 2);
-  b.chips(232, 6, 4, 2);
-  b.add('goal', 242, G);
+  b.arena(207, [
+    [{ type: 'frog', side: 'right' }, { type: 'walker', side: 'left' }],
+    [{ type: 'walker', side: 'right', spiky: true }, { type: 'frog', side: 'left' }, { type: 'walker', side: 'right' }],
+    [{ type: 'frog', side: 'right', big: true }],
+  ]);
+  for (let i = 0; i < 6; i++) b.pillar(228 + i, i + 1, 1);
+  b.pillar(234, 6, 2);
+  b.chips(236, 6, 4, 2);
+  b.add('goal', 246, G);
 
   L.spawn = { x: 3 * TILE, y: G * TILE - PLAYER_H };
   return L;

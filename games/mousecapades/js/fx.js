@@ -1,9 +1,20 @@
-// Dust and sparks. Purely cosmetic; driven by events from the player and the game.
+// Dust, sparks and hit stars. Purely cosmetic; driven by events from the player and the game.
 
 export class FX {
   constructor() {
     this.parts = [];
+    this.bursts = [];
     this.tick = 0;
+  }
+
+  // Impact star where a hit lands; heavy hits get a bigger star and a ring of sparks.
+  burst(x, y, heavy) {
+    this.bursts.push({ x, y, t: 0, life: heavy ? 9 : 6, r: heavy ? 7 : 5 });
+    const n = heavy ? 7 : 3;
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + Math.random();
+      this.add(x, y, Math.cos(a) * 1.6, Math.sin(a) * 1.4 - 0.4, 10 + (Math.random() * 6 | 0), i % 2 ? '#fff6c8' : '#e9f06a');
+    }
   }
 
   emit(type, p, arg = 0) {
@@ -60,9 +71,26 @@ export class FX {
       q.life--;
     }
     this.parts = this.parts.filter((q) => q.life > 0);
+    for (const b of this.bursts) b.t++;
+    this.bursts = this.bursts.filter((b) => b.t < b.life);
   }
 
   draw(ctx, camX, camY) {
+    for (const b of this.bursts) {
+      const x = Math.round(b.x - camX), y = Math.round(b.y - camY);
+      const r = b.t < 2 ? b.r + 1 : b.r - (b.t >> 2);
+      // Eight-point star: long arms on the axes, short ones on the diagonals, hot core.
+      ctx.fillStyle = b.t < 2 ? '#ffffff' : '#e9f06a';
+      ctx.fillRect(x - r, y, r * 2 + 1, 1);
+      ctx.fillRect(x, y - r, 1, r * 2 + 1);
+      const d = Math.max(1, (r * 0.6) | 0);
+      for (let i = 1; i <= d; i++) {
+        ctx.fillRect(x - i, y - i, 1, 1); ctx.fillRect(x + i, y - i, 1, 1);
+        ctx.fillRect(x - i, y + i, 1, 1); ctx.fillRect(x + i, y + i, 1, 1);
+      }
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x - 1, y - 1, 3, 3);
+    }
     for (const q of this.parts) {
       ctx.globalAlpha = Math.min(1, (q.life / q.max) * 1.5);
       ctx.fillStyle = q.color;

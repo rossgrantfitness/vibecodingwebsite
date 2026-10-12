@@ -73,7 +73,7 @@ function frame(now) {
 function fit() {
   // In portrait with touch controls, keep the bottom clear for the buttons.
   const touching = document.body.classList.contains('touch-ui');
-  const reserve = touching && window.innerHeight > window.innerWidth ? 190 : 0;
+  const reserve = touching && window.innerHeight > window.innerWidth ? 230 : 0;
   document.documentElement.style.setProperty('--reserve', `${reserve}px`);
   const s = Math.min(window.innerWidth / VIEW_W, (window.innerHeight - reserve) / VIEW_H);
   const scale = s >= 2 ? Math.floor(s) : s;

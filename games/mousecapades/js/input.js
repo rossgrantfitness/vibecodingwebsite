@@ -7,10 +7,12 @@ const KEYS = {
   ArrowDown: 'down', KeyS: 'down',
   KeyZ: 'jump', Space: 'jump', KeyK: 'jump',
   KeyX: 'run', ShiftLeft: 'run', ShiftRight: 'run', KeyJ: 'run',
+  KeyC: 'punch', KeyL: 'punch',
+  KeyV: 'kick', Semicolon: 'kick',
   Enter: 'start', Escape: 'start',
 };
 
-const ACTIONS = ['left', 'right', 'up', 'down', 'jump', 'run', 'start'];
+const ACTIONS = ['left', 'right', 'up', 'down', 'jump', 'run', 'punch', 'kick', 'start'];
 const DEADZONE = 0.4;
 
 export function isFormField(el) {
@@ -77,9 +79,10 @@ export class Input {
   }
 }
 
-// Standard mapping: bottom/right face = jump (SNES B/A), left/top face or triggers = run (SNES Y/X).
+// Standard mapping: bottom face = jump (SNES B), left face, shoulders or triggers = run (SNES Y),
+// top face = punch, right face = kick.
 function readGamepads() {
-  const out = { left: false, right: false, up: false, down: false, jump: false, run: false, start: false };
+  const out = { left: false, right: false, up: false, down: false, jump: false, run: false, punch: false, kick: false, start: false };
   const pads = navigator.getGamepads ? navigator.getGamepads() : [];
   for (const p of pads) {
     if (!p || !p.connected) continue;
@@ -90,8 +93,10 @@ function readGamepads() {
     out.right ||= b(15) || ax > DEADZONE;
     out.up ||= b(12) || ay < -DEADZONE;
     out.down ||= b(13) || ay > DEADZONE;
-    out.jump ||= b(0) || b(1);
-    out.run ||= b(2) || b(3) || b(6) || b(7);
+    out.jump ||= b(0);
+    out.run ||= b(2) || b(4) || b(5) || b(6) || b(7);
+    out.punch ||= b(3);
+    out.kick ||= b(1);
     out.start ||= b(9);
   }
   return out;
